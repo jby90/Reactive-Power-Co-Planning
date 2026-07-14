@@ -1,0 +1,12 @@
+figure,series,asset_cost_index,annual_loss_mwh,observed_day_event_rate,pv_generation_scale,feasible
+resource_efficiency,resource_efficient,90.00000059604645,382.9999406581927,0.0,,
+resource_efficiency,high_redundancy,151.0,597.6580773489163,0.0,,
+fixed_hardware_controller,film,90.00000059604645,382.9999406581927,0.0,,
+fixed_hardware_controller,blind,90.00000059604645,424.385778746996,0.0,,
+fixed_hardware_controller,concat,90.00000059604645,378.997370742389,0.0,,
+pv_feasibility_envelope,film,,,,0.8,1.0
+pv_feasibility_envelope,droop,,,,0.8,0.0
+pv_feasibility_envelope,film,,,,1.0,1.0
+pv_feasibility_envelope,droop,,,,1.0,0.0
+pv_feasibility_envelope,film,,,,1.2,0.0
+pv_feasibility_envelope,droop,,,,1.2,0.0
