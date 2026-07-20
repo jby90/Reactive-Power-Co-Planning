@@ -1,0 +1,29 @@
+{
+  "all_gates_pass": true,
+  "risk_not_worse_every_seed_and_mode": true,
+  "mean_loss_lower_both_modes": true,
+  "no_power_flow_failures": true,
+  "wg_intervention_rate_at_most_one_percent": true,
+  "combined_paired_bootstrap_ci_below_zero": true,
+  "combined_mean_paired_loss_difference_mw": -0.0024744532602155164,
+  "combined_bootstrap_95_ci_mw": [
+    -0.002546268987672466,
+    -0.0024034076810043013
+  ],
+  "mode_results": {
+    "uniform": {
+      "mean_paired_loss_difference_mw": -0.002309749947557781,
+      "bootstrap_95_ci_mw": [
+        -0.0023913750917557743,
+        -0.00222951006919581
+      ]
+    },
+    "stress": {
+      "mean_paired_loss_difference_mw": -0.0026391565728732507,
+      "bootstrap_95_ci_mw": [
+        -0.0027595667408599695,
+        -0.0025227647453316395
+      ]
+    }
+  }
+}

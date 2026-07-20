@@ -1,0 +1,13 @@
+{
+  "jobs": 255,
+  "projected": false,
+  "risk": 0.00392156862745098,
+  "pf_fail_rate": 0.0,
+  "mean_daily_loss_mwh": 1.4955684861249752,
+  "mean_intervention_rate": 0.0,
+  "projection_failure_steps": 0,
+  "worst_vmin": 0.9494365215394299,
+  "worst_vmax": 1.0351575899355592,
+  "jobs_csv": "data/results/capacity_planning\\delta_risk_path_raw\\jobs.csv",
+  "projection_config": null
+}

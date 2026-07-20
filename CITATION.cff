@@ -1,9 +1,9 @@
 cff-version: 1.2.0
 message: "If you use this software or data, please cite the associated article."
-title: "Reactive-Power Co-Planning for Cleaner PV Integration"
+title: "Risk-Aware Reactive-Power Co-Planning with Physics-Guided Safety Projection"
 type: software
-version: 1.0.0
-date-released: 2026-07-14
+version: 2.0.0
+date-released: 2026-07-20
 repository-code: "https://github.com/jby90/Reactive-Power-Co-Planning-for-Cleaner-PV"
 authors:
   - family-names: Zhang
@@ -23,7 +23,7 @@ authors:
     given-names: Ming
 preferred-citation:
   type: article
-  title: "Resource-Efficient Reactive-Power Co-Planning for Cleaner PV Integration in Active Distribution Networks"
+  title: "Risk-Aware Reactive-Power Co-Planning with Physics-Guided Safety Projection for Resource-Efficient PV Integration"
   authors:
     - family-names: Zhang
       given-names: Maojun

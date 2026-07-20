@@ -21,7 +21,7 @@ import random
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Tuple
+from typing import Iterable, List, Tuple
 
 os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")
 
@@ -65,6 +65,31 @@ def _parse_int_list(s: str) -> List[int]:
     if not s:
         return []
     return [int(x) for x in s.split(",") if str(x).strip() != ""]
+
+
+def capacity_minimum_margin(
+    theta: np.ndarray,
+    theta_min: Iterable[float],
+    theta_max: Iterable[float],
+) -> float:
+    """Return the clipped minimum normalised margin used by Scheme E."""
+    theta_arr = np.asarray(theta, dtype=np.float32)
+    lower = np.asarray(list(theta_min), dtype=np.float32)
+    upper = np.asarray(list(theta_max), dtype=np.float32)
+    if theta_arr.shape != (3,) or lower.shape != (3,) or upper.shape != (3,):
+        raise ValueError("theta and its bounds must each contain three values")
+    if np.any(upper <= lower):
+        raise ValueError("Each theta_max value must be greater than theta_min")
+    normalised = np.clip((theta_arr - lower) / (upper - lower), 0.0, 1.0)
+    return float(np.min(normalised))
+
+
+def margin_weighted_voltage_penalty(base_weight: float, margin_gain: float, minimum_margin: float) -> float:
+    """Compute w_v(theta) = w_v * [1 + gain * (1 - margin)]."""
+    if margin_gain < 0.0:
+        raise ValueError("margin_gain must be non-negative")
+    margin = float(np.clip(minimum_margin, 0.0, 1.0))
+    return float(base_weight) * (1.0 + float(margin_gain) * (1.0 - margin))
 
 
 class FiLM(nn.Module):
@@ -157,6 +182,163 @@ class FiLMActorCritic(nn.Module):
         v = self._v(obs, theta)
         return logp, entropy, v
 
+    def policy_parameters(self) -> Iterable[nn.Parameter]:
+        modules = (self.pi_fc1, self.pi_film1, self.pi_fc2, self.pi_film2, self.pi_mu)
+        for module in modules:
+            yield from module.parameters()
+        yield self.pi_log_std
+
+    def value_parameters(self) -> Iterable[nn.Parameter]:
+        modules = (self.v_fc1, self.v_film1, self.v_fc2, self.v_film2, self.v_out)
+        for module in modules:
+            yield from module.parameters()
+
+
+class ThetaConditionFeatures(nn.Module):
+    """Explicit capacity geometry for the actor-side residual pathway."""
+
+    feature_dim = 8
+
+    def __init__(self, theta_min: Iterable[float], theta_max: Iterable[float]):
+        super().__init__()
+        theta_min_t = torch.as_tensor(list(theta_min), dtype=torch.float32)
+        theta_max_t = torch.as_tensor(list(theta_max), dtype=torch.float32)
+        if theta_min_t.shape != (3,) or theta_max_t.shape != (3,):
+            raise ValueError("theta_min and theta_max must each contain three values")
+        if torch.any(theta_max_t <= theta_min_t):
+            raise ValueError("Each theta_max value must be greater than theta_min")
+        self.register_buffer("theta_min", theta_min_t)
+        self.register_buffer("theta_max", theta_max_t)
+
+    def forward(self, theta: torch.Tensor) -> torch.Tensor:
+        normalised = (theta - self.theta_min) / (self.theta_max - self.theta_min)
+        normalised = torch.clamp(normalised, 0.0, 1.0)
+        minimum_margin = normalised.min(dim=-1, keepdim=True).values
+        double_low = ((1.0 - normalised[..., 0]) * (1.0 - normalised[..., 1])).unsqueeze(-1)
+        # 3 normalised capacities + 1 global margin + 1 PV/SVC interaction + 3 raw capacities.
+        return torch.cat((normalised, minimum_margin, double_low, theta), dim=-1)
+
+
+class HybridFiLMActorCritic(FiLMActorCritic):
+    """FiLM policy with zero-initialised direct capacity residuals.
+
+    Only the actor is changed. The critic remains the original FiLM critic so
+    the v1 experiment isolates actor-side conditional expressivity.
+    """
+
+    def __init__(
+        self,
+        obs_dim: int,
+        act_dim: int,
+        theta_dim: int = 3,
+        hidden: tuple[int, int] = (256, 256),
+        log_std_init: float = -0.5,
+        theta_min: Iterable[float] = (0.7, 0.7, 0.0),
+        theta_max: Iterable[float] = (1.5, 1.5, 1.0),
+    ):
+        if theta_dim != 3:
+            raise ValueError("Hybrid residual features currently require theta_dim=3")
+        super().__init__(obs_dim, act_dim, theta_dim, hidden, log_std_init)
+        h1, h2 = hidden
+        self.theta_features = ThetaConditionFeatures(theta_min, theta_max)
+        feature_dim = self.theta_features.feature_dim
+        self.pi_res1 = nn.Linear(feature_dim, h1, bias=False)
+        self.pi_res2 = nn.Linear(feature_dim, h2, bias=False)
+        self.pi_res_out = nn.Linear(feature_dim, act_dim, bias=False)
+        for module in (self.pi_res1, self.pi_res2, self.pi_res_out):
+            nn.init.zeros_(module.weight)
+
+    def _actor_terms(
+        self, obs: torch.Tensor, theta: torch.Tensor
+    ) -> tuple[torch.Tensor, dict[str, torch.Tensor]]:
+        phi = self.theta_features(theta)
+
+        hidden1 = F.relu(self.pi_fc1(obs))
+        film1 = self.pi_film1(hidden1, theta)
+        residual1 = self.pi_res1(phi)
+        hidden1_out = F.relu(film1 + residual1)
+
+        hidden2 = F.relu(self.pi_fc2(hidden1_out))
+        film2 = self.pi_film2(hidden2, theta)
+        residual2 = self.pi_res2(phi)
+        hidden2_out = F.relu(film2 + residual2)
+
+        base_logits = self.pi_mu(hidden2_out)
+        output_residual = self.pi_res_out(phi)
+        logits = base_logits + output_residual
+        terms = {
+            "film1": film1,
+            "residual1": residual1,
+            "film2": film2,
+            "residual2": residual2,
+            "base_logits": base_logits,
+            "output_residual": output_residual,
+        }
+        return logits, terms
+
+    def _pi(self, obs: torch.Tensor, theta: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
+        logits, _ = self._actor_terms(obs, theta)
+        mu = torch.tanh(logits)
+        log_std = torch.clamp(self.pi_log_std, -20, 2)
+        return mu, log_std
+
+    def actor_conditioning_diagnostics(self, obs: torch.Tensor, theta: torch.Tensor) -> dict[str, torch.Tensor]:
+        _, terms = self._actor_terms(obs, theta)
+
+        def ratio(numerator: torch.Tensor, denominator: torch.Tensor) -> torch.Tensor:
+            return numerator.norm(dim=-1) / denominator.norm(dim=-1).clamp_min(1e-8)
+
+        return {
+            "residual_ratio_layer1": ratio(terms["residual1"], terms["film1"]),
+            "residual_ratio_layer2": ratio(terms["residual2"], terms["film2"]),
+            "residual_ratio_output": ratio(terms["output_residual"], terms["base_logits"]),
+            "residual_norm_layer1": terms["residual1"].norm(dim=-1),
+            "residual_norm_layer2": terms["residual2"].norm(dim=-1),
+            "residual_norm_output": terms["output_residual"].norm(dim=-1),
+        }
+
+    def policy_parameters(self) -> Iterable[nn.Parameter]:
+        yield from super().policy_parameters()
+        for module in (self.pi_res1, self.pi_res2, self.pi_res_out):
+            yield from module.parameters()
+
+
+def build_film_actor_from_state_dict(
+    obs_dim: int,
+    act_dim: int,
+    state_dict: dict[str, torch.Tensor],
+) -> FiLMActorCritic:
+    """Rebuild legacy FiLM or hybrid-residual actors from checkpoint keys."""
+    h1 = int(state_dict["pi_fc1.weight"].shape[0])
+    h2 = int(state_dict["pi_fc2.weight"].shape[0])
+    theta_dim = int(state_dict["pi_film1.scale.weight"].shape[1])
+    if "pi_res1.weight" in state_dict:
+        if "theta_features.theta_min" not in state_dict or "theta_features.theta_max" not in state_dict:
+            raise RuntimeError("Hybrid checkpoint is missing saved theta bounds")
+        actor: FiLMActorCritic = HybridFiLMActorCritic(
+            obs_dim,
+            act_dim,
+            theta_dim=theta_dim,
+            hidden=(h1, h2),
+            theta_min=state_dict["theta_features.theta_min"].detach().cpu().tolist(),
+            theta_max=state_dict["theta_features.theta_max"].detach().cpu().tolist(),
+        )
+    else:
+        actor = FiLMActorCritic(obs_dim, act_dim, theta_dim=theta_dim, hidden=(h1, h2))
+    actor.load_state_dict(state_dict)
+    return actor
+
+
+def extract_actor_state_dict(payload: object) -> dict[str, torch.Tensor]:
+    """Normalise the checkpoint formats used by the repository."""
+    if not isinstance(payload, dict):
+        raise TypeError(f"Unsupported checkpoint payload: {type(payload).__name__}")
+    for key in ("ac", "model_state_dict", "state_dict"):
+        candidate = payload.get(key)
+        if isinstance(candidate, dict):
+            return candidate
+    return payload  # A plain state_dict is itself a dictionary.
+
 
 @dataclass
 class PPOConfig:
@@ -164,6 +346,7 @@ class PPOConfig:
     seed: int = 42
     gamma: float = 0.9
     run_name: str = ""
+    actor_arch: str = "film"
 
     # PPO core
     lam: float = 0.95
@@ -177,6 +360,7 @@ class PPOConfig:
 
     # scalarization
     reward_v_weight: float = 200.0
+    reward_v_margin_gain: float = 0.0
     vmin: float = 0.95
     vmax: float = 1.05
     pf_fail_penalty: float = 1000.0
@@ -212,6 +396,11 @@ class PPOConfig:
     cap_total_min: float = 0.0
     cap_total_max: float = 1.0
 
+    # Optional Stage-3 boundary mixture. A zero probability preserves the
+    # original uniform sampler and its random-number sequence.
+    stage3_corner_prob: float = 0.0
+    stage3_corner_mode: str = "pv_svc_corners"
+
     episode_len: int = 96
 
     # misc
@@ -221,9 +410,18 @@ class PPOConfig:
 
 
 class ThetaCurriculumSampler:
+    CORNER_MODES = {"all_vertices", "pv_svc_corners", "critical_edge"}
+
     def __init__(self, cfg: PPOConfig, total_episodes: int):
         self.cfg = cfg
         self.total_episodes = max(1, int(total_episodes))
+        self.last_sample_kind = "uninitialised"
+        prob = float(cfg.stage3_corner_prob)
+        if not 0.0 <= prob <= 1.0:
+            raise ValueError(f"stage3_corner_prob must be in [0, 1], got {prob}")
+        if cfg.stage3_corner_mode not in self.CORNER_MODES:
+            choices = ", ".join(sorted(self.CORNER_MODES))
+            raise ValueError(f"stage3_corner_mode must be one of {{{choices}}}")
 
     def stage(self, episode_idx: int) -> int:
         cfg = self.cfg
@@ -238,12 +436,33 @@ class ThetaCurriculumSampler:
         cfg = self.cfg
         st = self.stage(episode_idx)
         if st == 1:
+            self.last_sample_kind = "stage1_fixed"
             return np.asarray([1.0, 1.0, float(cfg.cap0)], dtype=np.float32)
         if st == 2:
+            self.last_sample_kind = "stage2_uniform"
             pv = np.random.uniform(cfg.pv_s_mid_min, cfg.pv_s_mid_max)
             svc = np.random.uniform(cfg.svc_q_mid_min, cfg.svc_q_mid_max)
             cap = np.random.uniform(cfg.cap_mid_min, cfg.cap_mid_max)
             return np.asarray([pv, svc, cap], dtype=np.float32)
+
+        prob = float(cfg.stage3_corner_prob)
+        if prob > 0.0 and np.random.random() < prob:
+            mode = cfg.stage3_corner_mode
+            if mode == "critical_edge":
+                pv = float(cfg.pv_s_scale_min)
+                svc = float(cfg.svc_q_scale_min)
+                cap = np.random.uniform(cfg.cap_total_min, cfg.cap_total_max)
+            else:
+                pv = np.random.choice([cfg.pv_s_scale_min, cfg.pv_s_scale_max])
+                svc = np.random.choice([cfg.svc_q_scale_min, cfg.svc_q_scale_max])
+                if mode == "all_vertices":
+                    cap = np.random.choice([cfg.cap_total_min, cfg.cap_total_max])
+                else:
+                    cap = np.random.uniform(cfg.cap_total_min, cfg.cap_total_max)
+            self.last_sample_kind = f"stage3_{mode}"
+            return np.asarray([pv, svc, cap], dtype=np.float32)
+
+        self.last_sample_kind = "stage3_uniform"
         pv = np.random.uniform(cfg.pv_s_scale_min, cfg.pv_s_scale_max)
         svc = np.random.uniform(cfg.svc_q_scale_min, cfg.svc_q_scale_max)
         cap = np.random.uniform(cfg.cap_total_min, cfg.cap_total_max)
@@ -297,6 +516,8 @@ class ThetaEnvManager:
 
     def resample_and_reset(self) -> None:
         self.theta = self.sampler.sample(self.episode_idx)
+        self.sample_kind = self.sampler.last_sample_kind
+        self.is_corner_sample = self.sample_kind.startswith("stage3_") and self.sample_kind != "stage3_uniform"
         self.env = self._build_env(self.theta)
         self.env_det = self._build_env(self.theta)
         self.state = self.env.reset()
@@ -315,7 +536,16 @@ class ThetaEnvManager:
         assert self.state is not None
         assert self.state_det is not None
 
-        info = {"pf_fail_s": 0.0, "pf_fail_d": 0.0, "stage": float(self.stage())}
+        info = {
+            "pf_fail_s": 0.0,
+            "pf_fail_d": 0.0,
+            "stage": float(self.stage()),
+            "sample_kind": self.sample_kind,
+            "corner_sample": float(self.is_corner_sample),
+            "theta_pv": float(self.theta[0]),
+            "theta_svc": float(self.theta[1]),
+            "theta_cap": float(self.theta[2]),
+        }
         done = False
 
         # deterministic mirror step
@@ -400,24 +630,23 @@ class PPOTrainerFiLMTheta:
         self.act_dim = int(env0.action_space.shape[0])
         self.theta_dim = 3
 
-        self.ac = FiLMActorCritic(self.obs_dim, self.act_dim, theta_dim=self.theta_dim, log_std_init=cfg.log_std_init).to(self.device)
-        self.pi_opt = optim.Adam(
-            list(self.ac.pi_fc1.parameters())
-            + list(self.ac.pi_film1.parameters())
-            + list(self.ac.pi_fc2.parameters())
-            + list(self.ac.pi_film2.parameters())
-            + list(self.ac.pi_mu.parameters())
-            + [self.ac.pi_log_std],
-            lr=cfg.pi_lr,
-        )
-        self.vf_opt = optim.Adam(
-            list(self.ac.v_fc1.parameters())
-            + list(self.ac.v_film1.parameters())
-            + list(self.ac.v_fc2.parameters())
-            + list(self.ac.v_film2.parameters())
-            + list(self.ac.v_out.parameters()),
-            lr=cfg.vf_lr,
-        )
+        if cfg.actor_arch == "hybrid_residual":
+            self.ac = HybridFiLMActorCritic(
+                self.obs_dim,
+                self.act_dim,
+                theta_dim=self.theta_dim,
+                log_std_init=cfg.log_std_init,
+                theta_min=(cfg.pv_s_scale_min, cfg.svc_q_scale_min, cfg.cap_total_min),
+                theta_max=(cfg.pv_s_scale_max, cfg.svc_q_scale_max, cfg.cap_total_max),
+            ).to(self.device)
+        elif cfg.actor_arch == "film":
+            self.ac = FiLMActorCritic(
+                self.obs_dim, self.act_dim, theta_dim=self.theta_dim, log_std_init=cfg.log_std_init
+            ).to(self.device)
+        else:
+            raise ValueError(f"Unknown actor_arch: {cfg.actor_arch}")
+        self.pi_opt = optim.Adam(self.ac.policy_parameters(), lr=cfg.pi_lr)
+        self.vf_opt = optim.Adam(self.ac.value_parameters(), lr=cfg.vf_lr)
 
         gamma_str = str(cfg.gamma)
         group_dir = Path("runs") / "PPO_THETA_FILM" / f"env{cfg.env}_seed{cfg.seed}_gamma{gamma_str}"
@@ -443,8 +672,23 @@ class PPOTrainerFiLMTheta:
         with torch.no_grad():
             self.ac.pi_log_std.data.fill_(float(target))
 
-    def _scalar_reward(self, reward_vec: np.ndarray) -> float:
-        return float(reward_vec[0] + self.cfg.reward_v_weight * reward_vec[1])
+    def _minimum_margin(self, theta: np.ndarray) -> float:
+        cfg = self.cfg
+        return capacity_minimum_margin(
+            theta,
+            (cfg.pv_s_scale_min, cfg.svc_q_scale_min, cfg.cap_total_min),
+            (cfg.pv_s_scale_max, cfg.svc_q_scale_max, cfg.cap_total_max),
+        )
+
+    def _effective_reward_v_weight(self, theta: np.ndarray) -> float:
+        return margin_weighted_voltage_penalty(
+            self.cfg.reward_v_weight,
+            self.cfg.reward_v_margin_gain,
+            self._minimum_margin(theta),
+        )
+
+    def _scalar_reward(self, reward_vec: np.ndarray, theta: np.ndarray) -> float:
+        return float(reward_vec[0] + self._effective_reward_v_weight(theta) * reward_vec[1])
 
     def save_models(self) -> None:
         torch.save(self.ac.state_dict(), str(self.model_dir / "actor.pth"))
@@ -464,14 +708,47 @@ class PPOTrainerFiLMTheta:
         value_losses,
         entropies,
         stages,
+        sample_kinds,
+        corner_samples,
+        theta_pv,
+        theta_svc,
+        theta_cap,
+        theta_min_margin,
+        reward_v_weights,
     ) -> None:
         import pandas as pd
 
         pd.DataFrame(
-            {"scores": scores, "violation_sum_s": viol_counts, "grid_loss_sum_s": grid_loss_sums, "pf_fail_sum_s": pf_fails, "stage": stages}
+            {
+                "scores": scores,
+                "violation_sum_s": viol_counts,
+                "grid_loss_sum_s": grid_loss_sums,
+                "pf_fail_sum_s": pf_fails,
+                "stage": stages,
+                "sample_kind": sample_kinds,
+                "corner_sample": corner_samples,
+                "theta_pv": theta_pv,
+                "theta_svc": theta_svc,
+                "theta_cap": theta_cap,
+                "theta_min_margin": theta_min_margin,
+                "reward_v_weight_effective": reward_v_weights,
+            }
         ).to_csv(self.csv_dir / "train.csv", index=False)
         pd.DataFrame(
-            {"scorest": scores0, "violation_sum_st": viol_counts0, "grid_loss_sum_st": grid_loss_sums0, "pf_fail_sum_st": pf_fails0, "stage": stages}
+            {
+                "scorest": scores0,
+                "violation_sum_st": viol_counts0,
+                "grid_loss_sum_st": grid_loss_sums0,
+                "pf_fail_sum_st": pf_fails0,
+                "stage": stages,
+                "sample_kind": sample_kinds,
+                "corner_sample": corner_samples,
+                "theta_pv": theta_pv,
+                "theta_svc": theta_svc,
+                "theta_cap": theta_cap,
+                "theta_min_margin": theta_min_margin,
+                "reward_v_weight_effective": reward_v_weights,
+            }
         ).to_csv(self.csv_dir / "traintest.csv", index=False)
         pd.DataFrame({"actor_losses": actor_losses, "value_losses": value_losses, "entropy": entropies}).to_csv(self.csv_dir / "trainloss.csv", index=False)
 
@@ -507,7 +784,9 @@ class PPOTrainerFiLMTheta:
 
         scores, viol_counts, grid_loss_sums, pf_fails = [], [], [], []
         scores0, viol_counts0, grid_loss_sums0, pf_fails0 = [], [], [], []
-        stages = []
+        stages, sample_kinds, corner_samples = [], [], []
+        theta_pv, theta_svc, theta_cap = [], [], []
+        theta_min_margin, reward_v_weights = [], []
         actor_losses, value_losses, entropies = [], [], []
 
         score = 0.0
@@ -528,8 +807,15 @@ class PPOTrainerFiLMTheta:
             writer.add_text("meta/algo", "PPO_theta_robust_FiLM_curriculum")
             writer.add_text("meta/theta", "theta=[pv_s_scale, svc_q_scale, cap_total_mvar] (FiLM-modulated)")
             writer.add_scalar("meta/reward_v_weight", float(cfg.reward_v_weight), 0)
+            writer.add_scalar("meta/reward_v_margin_gain", float(cfg.reward_v_margin_gain), 0)
+            writer.add_text(
+                "meta/reward_v_weight_formula",
+                "base_weight * [1 + margin_gain * (1 - minimum_normalised_theta_margin)]",
+            )
             writer.add_scalar("meta/stage1_frac", float(cfg.stage1_frac), 0)
             writer.add_scalar("meta/stage2_frac", float(cfg.stage2_frac), 0)
+            writer.add_scalar("meta/stage3_corner_prob", float(cfg.stage3_corner_prob), 0)
+            writer.add_text("meta/stage3_corner_mode", str(cfg.stage3_corner_mode))
 
         while self.total_step < cfg.num_frames:
             self._anneal_log_std()
@@ -541,12 +827,13 @@ class PPOTrainerFiLMTheta:
                 self.total_step += 1
 
                 obs_t = torch.FloatTensor(np.asarray(self.mgr.state, dtype=np.float32)).to(self.device)  # type: ignore
-                theta_t = torch.FloatTensor(np.asarray(self.mgr.theta, dtype=np.float32)).to(self.device)
+                theta_np = np.asarray(self.mgr.theta, dtype=np.float32).copy()
+                theta_t = torch.FloatTensor(theta_np).to(self.device)
                 a_sample, a_mean, logp, v = self.ac.act(obs_t, theta_t)
 
                 next_obs, reward_vec, reward_vec0, done, info = self.mgr.step(a_sample, a_mean)
-                r_scalar = self._scalar_reward(reward_vec)
-                r_scalar0 = self._scalar_reward(reward_vec0)
+                r_scalar = self._scalar_reward(reward_vec, theta_np)
+                r_scalar0 = self._scalar_reward(reward_vec0, theta_np)
 
                 score += float(r_scalar)
                 score0 += float(r_scalar0)
@@ -559,7 +846,7 @@ class PPOTrainerFiLMTheta:
 
                 # buffers (store current state/theta used for action)
                 obs_buf.append(np.asarray(self.mgr.state, dtype=np.float32).copy())  # type: ignore
-                theta_buf.append(np.asarray(theta_t.detach().cpu().numpy(), dtype=np.float32).copy())
+                theta_buf.append(theta_np)
                 act_buf.append(np.asarray(a_sample, dtype=np.float32).copy())
                 logp_buf.append(float(logp))
                 val_buf.append(float(v))
@@ -570,12 +857,18 @@ class PPOTrainerFiLMTheta:
                     writer.add_scalar("step/reward_p", float(reward_vec[0]), self.total_step)
                     writer.add_scalar("step/reward_v", float(reward_vec[1]), self.total_step)
                     writer.add_scalar("step/reward_scalar", float(r_scalar), self.total_step)
+                    writer.add_scalar(
+                        "step/reward_v_weight_effective",
+                        self._effective_reward_v_weight(theta_np),
+                        self.total_step,
+                    )
                     writer.add_scalar("step/pf_fail", float(info.get("pf_fail_s", 0.0)), self.total_step)
                     writer.add_scalar("step/pf_fail_action0", float(info.get("pf_fail_d", 0.0)), self.total_step)
                     writer.add_scalar("theta/pv_s_scale", float(self.mgr.theta[0]), self.total_step)
                     writer.add_scalar("theta/svc_q_scale", float(self.mgr.theta[1]), self.total_step)
                     writer.add_scalar("theta/cap_total_mvar", float(self.mgr.theta[2]), self.total_step)
                     writer.add_scalar("curriculum/stage", float(info.get("stage", 0.0)), self.total_step)
+                    writer.add_scalar("curriculum/corner_sample", float(info.get("corner_sample", 0.0)), self.total_step)
 
                 if cfg.log_every > 0 and self.total_step % cfg.log_every == 0:
                     now = time.time()
@@ -594,6 +887,13 @@ class PPOTrainerFiLMTheta:
                     scores.append(score); viol_counts.append(viol_cnt); grid_loss_sums.append(gl_sum); pf_fails.append(pf_fail_ep)
                     scores0.append(score0); viol_counts0.append(viol_cnt0); grid_loss_sums0.append(gl_sum0); pf_fails0.append(pf_fail_ep0)
                     stages.append(int(info.get("stage", self.mgr.stage())))
+                    sample_kinds.append(str(info.get("sample_kind", "unknown")))
+                    corner_samples.append(int(info.get("corner_sample", 0.0)))
+                    theta_pv.append(float(info.get("theta_pv", np.nan)))
+                    theta_svc.append(float(info.get("theta_svc", np.nan)))
+                    theta_cap.append(float(info.get("theta_cap", np.nan)))
+                    theta_min_margin.append(self._minimum_margin(theta_np))
+                    reward_v_weights.append(self._effective_reward_v_weight(theta_np))
 
                     if writer is not None:
                         writer.add_scalar("train/episode_score", float(score), self.total_step)
@@ -695,7 +995,9 @@ class PPOTrainerFiLMTheta:
         self._write_csv_and_figures(
             scores, viol_counts, grid_loss_sums, pf_fails,
             scores0, viol_counts0, grid_loss_sums0, pf_fails0,
-            actor_losses, value_losses, entropies, stages
+            actor_losses, value_losses, entropies, stages,
+            sample_kinds, corner_samples, theta_pv, theta_svc, theta_cap,
+            theta_min_margin, reward_v_weights
         )
 
         if writer is not None:
@@ -709,6 +1011,13 @@ def build_argparser() -> argparse.ArgumentParser:
     p.add_argument("--seed", type=int, default=42)
     p.add_argument("--gamma", type=float, default=0.9)
     p.add_argument("--run_name", type=str, default="")
+    p.add_argument(
+        "--actor_arch",
+        type=str,
+        default="film",
+        choices=["film", "hybrid_residual"],
+        help="Actor conditioning architecture; hybrid_residual is scheme C v1 without LayerNorm.",
+    )
     p.add_argument("--num_frames", type=int, default=96 * 300)
     p.add_argument("--steps_per_update", type=int, default=2048)
     p.add_argument("--minibatch_size", type=int, default=256)
@@ -719,6 +1028,12 @@ def build_argparser() -> argparse.ArgumentParser:
     p.add_argument("--clip_ratio", type=float, default=0.2)
 
     p.add_argument("--reward_v_weight", type=float, default=200.0)
+    p.add_argument(
+        "--reward_v_margin_gain",
+        type=float,
+        default=0.0,
+        help="Scheme E gain in w_v(theta)=base*[1+gain*(1-minimum_margin)]; zero preserves legacy training.",
+    )
     p.add_argument("--vmin", type=float, default=0.95)
     p.add_argument("--vmax", type=float, default=1.05)
     p.add_argument("--pf_fail_penalty", type=float, default=1000.0)
@@ -751,6 +1066,19 @@ def build_argparser() -> argparse.ArgumentParser:
     p.add_argument("--svc_q_scale_max", type=float, default=1.2)
     p.add_argument("--cap_total_min", type=float, default=0.0)
     p.add_argument("--cap_total_max", type=float, default=1.0)
+    p.add_argument(
+        "--stage3_corner_prob",
+        type=float,
+        default=0.0,
+        help="Probability of replacing a Stage-3 uniform draw with a boundary-focused draw.",
+    )
+    p.add_argument(
+        "--stage3_corner_mode",
+        type=str,
+        default="pv_svc_corners",
+        choices=sorted(ThetaCurriculumSampler.CORNER_MODES),
+        help="Boundary draw: all 3-D vertices, PV/SVC corners with continuous cap, or the double-low critical edge.",
+    )
     p.add_argument("--episode_len", type=int, default=96)
     return p
 
@@ -763,6 +1091,7 @@ def main() -> None:
         seed=args.seed,
         gamma=args.gamma,
         run_name=args.run_name,
+        actor_arch=str(args.actor_arch),
         lam=args.lam,
         clip_ratio=args.clip_ratio,
         pi_lr=args.pi_lr,
@@ -772,6 +1101,7 @@ def main() -> None:
         steps_per_update=args.steps_per_update,
         num_frames=args.num_frames,
         reward_v_weight=args.reward_v_weight,
+        reward_v_margin_gain=float(args.reward_v_margin_gain),
         vmin=args.vmin,
         vmax=args.vmax,
         pf_fail_penalty=args.pf_fail_penalty,
@@ -798,6 +1128,8 @@ def main() -> None:
         svc_q_scale_max=float(args.svc_q_scale_max),
         cap_total_min=float(args.cap_total_min),
         cap_total_max=float(args.cap_total_max),
+        stage3_corner_prob=float(args.stage3_corner_prob),
+        stage3_corner_mode=str(args.stage3_corner_mode),
         episode_len=int(args.episode_len),
     )
     set_seed(cfg.seed)

@@ -1,0 +1,26 @@
+{
+  "jobs": 1000,
+  "risk": 0.0,
+  "under_risk": 0.0,
+  "over_risk": 0.0,
+  "pf_fail_rate": 0.0,
+  "mean_loss_mw": 0.06156502669076227,
+  "mean_energy_mwh": 1.4775606405782946,
+  "worst_vmin": 0.9511842129072546,
+  "worst_vmax": 1.042728313670505,
+  "raw_worst_vmin": 0.9511842129072546,
+  "raw_worst_vmax": 1.042728313670505,
+  "mean_intervention_rate": 0.0,
+  "jobs_with_intervention": 0,
+  "projection_failure_steps": 0,
+  "mean_correction_norm": 0.0,
+  "max_correction_norm": 0.0,
+  "mean_power_flow_previews_per_job": 96.0,
+  "projection_config": {
+    "lower_voltage": 0.9505,
+    "upper_voltage": 1.0495,
+    "finite_difference_step": 0.02,
+    "max_iterations": 3,
+    "optimiser_tolerance": 1e-09
+  }
+}

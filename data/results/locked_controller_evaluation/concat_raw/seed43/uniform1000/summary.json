@@ -1,0 +1,13 @@
+{
+  "jobs": 1000,
+  "risk": 0.001,
+  "under_risk": 0.001,
+  "over_risk": 0.0,
+  "pf_fail_rate": 0.0,
+  "mean_violation_step_rate": 1.0416666666666666e-05,
+  "mean_loss_mw": 0.060938206520734346,
+  "mean_energy_mwh": 1.4625169564976244,
+  "worst_vmin": 0.9492495277551776,
+  "worst_vmax": 1.040793610755209,
+  "source_jobs_csv": "data/results/locked_controller_evaluation\\uniform1000.csv"
+}

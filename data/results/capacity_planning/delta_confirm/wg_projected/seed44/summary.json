@@ -1,0 +1,19 @@
+{
+  "jobs": 555,
+  "projected": true,
+  "risk": 0.0,
+  "pf_fail_rate": 0.0,
+  "mean_daily_loss_mwh": 1.1854599267388126,
+  "mean_intervention_rate": 7.507507507507507e-05,
+  "projection_failure_steps": 0,
+  "worst_vmin": 0.9505000006324554,
+  "worst_vmax": 1.0366386553989095,
+  "jobs_csv": "data/results/capacity_planning\\delta_confirm\\jobs.csv",
+  "projection_config": {
+    "lower_voltage": 0.9505,
+    "upper_voltage": 1.0495,
+    "finite_difference_step": 0.02,
+    "max_iterations": 3,
+    "optimiser_tolerance": 1e-09
+  }
+}

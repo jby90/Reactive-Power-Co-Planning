@@ -1,15 +1,13 @@
-# Released policies
+# Released policy checkpoints
 
-The three `actor.pth` files are PyTorch state dictionaries used in the paper's matched-controller assessment.
+The release includes three independently trained policies for each family:
 
-| Directory | Observation | Network | Training seed | Frames |
-|---|---|---|---:|---:|
-| `film/` | 103-state vector plus 3 capacity parameters | Two 256-unit hidden layers with feature-wise linear modulation | 42 | 28,800 |
-| `blind/` | 103-state vector | Two 256-unit hidden layers; no capacity input | 42 | 28,800 |
-| `concat/` | 103-state vector concatenated with 3 capacity parameters | Two 256-unit hidden layers | 42 | 28,800 |
+| Family | Capacity input | Training objective | Seeds |
+|---|---|---|---|
+| `wg_cvar` | Concatenated capacity vector | Directional within-group CVaR with worst-group weighting | 42, 43, 44 |
+| `concat` | Concatenated capacity vector | Scalar PPO baseline | 42, 43, 44 |
+| `blind` | None | Scalar PPO conditioning diagnostic | 42, 43, 44 |
 
-All policies output four normalised continuous actions: reactive-power commands for PV inverters at zero-based buses 17, 21, and 24, and for the centralised SVC at zero-based bus 32. The environment maps these values to device-specific reactive-power bounds.
+Every seed directory contains `config.json`, `csv/episodes.csv`, `csv/updates.csv`, and `models/checkpoint.pth`. Concat and Blind directories also retain the actor-only state dictionary produced by their trainer. The evaluator loads the complete checkpoint because it records the architecture and capacity bounds required to reconstruct the actor.
 
-The `training/` subdirectories contain `train.csv`, `traintest.csv`, and `trainloss.csv`. These are trajectories from one principal training run, not independent-seed samples. TensorBoard event files and optimiser checkpoints are intentionally excluded because they are unnecessary for evaluation and add approximately 40 MB.
-
-Only load model files from sources you trust. The release scripts load these state dictionaries into explicitly constructed model classes in `src/`.
+All policies produce four normalised reactive-power commands for three PV inverters and one SVC. Only load PyTorch checkpoints from sources you trust.

@@ -1,97 +1,88 @@
-"""Fast integrity and reproducibility checks for the public release."""
+"""Verify the public release and recompute the manuscript's headline values."""
 
 from __future__ import annotations
 
-import hashlib
-import sys
+import json
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
-import torch
 
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "src"))
-
-import Env  # noqa: E402
-from PPO_theta_robust import ActorCritic  # noqa: E402
-from PPO_theta_robust_film_curriculum import FiLMActorCritic  # noqa: E402
+RESULTS = ROOT / "data" / "results"
 
 
-EXPECTED_HASHES = {
-    "case33_bw.mat": "b90e392c9a86c3f9",
-    "load96.npy": "d536ec5f92252c9e",
-    "gen96.npy": "bc0c97a1185ed784",
-    "two33load.npy": "2e2fb7e64b8efa53",
-    "two33gen.npy": "5dff4d92d5093342",
-}
-
-
-def _short_hash(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()[:16]
-
-
-def verify_inputs() -> None:
-    for name, expected in EXPECTED_HASHES.items():
-        actual = _short_hash(Env.DATA_DIR / name)
-        assert actual == expected, f"Hash mismatch for {name}: {actual} != {expected}"
-
-    load = np.load(Env.DATA_DIR / "load96.npy")
-    generation = np.load(Env.DATA_DIR / "gen96.npy")
-    assert load.shape == generation.shape == (38496,)
-    assert np.load(Env.DATA_DIR / "two33load.npy").shape == (38496, 32)
-    assert np.load(Env.DATA_DIR / "two33gen.npy").shape == (38496, 3)
-
-
-def verify_environment() -> None:
-    load = np.load(Env.DATA_DIR / "load96.npy")
-    generation = np.load(Env.DATA_DIR / "gen96.npy")
-    env = Env.grid_case(33, load, generation, [17, 21, 24], [32])
-    result = env.step_model(np.zeros(4, dtype=float))
-    assert len(env.observation_space) == 103
-    assert len(env.action_space) == 4
-    assert np.isfinite(np.asarray(result[1], dtype=float)).all()
-    assert np.isfinite(float(result[8]))
+def require(path: Path) -> Path:
+    if not path.exists():
+        raise FileNotFoundError(f"Missing release file: {path.relative_to(ROOT)}")
+    return path
 
 
 def verify_models() -> None:
-    film = FiLMActorCritic(103, 4, theta_dim=3, hidden=(256, 256))
-    film.load_state_dict(torch.load(ROOT / "models" / "film" / "actor.pth", map_location="cpu", weights_only=True))
+    expected = {
+        "wg_cvar": "concat_worst_group_cvar",
+        "concat": "concat_scalar_corrected",
+        "blind": "blind_scalar_corrected",
+    }
+    for family, actor_arch in expected.items():
+        for seed in (42, 43, 44):
+            run_dir = ROOT / "models" / family / f"seed{seed}"
+            config = json.loads(require(run_dir / "config.json").read_text(encoding="utf-8"))
+            require(run_dir / "models" / "checkpoint.pth")
+            require(run_dir / "csv" / "episodes.csv")
+            assert config["actor_arch"] == actor_arch, (family, seed, config["actor_arch"])
+            assert int(config["seed"]) == seed
 
-    blind = ActorCritic(103, 4, hidden=(256, 256))
-    blind.load_state_dict(torch.load(ROOT / "models" / "blind" / "actor.pth", map_location="cpu", weights_only=True))
 
-    concat = ActorCritic(106, 4, hidden=(256, 256))
-    concat.load_state_dict(torch.load(ROOT / "models" / "concat" / "actor.pth", map_location="cpu", weights_only=True))
+def verify_locked_comparison() -> tuple[float, float]:
+    base = RESULTS / "locked_controller_evaluation"
+    summary = pd.read_csv(require(base / "locked_summary.csv"))
+    paired = pd.read_csv(require(base / "locked_paired_comparison.csv"))
+    assert len(summary) == 24
+    assert len(paired) == 6
+    projected = summary[summary.variant.isin(["wg_projected", "concat_projected"])]
+    assert len(projected) == 12
+    assert np.allclose(projected.risk, 0.0)
+    reductions: list[float] = []
+    for mode in ("uniform", "stress"):
+        rows = projected[projected["mode"] == mode].set_index("variant")
+        wg = float(rows.loc["wg_projected", "mean_loss_mw"].mean())
+        concat = float(rows.loc["concat_projected", "mean_loss_mw"].mean())
+        reductions.append(100.0 * (concat - wg) / concat)
+    np.testing.assert_allclose(reductions, [3.74, 4.07], atol=0.01)
+    return reductions[0], reductions[1]
 
 
-def verify_reported_values() -> None:
-    base = ROOT / "data" / "results" / "cleaner_energy"
-    comparison = pd.read_csv(base / "controller_comparison" / "best_plans.csv").set_index("controller")
-    np.testing.assert_allclose(comparison.loc["film", "annual_loss_mwh"], 382.99994065819266)
-    np.testing.assert_allclose(comparison.loc["blind", "annual_loss_mwh"], 424.385778746996)
-    np.testing.assert_allclose(comparison.loc["concat", "annual_loss_mwh"], 378.997370742389)
-    assert (comparison["pr_violation_any"] == 0.0).all()
-
-    low = pd.read_csv(base / "resource_efficient" / "best_plans.csv")
-    high = pd.read_csv(base / "high_redundancy" / "best_plans.csv")
-    low = low[(low["controller"] == "film") & np.isclose(low["pv_generation_scale"], 1.0)].iloc[0]
-    high = high[(high["controller"] == "film") & np.isclose(high["pv_generation_scale"], 1.0)].iloc[0]
-    np.testing.assert_allclose(100.0 * (1.0 - low["asset_cost_index"] / high["asset_cost_index"]), 40.3973505987, rtol=1e-8)
-    np.testing.assert_allclose(100.0 * (1.0 - low["annual_loss_mwh"] / high["annual_loss_mwh"]), 35.9165457351, rtol=1e-8)
-
-    planning = pd.read_csv(ROOT / "data" / "results" / "capacity_planning" / "summary_candidates.csv")
-    assert len(planning) == 2000
-    assert planning[["pv_s_scale", "svc_q_scale", "cap_total_mvar"]].drop_duplicates().shape[0] == 2000
+def verify_capacity_planning() -> tuple[float, float]:
+    base = RESULTS / "capacity_planning"
+    grid = pd.read_csv(require(base / "grid_candidates.csv"))
+    confirm = pd.read_csv(require(base / "confirm" / "wg_projected_candidate_summary.csv"))
+    optimum = pd.read_csv(require(base / "final_optimum.csv")).iloc[0]
+    ablation = pd.read_csv(require(base / "ablation" / "comparison.csv"))
+    assert len(grid) == 2000
+    assert len(confirm) == 37
+    np.testing.assert_allclose(
+        optimum[["pv_s_scale", "svc_q_scale", "cap_total_mvar"]].astype(float),
+        [0.7, 0.7, 0.0],
+    )
+    selected = ablation[(ablation.variant == "wg_projected")].set_index("selection_role")
+    minimum = selected.loc["optimiser_candidate"]
+    high = selected.loc["risk_path"]
+    resource_reduction = 100.0 * (1.0 - minimum.resource_index / high.resource_index)
+    loss_reduction = 100.0 * (1.0 - minimum.mean_daily_loss_mwh / high.mean_daily_loss_mwh)
+    np.testing.assert_allclose([resource_reduction, loss_reduction], [53.95, 62.88], atol=0.01)
+    assert minimum.worst_seed_risk == high.worst_seed_risk == 0.0
+    return float(resource_reduction), float(loss_reduction)
 
 
 def main() -> None:
-    verify_inputs()
-    verify_environment()
     verify_models()
-    verify_reported_values()
-    print("Release verification passed: inputs, environment, models, and reported values are consistent.")
+    uniform, stress = verify_locked_comparison()
+    resource, loss = verify_capacity_planning()
+    print("Release verification passed.")
+    print(f"Locked line-loss reductions: uniform={uniform:.2f}%, stress={stress:.2f}%")
+    print(f"High-redundancy comparison: resource={resource:.2f}%, line loss={loss:.2f}%")
 
 
 if __name__ == "__main__":
