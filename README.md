@@ -1,127 +1,95 @@
-# Reactive-Power Co-Planning for Cleaner PV Integration
+# Risk-aware reactive-power co-planning for cleaner PV integration
 
-Research code, processed benchmark data, trained policies, and source results for **"Resource-Efficient Reactive-Power Co-Planning for Cleaner PV Integration in Active Distribution Networks"**.
+This repository contains the public code, trained policies, locked evaluation data, planning outputs, and figure source data for:
 
-The repository implements a bi-level workflow:
+> **Risk-Aware Reactive-Power Co-Planning with Physics-Guided Safety Projection for Resource-Efficient PV Integration**
 
-1. a capacity-conditioned FiLM-PPO controller coordinates three PV smart inverters and one centralised SVC on a modified IEEE 33-bus feeder;
-2. an outer Monte Carlo scan evaluates inverter, SVC, and shunt-capacitor capacities under empirical day-level chance constraints; and
-3. the released result tables support the paper's controller, planning, resource-efficiency, and PV-feasibility analyses.
+The current release implements a deployment-consistent workflow with three linked components:
 
-## Repository contents
+1. capacity-conditioned worst-group CVaR PPO (WG-CVaR-PPO) for Volt-VAR control;
+2. a selectively activated AC power-flow safety projection; and
+3. a three-stage empirical chance-constrained scan of inverter, SVC, and capacitor capacity.
+
+The earlier FiLM-based release is retained only for provenance under [`legacy/film-release-v1/`](legacy/film-release-v1/ARCHIVED.md). It is not the method or evidence base used by the current manuscript.
+
+## Headline released results
+
+- On locked uniform and stress sets, projected WG-CVaR reduced pooled mean line loss by **3.74%** and **4.07%**, respectively, relative to projected Concat PPO.
+- Both projected controllers recorded **0/3,000 seed-job voltage events** on each locked set.
+- The final scan evaluated **2,000** capacity combinations, refined **300**, and confirmed **37** configurations using three independently trained WG-CVaR policies.
+- The confirmed minimum-resource point was `[0.7, 0.7, 0.0]`, where the entries are PV-inverter capacity scale, SVC capacity scale, and capacitor capacity in MVar.
+- Relative to the predefined high-redundancy case `[1.5, 1.5, 1.0]`, this point reduced the normalised resource index by **53.95%** and daily line-loss energy by **62.88%**.
+
+These are simulation results for the released modified IEEE 33-bus study. The resource index is not a monetary cost or life-cycle footprint.
+
+## Repository map
 
 | Path | Contents |
 |---|---|
-| `src/Env.py` | AC power-flow environment and reactive-power device models |
-| `src/PPO_theta_robust_film_curriculum.py` | FiLM-PPO training with curriculum domain randomisation |
-| `src/PPO_theta_robust.py` | Blind and concatenation-conditioned PPO baselines |
-| `src/chance_constraint_capacity_planning_film.py` | Chance-constrained outer capacity scan |
-| `src/cleaner_energy_assessment.py` | Matched-day controller and resource-efficiency assessment |
-| `data/inputs/` | Modified 33-bus case and normalised load/PV time series |
-| `data/results/` | Candidate scans, selected plans, figure source data, and run metadata |
-| `models/` | Released FiLM, Blind, and Concat policy weights plus training logs |
-| `figures/manuscript/` | Figures used in the submitted manuscript |
-| `scripts/` | Evaluation, figure generation, smoke testing, and release verification |
-
-See [`data/README.md`](data/README.md) and [`models/README.md`](models/README.md) before interpreting the files.
+| `src/` | Training, evaluation, safety-projection, planning, and plotting code |
+| `models/` | Three WG-CVaR, Concat, and Blind PPO checkpoints plus training records |
+| `data/inputs/` | Network case and load/PV profiles used by the simulator |
+| `data/results/locked_controller_evaluation/` | Frozen uniform/stress jobs and controller outputs |
+| `data/results/capacity_planning/` | Screening, refinement, confirmation, ablation, and capacity-path outputs |
+| `data/figure_source/` | Source tables for all released manuscript figures |
+| `figures/` | Submission figures in PNG, PDF, and SVG formats |
+| `scripts/` | Lightweight release verification and smoke tests |
+| `legacy/film-release-v1/` | Superseded FiLM-era public release |
 
 ## Installation
 
-Python 3.10 or 3.11 is recommended. The release was verified with Python 3.11, PyTorch 2.9.1, and pandapower 3.1.2.
+Python 3.10 was used for the locked evaluation. From the repository root:
 
 ```bash
 python -m venv .venv
 # Windows: .venv\Scripts\activate
 # Linux/macOS: source .venv/bin/activate
-python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
-## Quick verification
+## Fast verification
 
-Run one IEEE 33-bus power-flow step, load all policy weights, and verify the published key values:
+The verification script checks the released file structure and recomputes the reported percentages from the CSV files without rerunning power flow:
 
 ```bash
 python scripts/verify_release.py
 ```
 
-Regenerate the cleaner-energy evidence figures from the released CSV files:
+An environment and checkpoint smoke test is available with:
 
 ```bash
-python scripts/make_cleaner_energy_paper_figures.py
+python scripts/smoke_test.py
 ```
 
-Generated PNG, PDF, and SVG files are written to `figures/generated/`.
+## Reproduce key analyses
 
-## Reproduce the fixed-hardware comparison
-
-The following command evaluates FiLM-PPO, Blind PPO, and Concat PPO with the same hardware, PV profile, and 30 held-out days. Results are placed in a timestamped directory under `reproduced/controller_comparison/`.
+Regenerate the locked controller comparison from the released checkpoints and frozen 1,000-job tables:
 
 ```bash
-python src/cleaner_energy_assessment.py \
-  --actor_run_dir models/film \
-  --blind_run_dir models/blind \
-  --concat_run_dir models/concat \
-  --pv_generation_levels 1.0 \
-  --pv_s_levels 0.7 \
-  --svc_levels 1.1 \
-  --cap_levels 0.0 \
-  --cap_buses 20,8 \
-  --n_days_coarse 5 \
-  --n_days_final 30 \
-  --refine_topk 1 \
-  --eps_v 0.05 \
-  --eps_pf 0.0 \
-  --cost_pv 50 \
-  --cost_svc 50 \
-  --cost_cap 2 \
-  --seed 20260714 \
-  --out_dir reproduced/controller_comparison
+python src/run_locked_projection_confirmation.py
 ```
 
-The published comparison is in `data/results/cleaner_energy/controller_comparison/best_plans.csv`. Under this configuration, the annualised line-loss estimates are 383.0 MWh for FiLM-PPO, 424.4 MWh for Blind PPO, and 379.0 MWh for Concat PPO; none of the three policies produced a day-level voltage event in the 30 sampled days.
-
-## Reproduce the outer capacity scan
-
-This command evaluates the 20 x 20 x 5 capacity mesh used in the released planning table. It is substantially slower than the quick verification.
+Rerun the complete three-stage capacity-planning protocol:
 
 ```bash
-python src/chance_constraint_capacity_planning_film.py \
-  --actor_run_dir models/film \
-  --env 33 \
-  --seed 42 \
-  --res 20 \
-  --pv_min 0.7 --pv_max 1.5 \
-  --svc_min 0.7 --svc_max 1.5 \
-  --cap_levels 0,0.25,0.5,0.75,1.0 \
-  --cap_buses 20,8 \
-  --n_scenarios_coarse 5 \
-  --n_scenarios 30 \
-  --topk_refine 150 \
-  --stride 2 \
-  --eps_v 0.01 --eps_pf 0.01 \
-  --cost_pv 50 --cost_svc 50 --cost_cap 2 \
-  --out_dir reproduced/capacity_scan
+python src/run_final_capacity_planning.py
 ```
 
-The archived 2,000-candidate output is `data/results/capacity_planning/summary_candidates.csv`.
+This full planning run is computationally intensive. It writes new outputs to `reproduced/` and does not overwrite the released evidence in `data/results/`.
 
-## Interpretation boundaries
+Regenerate the result figures from the frozen outputs:
 
-- The principal controller training comparison uses one training seed (`42`). Rolling bands in the training figures are not confidence intervals across independently trained policies.
-- Empirical risk is the fraction of sampled days containing at least one voltage event or power-flow failure. Thirty zero-event days do not prove zero population risk.
-- The asset-cost index uses benchmark weights (`50`, `50`, and `2`) and is not market CAPEX, currency, lifecycle impact, or an emissions estimate.
-- Most controller comparisons use a simulator-derived line-loss metric. Annualised MWh values multiply the matched-day mean by 365 and are not utility-metered annual losses.
-- The study covers one modified IEEE 33-bus feeder and a bounded family of capacity and PV scenarios. It does not establish universal hosting capacity or deployment performance.
+```bash
+python src/make_final_cleaner_energy_figures.py
+python src/plot_final_training_reward.py
+```
 
-## Citation
+Generated figures are written to `figures/generated/`. Further protocol details are provided in [`docs/REPRODUCIBILITY.md`](docs/REPRODUCIBILITY.md).
 
-If you use this release, please cite the associated article after publication. Citation metadata are also available in [`CITATION.cff`](CITATION.cff).
+## Released action and capacity definitions
 
-## Licence and third-party material
+The shared policy receives the network state and capacity vector `theta = [s_pv, s_svc, q_cap]`. It outputs four normalised continuous actions: reactive-power commands for PV inverters at zero-based buses 17, 21, and 24, and for the centralised SVC at zero-based bus 32. The environment maps these commands to device-specific reactive-power limits before AC power flow.
 
-Original repository code is released under the MIT License; see [`LICENSE`](LICENSE). Benchmark or adapted material remains subject to its original terms. See [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) for the IEEE 33-bus case and the environment attribution. The processed data are supplied for transparent verification; consult [`data/README.md`](data/README.md) before redistribution.
+## Licence and citation
 
-## Contact
-
-Questions about the release can be directed to the corresponding author, Boyin Jin (`boyin_jin@just.edu.cn`).
+Code is released under the repository licence. Third-party notices remain in [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md). If you use this release, please cite the manuscript using [`CITATION.cff`](CITATION.cff); update the citation with the journal DOI once available.

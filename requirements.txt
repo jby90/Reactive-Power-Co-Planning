@@ -7,3 +7,4 @@ pandapower>=3.1,<4.0
 torch>=2.0
 tensorboard>=2.12
 numba>=0.57
+joblib>=1.2

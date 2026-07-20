@@ -1,52 +1,27 @@
-# Data documentation
+# Data dictionary
 
-## Input files
+## Inputs
 
-| File | Shape | Meaning |
-|---|---:|---|
-| `inputs/case33_bw.mat` | MATPOWER case | Modified IEEE 33-bus radial distribution feeder |
-| `inputs/load96.npy` | `(38496,)` | Normalised scalar load profile at 15-minute resolution |
-| `inputs/gen96.npy` | `(38496,)` | Normalised scalar PV profile at 15-minute resolution |
-| `inputs/two33load.npy` | `(38496, 32)` | Per-load multipliers used by the simulator |
-| `inputs/two33gen.npy` | `(38496, 3)` | Per-inverter PV multipliers used by the simulator |
+`inputs/` contains the modified IEEE 33-bus Matpower case and the load/PV arrays required by the environment. The network case follows the Baran--Wu benchmark. The load and PV arrays are synthetic simulation inputs, not field measurements: they inherit a normalised 96-point daily fluctuation template from the Volt--VAR environment lineage documented in `THIRD_PARTY_NOTICES.md`, and the bus/device-level arrays contain 370 fixed-seed realisations generated with independent multiplicative factors sampled from `U(0.8, 1.2)`. Repeated base-template blocks retained for environment compatibility are removed by exact joint load/PV hashing when constructing the 200-profile confirmation set. The release contains no personal or human-participant data.
 
-The arrays contain 401 days of 96 quarter-hour samples. `two33load.npy` and `two33gen.npy` are deterministic processed arrays. They are reproduced by broadcasting `load96.npy` and `gen96.npy` to the 32 loads and three PV inverters, then applying NumPy `default_rng(0)` uniform multipliers in `[0.8, 1.2]` to the first 370 days. The implementation is retained in `src/Env.py`.
+## Locked controller evaluation
 
-The current project archive does not retain a separate upstream provenance record for the one-dimensional normalised profiles. They are therefore released as the exact research inputs used in the reported simulations, not represented as raw measurements from a named utility or location.
+`results/locked_controller_evaluation/` contains the immutable `uniform1000.csv` and `stress1000.csv` job tables. Subdirectories store episode-level results for WG-CVaR and Concat, before and after AC safety projection, for seeds 42, 43, and 44. `locked_summary.csv` and `locked_paired_comparison.csv` are the manuscript-level summaries.
 
-## Result files
+## Capacity planning
 
-`results/capacity_planning/summary_candidates.csv` contains all 2,000 combinations in the 20 x 20 x 5 planning mesh. The principal fields are:
+`results/capacity_planning/` contains:
 
-| Field | Definition |
-|---|---|
-| `pv_s_scale` | PV inverter apparent-power capacity multiplier |
-| `svc_q_scale` | Centralised SVC reactive-power capacity multiplier |
-| `cap_total_mvar` | Total shunt-capacitor capacity allocated to the candidate buses |
-| `pr_violation_any` | Fraction of sampled days with at least one voltage-band violation |
-| `pr_pf_fail_any` | Fraction of sampled days with at least one power-flow failure |
-| `loss_mean_pos` | Mean positive simulator line-loss proxy over the evaluated samples |
-| `capex` | Normalised asset-cost index, not currency or market CAPEX |
-| `pass` | Coarse or refined Monte Carlo evaluation stage |
-| `feasible` | Indicator under the specified empirical chance limits |
+- `grid_candidates.csv`: the full 20 x 20 x 5 capacity grid;
+- `screen/`, `refine/`, and `confirm/`: stage-level candidate and seed summaries;
+- `final_optimum.csv`: the confirmed minimum-resource configuration;
+- `ablation/`: raw/projected WG-CVaR and Concat results at selected configurations;
+- `risk_path_raw/`: raw-policy risk along the predefined capacity path;
+- `locked_days/`: shared day indices used for screen, refine, and profile-unique confirmation;
+- `delta_*`: additional evaluations used to repair duplicated confirmation profiles without rerunning valid earlier stages.
 
-`results/cleaner_energy/` contains the matched-day assessments used in the paper:
+## Figure source data
 
-- `resource_efficient/`: selected low-redundancy configuration;
-- `high_redundancy/`: deliberately high-capacity comparison;
-- `pv_envelope/`: evaluated PV-generation boundary;
-- `controller_comparison/`: FiLM, Blind, and Concat PPO at fixed hardware.
+`figure_source/` contains one CSV table per released manuscript figure. These tables are derived from the episode-level files and are provided to make plotting claims directly auditable.
 
-Each directory includes `candidate_results.csv`, `best_plans.csv`, and `metadata.json`. The metadata records the random seed, sampled day indices, candidate grid, risk definition, cost weights, and annualisation convention.
-
-## Checks and limitations
-
-- All values are simulation outputs; there are no human participants or personal data.
-- Day indices are sampled without replacement using seed `20260714`.
-- `annual_loss_mwh = daily_loss_mwh x 365`; this annualisation does not model seasonal reweighting beyond the sampled-day average.
-- `daily_pv_energy_mwh` is accepted simulated PV injection. The environment has no active-power curtailment action.
-- The data do not quantify embodied carbon, lifecycle footprints, market prices, equipment ageing, communication delay, switching cost, or protection constraints.
-
-## Reuse
-
-These processed files are provided with the repository for verification of the associated study. `case33_bw.mat` is based on the standard Baran-Wu/MATPOWER test case and remains subject to applicable upstream terms. The repository's MIT licence applies to original code, not automatically to third-party benchmark material.
+Some raw result tables retain simulator-oriented column names. Paths recorded by the original orchestration have been normalised to repository-relative paths for public release.

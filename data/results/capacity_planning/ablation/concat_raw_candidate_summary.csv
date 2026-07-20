@@ -1,0 +1,3 @@
+candidate_id,worst_seed_risk,mean_seed_risk,worst_seed_pf_fail_rate,mean_daily_loss_mwh,maximum_seed_loss_mwh,mean_intervention_rate,projection_failure_steps,worst_vmin,worst_vmax,raw_worst_vmin,raw_worst_vmax,pv_s_scale,svc_q_scale,cap_total_mvar,selection_role,resource_index,path_fraction,robust_feasible
+0,0.12,0.09666666666666666,0.0,0.9167381108896134,0.9628954358132192,0.0,0,0.9453898845843106,1.0437907401800162,0.9453898845843106,1.0437907401800162,0.7,0.7,0.0,optimiser_candidate,70.0,,0
+2016,0.0,0.0,0.0,2.5255640509783577,2.782181704803457,0.0,0,0.9657339399094452,1.0406337529468406,0.9657339399094452,1.0406337529468406,1.5,1.5,1.0,risk_path,152.0,1.0,1

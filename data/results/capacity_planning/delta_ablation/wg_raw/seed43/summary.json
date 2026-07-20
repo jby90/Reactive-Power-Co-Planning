@@ -1,0 +1,13 @@
+{
+  "jobs": 30,
+  "projected": false,
+  "risk": 0.0,
+  "pf_fail_rate": 0.0,
+  "mean_daily_loss_mwh": 1.6639760746248566,
+  "mean_intervention_rate": 0.0,
+  "projection_failure_steps": 0,
+  "worst_vmin": 0.9518839384857545,
+  "worst_vmax": 1.0420117085642095,
+  "jobs_csv": "data/results/capacity_planning\\delta_ablation\\jobs.csv",
+  "projection_config": null
+}

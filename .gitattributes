@@ -4,3 +4,4 @@
 *.pth binary
 *.png binary
 *.pdf binary
+*.svg binary
