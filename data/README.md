@@ -2,7 +2,7 @@
 
 ## Inputs
 
-`inputs/` contains the modified IEEE 33-bus Matpower case and the load/PV arrays required by the environment. Values are simulation inputs; the release contains no personal or human-participant data.
+`inputs/` contains the modified IEEE 33-bus Matpower case and the load/PV arrays required by the environment. The network case follows the Baran--Wu benchmark. The load and PV arrays are synthetic simulation inputs, not field measurements: they inherit a normalised 96-point daily fluctuation template from the Volt--VAR environment lineage documented in `THIRD_PARTY_NOTICES.md`, and the bus/device-level arrays contain 370 fixed-seed realisations generated with independent multiplicative factors sampled from `U(0.8, 1.2)`. Repeated base-template blocks retained for environment compatibility are removed by exact joint load/PV hashing when constructing the 200-profile confirmation set. The release contains no personal or human-participant data.
 
 ## Locked controller evaluation
 
