@@ -7,7 +7,7 @@ __pycache__/
 Thumbs.db
 runs/
 reproduced/
-figures/generated/
+figures/
 *.log
 *.tmp
 *.zip

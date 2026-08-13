@@ -1,3 +1,0 @@
-controller,pv_generation_scale,pv_s_scale,svc_q_scale,cap_total_mvar,asset_cost_index,stage,pr_violation_any,pr_pf_fail_any,daily_loss_mwh,daily_pv_energy_mwh,feasible,annual_loss_mwh,annual_pv_energy_mwh
-film,1.0,1.5,1.5,0.5,151.0,refined,0.0,0.0,1.637419389997031,31.802922648746073,1,597.6580773489163,11608.066766792317
-droop,1.0,,,,,,,,,,0,,

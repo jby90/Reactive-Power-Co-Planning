@@ -2,13 +2,13 @@
 
 ## Evaluation hierarchy
 
-The release preserves three distinct evidence levels.
+The repository preserves three distinct evaluation levels.
 
 1. **Locked controller evaluation:** 1,000 shared jobs for each of the uniform and stress sets, evaluated by policy seeds 42, 43, and 44. Raw and AC-projected WG-CVaR and Concat outputs are retained.
 2. **Three-stage capacity planning:** 2,000 candidates are screened, 300 are refined, and 37 are confirmed. A candidate is feasible only when every WG-CVaR seed satisfies the empirical event-day threshold.
 3. **Profile-unique confirmation:** each confirmed configuration is evaluated on the same 200 distinct held-out daily profiles for every policy seed.
 
-The released controller comparison and capacity-boundary result answer different questions. The former compares operating loss under matched projected safety. The latter uses WG-CVaR's own worst-seed feasibility rule and does not depend on WG-CVaR outperforming Concat for every training seed.
+The controller comparison and capacity-boundary result answer different questions. The former compares operating loss under matched projected safety. The latter uses WG-CVaR's own worst-seed feasibility rule and does not depend on WG-CVaR outperforming Concat for every training seed.
 
 ## Risk and energy conventions
 
@@ -21,7 +21,7 @@ The released controller comparison and capacity-boundary result answer different
 
 ## Checkpoints
 
-Each `models/<family>/seed<seed>/` directory contains the exact configuration, training CSV files, and checkpoint used in the released evaluation. PyTorch checkpoint files should only be loaded from trusted sources.
+Each `models/<family>/seed<seed>/` directory contains the exact configuration, training CSV files, and checkpoint used in the frozen evaluation. PyTorch checkpoint files should only be loaded from trusted sources.
 
 ## Expected compute
 
@@ -29,4 +29,4 @@ Each `models/<family>/seed<seed>/` directory contains the exact configuration, t
 
 ## Output isolation
 
-Reproduction commands write to `reproduced/` or `figures/generated/`. The frozen released data under `data/results/` are never overwritten by default.
+Reproduction commands write to `reproduced/`. The frozen data under `data/results/` are never overwritten by default.

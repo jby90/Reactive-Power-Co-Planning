@@ -1,4 +1,4 @@
-"""Verify the public release and recompute the manuscript's headline values."""
+"""Verify repository integrity and recompute principal aggregate metrics."""
 
 from __future__ import annotations
 
@@ -80,7 +80,7 @@ def main() -> None:
     verify_models()
     uniform, stress = verify_locked_comparison()
     resource, loss = verify_capacity_planning()
-    print("Release verification passed.")
+    print("Repository verification passed.")
     print(f"Locked line-loss reductions: uniform={uniform:.2f}%, stress={stress:.2f}%")
     print(f"High-redundancy comparison: resource={resource:.2f}%, line loss={loss:.2f}%")
 

@@ -1,6 +1,6 @@
-# Released policy checkpoints
+# Policy checkpoints
 
-The release includes three independently trained policies for each family:
+The repository includes three independently trained policies for each family:
 
 | Family | Capacity input | Training objective | Seeds |
 |---|---|---|---|

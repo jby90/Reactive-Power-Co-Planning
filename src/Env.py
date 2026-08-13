@@ -1,14 +1,8 @@
 '''
 @Author: Qiong Liu, Ye Guo, Lirong Deng, Haotian Liu, Dongyu Li, Hongbin Sun, and Wenqi Huang
 @Email: liuqiong_yl@outlook.com
-@Description:
-# code for paper
-# @article{liu2022reducing,
-#   title={Reducing Learning Difficulties: One-Step Two-Critic Deep Reinforcement Learning for Inverter-based Volt-Var Control},
-#   author={Liu, Qiong and Guo, Ye and Deng, Lirong and Liu, Haotian and Li, Dongyu and Sun, Hongbin and Huang, Wenqi},
-#   journal={arXiv preprint arXiv:2203.16289},
-#   year={2022}
-# }
+@Description: Volt-VAR simulation environment. See THIRD_PARTY_NOTICES.md for
+upstream attribution and a summary of repository-specific modifications.
 '''
 
 import copy
