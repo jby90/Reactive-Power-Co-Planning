@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from time import perf_counter
 
 import numpy as np
 import pandapower as pp
@@ -23,6 +24,9 @@ class ProjectionResult:
     projected_vmin: float
     projected_vmax: float
     correction_norm: float
+    preview_seconds: float
+    optimiser_seconds: float
+    total_seconds: float
 
 
 class ACPowerFlowSafetyProjector:
@@ -65,9 +69,10 @@ class ACPowerFlowSafetyProjector:
 
     def _jacobian(
         self, env: Env.grid_case, action: np.ndarray, base_voltage: np.ndarray
-    ) -> tuple[np.ndarray, int]:
+    ) -> tuple[np.ndarray, int, float]:
         jacobian = np.zeros((base_voltage.size, action.size), dtype=np.float64)
         calls = 0
+        preview_seconds = 0.0
         for index in range(action.size):
             direction = 1.0 if action[index] <= 1.0 - self.finite_difference_step else -1.0
             perturbed = action.copy()
@@ -77,15 +82,21 @@ class ACPowerFlowSafetyProjector:
             displacement = perturbed[index] - action[index]
             if abs(displacement) < 1e-12:
                 continue
+            preview_start = perf_counter()
             voltage = self._preview(env, perturbed)
+            preview_seconds += perf_counter() - preview_start
             calls += 1
             jacobian[:, index] = (voltage - base_voltage) / displacement
-        return jacobian, calls
+        return jacobian, calls, preview_seconds
 
     def project(self, env: Env.grid_case, policy_action: np.ndarray) -> ProjectionResult:
+        total_start = perf_counter()
         raw_action = np.clip(np.asarray(policy_action, dtype=np.float64), -1.0, 1.0)
         current_action = raw_action.copy()
+        preview_start = perf_counter()
         current_voltage = self._preview(env, current_action)
+        preview_seconds = perf_counter() - preview_start
+        optimiser_seconds = 0.0
         calls = 1
         raw_vmin = float(np.min(current_voltage))
         raw_vmax = float(np.max(current_voltage))
@@ -101,6 +112,9 @@ class ACPowerFlowSafetyProjector:
                 projected_vmin=raw_vmin,
                 projected_vmax=raw_vmax,
                 correction_norm=0.0,
+                preview_seconds=preview_seconds,
+                optimiser_seconds=optimiser_seconds,
+                total_seconds=perf_counter() - total_start,
             )
 
         best_action = current_action.copy()
@@ -110,13 +124,17 @@ class ACPowerFlowSafetyProjector:
 
         for iteration in range(1, self.max_iterations + 1):
             completed_iterations = iteration
-            jacobian, jacobian_calls = self._jacobian(env, current_action, current_voltage)
+            jacobian, jacobian_calls, jacobian_seconds = self._jacobian(
+                env, current_action, current_voltage
+            )
+            preview_seconds += jacobian_seconds
             calls += jacobian_calls
             offset = jacobian @ current_action
             lower = self.lower_voltage - current_voltage + offset
             upper = self.upper_voltage - current_voltage + offset
             constraint = LinearConstraint(jacobian, lower, upper)
 
+            optimiser_start = perf_counter()
             result = minimize(
                 lambda candidate: 0.5 * float(np.square(candidate - raw_action).sum()),
                 current_action,
@@ -126,10 +144,13 @@ class ACPowerFlowSafetyProjector:
                 constraints=[constraint],
                 options={"ftol": self.optimiser_tolerance, "maxiter": 100, "disp": False},
             )
+            optimiser_seconds += perf_counter() - optimiser_start
             if not result.success or not np.all(np.isfinite(result.x)):
                 break
             candidate = np.clip(np.asarray(result.x, dtype=np.float64), -1.0, 1.0)
+            preview_start = perf_counter()
             voltage = self._preview(env, candidate)
+            preview_seconds += perf_counter() - preview_start
             calls += 1
             violation = self._violation(voltage)
             if violation < best_violation:
@@ -151,4 +172,7 @@ class ACPowerFlowSafetyProjector:
             projected_vmin=float(np.min(best_voltage)),
             projected_vmax=float(np.max(best_voltage)),
             correction_norm=float(np.linalg.norm(best_action - raw_action)),
+            preview_seconds=preview_seconds,
+            optimiser_seconds=optimiser_seconds,
+            total_seconds=perf_counter() - total_start,
         )

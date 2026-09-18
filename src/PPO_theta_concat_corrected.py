@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import json
 import time
 from dataclasses import asdict, dataclass
@@ -16,9 +17,15 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 
-import Env
-from PPO_theta_crdc import CRDCThetaEnvManager, compute_gae, normalise_theta, set_seed, standardise
-from PPO_theta_robust_film_curriculum import PPOConfig
+from PPO_theta_crdc import (
+    CRDCThetaEnvManager,
+    compute_gae,
+    load_policy_initialisation,
+    normalise_theta,
+    set_seed,
+    standardise,
+)
+from training_common import PPOConfig
 
 try:
     from torch.utils.tensorboard import SummaryWriter
@@ -130,6 +137,10 @@ class CorrectedConcatConfig(PPOConfig):
     cap_total_max: float = 1.0
     log_std_init: float = -2.0
     log_std_final: float = -3.0
+    policy_init_path: str = ""
+    policy_anchor_coef: float = 0.0
+    sampling_pv_s_scale_min: float = -1.0
+    sampling_svc_q_scale_min: float = -1.0
     reward_v_weight: float = 200.0
     blind_theta: bool = False
 
@@ -138,8 +149,8 @@ class CorrectedConcatTrainer:
     def __init__(self, cfg: CorrectedConcatConfig):
         self.cfg = cfg
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        load_pu = np.load(Env.DATA_DIR / "load96.npy")
-        gene_pu = np.load(Env.DATA_DIR / "gen96.npy")
+        load_pu = np.load(cfg.load_profile_path)
+        gene_pu = np.load(cfg.generation_profile_path)
         if cfg.env == 33:
             id_iber, id_svc = [17, 21, 24], [32]
         elif cfg.env == 69:
@@ -156,6 +167,14 @@ class CorrectedConcatTrainer:
             [cfg.pv_s_scale_max, cfg.svc_q_scale_max, cfg.cap_total_max],
             log_std_init=cfg.log_std_init,
         ).to(self.device)
+        load_policy_initialisation(self.ac, cfg.policy_init_path)
+        self.policy_anchor = None
+        if cfg.policy_anchor_coef > 0.0:
+            if not cfg.policy_init_path:
+                raise ValueError("policy_anchor_coef requires policy_init_path")
+            self.policy_anchor = copy.deepcopy(self.ac).eval()
+            for parameter in self.policy_anchor.parameters():
+                parameter.requires_grad_(False)
         self.pi_opt = optim.Adam(self.ac.policy_parameters(), lr=cfg.pi_lr)
         self.vf_opt = optim.Adam(self.ac.value_parameters(), lr=cfg.vf_lr)
         run_name = cfg.run_name or time.strftime("%Y%m%d-%H%M%S")
@@ -172,9 +191,19 @@ class CorrectedConcatTrainer:
         self.update_rows: list[dict] = []
 
     def _group_id(self, theta: np.ndarray) -> int:
+        pv_lower = (
+            self.cfg.sampling_pv_s_scale_min
+            if self.cfg.sampling_pv_s_scale_min >= 0.0
+            else self.cfg.pv_s_scale_min
+        )
+        svc_lower = (
+            self.cfg.sampling_svc_q_scale_min
+            if self.cfg.sampling_svc_q_scale_min >= 0.0
+            else self.cfg.svc_q_scale_min
+        )
         midpoint = np.asarray([
-            (self.cfg.pv_s_scale_min + self.cfg.pv_s_scale_max) / 2,
-            (self.cfg.svc_q_scale_min + self.cfg.svc_q_scale_max) / 2,
+            (pv_lower + self.cfg.pv_s_scale_max) / 2,
+            (svc_lower + self.cfg.svc_q_scale_max) / 2,
             (self.cfg.cap_total_min + self.cfg.cap_total_max) / 2,
         ])
         bits = np.asarray(theta) >= midpoint
@@ -187,6 +216,9 @@ class CorrectedConcatTrainer:
             self.ac.pi_log_std.fill_(float(value))
 
     def _save(self):
+        elapsed = max(
+            time.time() - getattr(self, "training_start_time", time.time()), 0.0
+        )
         payload = {
             "algorithm": (
                 "Blind-Scalar-PPO-Corrected"
@@ -197,6 +229,10 @@ class CorrectedConcatTrainer:
             "ac": self.ac.state_dict(),
             "total_step": self.total_step,
             "update_index": self.update_index,
+            "training_elapsed_seconds": elapsed,
+            "training_transitions_per_second": (
+                self.total_step / elapsed if elapsed > 0.0 else 0.0
+            ),
         }
         torch.save(payload, self.model_dir / "checkpoint.pth")
         torch.save(self.ac.state_dict(), self.model_dir / "actor.pth")
@@ -210,6 +246,7 @@ class CorrectedConcatTrainer:
         episode_pf_fail = 0
         episode_theta = np.asarray(self.mgr.theta).copy()
         start_time = time.time()
+        self.training_start_time = start_time
         while self.total_step < cfg.num_frames:
             self._anneal_log_std()
             buffers = {key: [] for key in ("obs", "theta", "group", "act", "logp", "value", "reward", "done")}
@@ -239,6 +276,7 @@ class CorrectedConcatTrainer:
                         "group_id": self._group_id(episode_theta),
                         "theta_pv": float(episode_theta[0]), "theta_svc": float(episode_theta[1]),
                         "theta_cap": float(episode_theta[2]), "line_loss_mwh": -0.25 * episode_loss_reward,
+                        "training_day_index": int(info.get("training_day_index", 0)),
                         "violation_steps": episode_violation_steps,
                         "event_day": int(bool(episode_violation_steps or episode_pf_fail)),
                         "pf_fail_steps": episode_pf_fail,
@@ -262,7 +300,7 @@ class CorrectedConcatTrainer:
                 advantage = standardise(advantage)
 
             indices = np.arange(len(rewards))
-            policy_losses, value_losses, entropies = [], [], []
+            policy_losses, anchor_losses, value_losses, entropies = [], [], [], []
             last_kl = 0.0
             for _iteration in range(cfg.train_iters):
                 np.random.shuffle(indices)
@@ -275,6 +313,13 @@ class CorrectedConcatTrainer:
                     mb_groups = groups[mb]
                     group_terms = [surrogate[mb_groups == group].mean() for group in range(8) if torch.any(mb_groups == group)]
                     policy_loss = -torch.stack(group_terms).mean()
+                    anchor_loss = torch.zeros((), device=self.device)
+                    if self.policy_anchor is not None:
+                        current_mu, _ = self.ac._pi(obs[mb], theta[mb])
+                        with torch.no_grad():
+                            anchor_mu, _ = self.policy_anchor._pi(obs[mb], theta[mb])
+                        anchor_loss = F.mse_loss(current_mu, anchor_mu)
+                        policy_loss = policy_loss + cfg.policy_anchor_coef * anchor_loss
                     if cfg.entropy_coef:
                         policy_loss -= cfg.entropy_coef * entropy.mean()
                     self.pi_opt.zero_grad()
@@ -288,6 +333,7 @@ class CorrectedConcatTrainer:
                     self.vf_opt.step()
                     last_kl = float((old_logp[mb] - logp).mean().detach().cpu())
                     policy_losses.append(float(policy_loss.detach().cpu()))
+                    anchor_losses.append(float(anchor_loss.detach().cpu()))
                     value_losses.append(float(value_loss.detach().cpu()))
                     entropies.append(float(entropy.mean().detach().cpu()))
                 if last_kl > cfg.target_kl:
@@ -295,8 +341,13 @@ class CorrectedConcatTrainer:
             self.update_index += 1
             row = {
                 "update": self.update_index, "total_step": self.total_step,
-                "policy_loss": float(np.mean(policy_losses)), "value_loss": float(np.mean(value_losses)),
+                "policy_loss": float(np.mean(policy_losses)),
+                "policy_anchor_loss": float(np.mean(anchor_losses)),
+                "value_loss": float(np.mean(value_losses)),
                 "entropy": float(np.mean(entropies)), "approx_kl": last_kl,
+                "training_elapsed_seconds": time.time() - start_time,
+                "training_transitions_per_second": self.total_step
+                / max(time.time() - start_time, 1e-9),
             }
             self.update_rows.append(row)
             self._save()
@@ -339,10 +390,24 @@ def build_parser():
     parser.add_argument("--pv_s_scale_max", type=float, default=1.5)
     parser.add_argument("--svc_q_scale_min", type=float, default=0.7)
     parser.add_argument("--svc_q_scale_max", type=float, default=1.5)
+    parser.add_argument("--svc_absorption_ratio", type=float, default=0.0)
     parser.add_argument("--cap_total_min", type=float, default=0.0)
     parser.add_argument("--cap_total_max", type=float, default=1.0)
     parser.add_argument("--cap_buses", default="20,8")
     parser.add_argument("--episode_len", type=int, default=96)
+    parser.add_argument("--training_days_csv", default="")
+    parser.add_argument("--training_day_seed", type=int, default=0)
+    parser.add_argument(
+        "--action_parameterization",
+        choices=["relative", "reference_mvar"],
+        default="relative",
+    )
+    parser.add_argument("--load_profile_path", default="load96.npy")
+    parser.add_argument("--generation_profile_path", default="gen96.npy")
+    parser.add_argument("--policy_init_path", default="")
+    parser.add_argument("--policy_anchor_coef", type=float, default=0.0)
+    parser.add_argument("--sampling_pv_s_scale_min", type=float, default=-1.0)
+    parser.add_argument("--sampling_svc_q_scale_min", type=float, default=-1.0)
     parser.add_argument("--enable_pq_curve", action="store_true")
     parser.add_argument("--blind_theta", action="store_true")
     return parser
@@ -359,9 +424,19 @@ def main():
         log_std_init=args.log_std_init, log_std_final=args.log_std_final,
         pv_s_scale_min=args.pv_s_scale_min, pv_s_scale_max=args.pv_s_scale_max,
         svc_q_scale_min=args.svc_q_scale_min, svc_q_scale_max=args.svc_q_scale_max,
+        svc_absorption_ratio=args.svc_absorption_ratio,
         cap_total_min=args.cap_total_min, cap_total_max=args.cap_total_max,
         cap_buses=[int(value) for value in args.cap_buses.split(",") if value.strip()],
         episode_len=args.episode_len, enable_pq_curve=bool(args.enable_pq_curve),
+        training_days_csv=args.training_days_csv,
+        training_day_seed=args.training_day_seed,
+        action_parameterization=args.action_parameterization,
+        load_profile_path=args.load_profile_path,
+        generation_profile_path=args.generation_profile_path,
+        policy_init_path=args.policy_init_path,
+        policy_anchor_coef=args.policy_anchor_coef,
+        sampling_pv_s_scale_min=args.sampling_pv_s_scale_min,
+        sampling_svc_q_scale_min=args.sampling_svc_q_scale_min,
         blind_theta=bool(args.blind_theta),
         actor_arch=("blind_scalar_corrected" if args.blind_theta else "concat_scalar_corrected"),
     )

@@ -24,7 +24,7 @@ import torch.nn.functional as F
 import torch.optim as optim
 
 import Env
-from PPO_theta_robust_film_curriculum import PPOConfig, ThetaEnvManager
+from training_common import PPOConfig, ThetaEnvManager
 
 try:
     from torch.utils.tensorboard import SummaryWriter
@@ -92,8 +92,15 @@ class StratifiedCapacitySampler:
     """Uniformly sample within all eight capacity half-boxes in shuffled cycles."""
 
     def __init__(self, cfg: PPOConfig, seed: int):
+        pv_lower = float(getattr(cfg, "sampling_pv_s_scale_min", -1.0))
+        svc_lower = float(getattr(cfg, "sampling_svc_q_scale_min", -1.0))
         self.lower = np.asarray(
-            [cfg.pv_s_scale_min, cfg.svc_q_scale_min, cfg.cap_total_min], dtype=np.float64
+            [
+                pv_lower if pv_lower >= 0.0 else cfg.pv_s_scale_min,
+                svc_lower if svc_lower >= 0.0 else cfg.svc_q_scale_min,
+                cfg.cap_total_min,
+            ],
+            dtype=np.float64,
         )
         self.upper = np.asarray(
             [cfg.pv_s_scale_max, cfg.svc_q_scale_max, cfg.cap_total_max], dtype=np.float64
@@ -127,6 +134,39 @@ class StratifiedCapacitySampler:
         return theta
 
 
+class TrainingDaySampler:
+    """Cycle through shuffled, pre-specified training days without test leakage."""
+
+    def __init__(self, csv_path: str, seed: int, episode_len: int, data_length: int):
+        if csv_path:
+            frame = pd.read_csv(csv_path)
+            if "day_index" in frame:
+                days = frame["day_index"].to_numpy(dtype=int)
+            elif "t0" in frame:
+                days = (frame["t0"].to_numpy(dtype=int) // int(episode_len)).astype(int)
+            else:
+                raise ValueError("training-days CSV must contain day_index or t0")
+        else:
+            days = np.asarray([0], dtype=int)
+        days = np.unique(days)
+        if days.size == 0 or np.any(days < 0):
+            raise ValueError("training-day indices must be non-negative and non-empty")
+        if np.any(days * int(episode_len) + int(episode_len) > int(data_length)):
+            raise ValueError("a training day extends beyond the available time series")
+        self.days = days
+        self.rng = np.random.default_rng(int(seed) + 27183)
+        self._cycle = -1
+        self._order = days.copy()
+
+    def sample(self, episode_idx: int) -> int:
+        cycle = int(episode_idx) // len(self.days)
+        position = int(episode_idx) % len(self.days)
+        if cycle != self._cycle:
+            self._order = self.rng.permutation(self.days)
+            self._cycle = cycle
+        return int(self._order[position])
+
+
 class CRDCThetaEnvManager(ThetaEnvManager):
     """Use the existing physical environment with a balanced capacity sampler."""
 
@@ -151,7 +191,34 @@ class CRDCThetaEnvManager(ThetaEnvManager):
         self.episode_step = 0
         self.episode_idx = 0
         self.sampler = StratifiedCapacitySampler(cfg, cfg.seed)
+        self.training_day_sampler = TrainingDaySampler(
+            str(getattr(cfg, "training_days_csv", "")),
+            int(getattr(cfg, "training_day_seed", cfg.seed)),
+            int(cfg.episode_len),
+            min(len(load_pu), len(gene_pu)),
+        )
+        self.training_day_index = 0
         self.resample_and_reset()
+
+    def resample_and_reset(self) -> None:
+        self.theta = self.sampler.sample(self.episode_idx)
+        self.sample_kind = self.sampler.last_sample_kind
+        self.is_corner_sample = False
+        self.training_day_index = self.training_day_sampler.sample(self.episode_idx)
+        self.env = self._build_env(self.theta)
+        self.env_det = self._build_env(self.theta)
+        start = self.training_day_index * int(self.cfg.episode_len)
+        self.state = self.env.reset_at_step(start)
+        self.state_det = self.env_det.reset_at_step(start)
+        self.episode_step = 0
+
+    def step(
+        self, action: np.ndarray, action_mean: np.ndarray
+    ) -> tuple[np.ndarray, np.ndarray, np.ndarray, bool, dict]:
+        training_day_index = self.training_day_index
+        next_state, reward_vec, reward_vec_d, done, info = super().step(action, action_mean)
+        info["training_day_index"] = float(training_day_index)
+        return next_state, reward_vec, reward_vec_d, done, info
 
 
 class ConcatDirectionalActorCritic(nn.Module):
@@ -321,6 +388,10 @@ class CRDCConfig(PPOConfig):
     cap_total_max: float = 1.0
     log_std_init: float = -2.0
     log_std_final: float = -3.0
+    policy_init_path: str = ""
+    policy_anchor_coef: float = 0.0
+    sampling_pv_s_scale_min: float = -1.0
+    sampling_svc_q_scale_min: float = -1.0
 
     safety_event_target: float = 0.05
     safety_severity_scale: float = 1000.0
@@ -356,12 +427,34 @@ def standardise(value: torch.Tensor) -> torch.Tensor:
     return (value - value.mean()) / (value.std(unbiased=False) + 1e-8)
 
 
+def load_policy_initialisation(model: nn.Module, checkpoint_path: str) -> None:
+    """Load only matched policy parameters from an OPF-imitation checkpoint."""
+    if not checkpoint_path:
+        return
+    payload = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
+    source = payload.get("policy_state_dict", payload)
+    policy_prefixes = ("pi_fc1.", "pi_fc2.", "pi_mu.", "pi_log_std")
+    selected = {
+        key: value for key, value in source.items() if key.startswith(policy_prefixes)
+    }
+    expected = {
+        key for key in model.state_dict() if key.startswith(policy_prefixes)
+    }
+    if set(selected) != expected:
+        missing = sorted(expected - set(selected))
+        extra = sorted(set(selected) - expected)
+        raise ValueError(
+            f"Policy initialisation mismatch; missing={missing}, extra={extra}"
+        )
+    model.load_state_dict(selected, strict=False)
+
+
 class CRDCPPOTrainer:
     def __init__(self, cfg: CRDCConfig):
         self.cfg = cfg
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        load_pu = np.load(Env.DATA_DIR / "load96.npy")
-        gene_pu = np.load(Env.DATA_DIR / "gen96.npy")
+        load_pu = np.load(cfg.load_profile_path)
+        gene_pu = np.load(cfg.generation_profile_path)
         if cfg.env == 33:
             self.id_iber, self.id_svc = [17, 21, 24], [32]
         elif cfg.env == 69:
@@ -383,6 +476,7 @@ class CRDCPPOTrainer:
             theta_max,
             log_std_init=cfg.log_std_init,
         ).to(self.device)
+        load_policy_initialisation(self.ac, cfg.policy_init_path)
         self.pi_opt = optim.Adam(self.ac.policy_parameters(), lr=cfg.pi_lr)
         self.vf_opt = optim.Adam(self.ac.value_parameters(), lr=cfg.vf_lr)
         self.pid = GroupPIDLagrange(
@@ -527,6 +621,7 @@ class CRDCPPOTrainer:
                             "theta_pv": float(episode_theta[0]),
                             "theta_svc": float(episode_theta[1]),
                             "theta_cap": float(episode_theta[2]),
+                            "training_day_index": int(info.get("training_day_index", 0)),
                             "line_loss_mwh": -0.25 * episode_reward,
                             "under_steps": episode_under_steps,
                             "over_steps": episode_over_steps,
@@ -718,6 +813,15 @@ def build_argparser() -> argparse.ArgumentParser:
     parser.add_argument("--cap_total_max", type=float, default=1.0)
     parser.add_argument("--cap_buses", type=str, default="20,8")
     parser.add_argument("--episode_len", type=int, default=96)
+    parser.add_argument("--training_days_csv", default="")
+    parser.add_argument("--training_day_seed", type=int, default=0)
+    parser.add_argument(
+        "--action_parameterization",
+        choices=["relative", "reference_mvar"],
+        default="relative",
+    )
+    parser.add_argument("--load_profile_path", default="load96.npy")
+    parser.add_argument("--generation_profile_path", default="gen96.npy")
     parser.add_argument("--enable_pq_curve", action="store_true")
     return parser
 
@@ -762,6 +866,11 @@ def main() -> None:
         cap_total_max=args.cap_total_max,
         cap_buses=cap_buses,
         episode_len=args.episode_len,
+        training_days_csv=args.training_days_csv,
+        training_day_seed=args.training_day_seed,
+        action_parameterization=args.action_parameterization,
+        load_profile_path=args.load_profile_path,
+        generation_profile_path=args.generation_profile_path,
         enable_pq_curve=bool(args.enable_pq_curve),
     )
     set_seed(cfg.seed)

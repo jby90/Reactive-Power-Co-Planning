@@ -1,80 +1,69 @@
-# Reactive-power control and capacity-planning benchmark
+# Reactive-Power Co-Planning
 
-This repository provides code, trained policies, simulation inputs, and frozen evaluation outputs for risk-aware Volt-VAR control and reactive-power capacity planning on a modified IEEE 33-bus distribution feeder.
+This repository contains the code, frozen inputs, trained policies, job tables, and result tables for capacity-conditioned reactive-power control and resource screening on IEEE distribution-network benchmarks.
 
-The implemented workflow has three linked components:
+The released evidence separates three questions:
 
-1. capacity-conditioned worst-group CVaR PPO (WG-CVaR-PPO);
-2. an AC power-flow safety projection applied to policy actions; and
-3. a three-stage empirical chance-constrained scan of PV-inverter, SVC, and capacitor capacity.
+1. whether a learned controller remains safe at a specified device-capacity vector;
+2. how an AC power-flow safety projection changes controller actions and outcomes; and
+3. which capacity vectors pass the fixed multi-seed screening and confirmation protocol.
 
-## Included results
+The principal 33-bus study uses 366 public 15-minute German load and solar temporal profiles from the Open Power System Data time-series package (2020-10-06). These system-level temporal shapes are mapped to the fixed spatial allocations of the benchmark feeder; they are not field measurements from that feeder. The frozen split contains 50 training, 17 selection, and 299 confirmation days.
 
-- Locked uniform and stress evaluations contain 1,000 shared jobs per set for three independently trained policy seeds.
-- The capacity-planning outputs cover 2,000 screened combinations, 300 refined combinations, and 37 confirmed configurations.
-- Raw and safety-projected outputs are retained for WG-CVaR and Concat PPO.
-- The confirmed minimum-resource configuration is `[0.7, 0.7, 0.0]`, expressed as PV-inverter capacity scale, SVC capacity scale, and capacitor capacity in MVar.
+## Repository layout
 
-These are simulation results for the included modified IEEE 33-bus system. The resource index is a normalised study metric rather than a monetary cost or life-cycle measure.
+- `src/`: controller training, evaluation, safety projection, local AC-OPF comparison, mismatch analysis, and summary utilities.
+- `data/inputs/`: benchmark cases, processed temporal profiles, metadata, and frozen day splits.
+- `data/jobs/`: capacity-grid and confirmation job tables.
+- `data/results/`: source result tables used for the reported analyses.
+- `models/`: final multi-seed policies, ablation policies, sensitivity policies, portability policies, and policy-initialisation weights.
+- `tests/`: focused tests for profile loading, day-table loading, safety projection, and local AC-OPF.
+- `data/release_manifest.json`: SHA-256 and byte size for every released file except the manifest itself.
 
-## Repository map
+## Environment
 
-| Path | Contents |
-|---|---|
-| `src/` | Training, evaluation, safety-projection, and capacity-planning code |
-| `models/` | WG-CVaR, Concat, and Blind PPO checkpoints for seeds 42, 43, and 44 |
-| `data/inputs/` | Network case and load/PV simulation profiles |
-| `data/results/locked_controller_evaluation/` | Frozen uniform/stress jobs and controller outputs |
-| `data/results/capacity_planning/` | Screening, refinement, confirmation, ablation, and capacity-path outputs |
-| `data/derived_metrics/` | Machine-readable summaries derived from the frozen results |
-| `scripts/` | Lightweight integrity checks and an execution smoke test |
-| `docs/` | Reproducibility protocol and metric definitions |
-
-## Installation
-
-Python 3.10 was used for the frozen evaluation. From the repository root:
+Python 3.11 is recommended. Install the tested package versions with:
 
 ```bash
-python -m venv .venv
-# Windows: .venv\Scripts\activate
-# Linux/macOS: source .venv/bin/activate
 python -m pip install -r requirements.txt
 ```
 
-## Fast verification
+PyTorch wheels are platform-specific. The recorded experiments used PyTorch 2.10.0 with CUDA 12.6; CPU evaluation is also supported.
 
-Check the model and result structure and recompute the principal aggregate metrics without rerunning power flow:
+## Verify the release
+
+From the repository root:
 
 ```bash
 python scripts/verify_release.py
+python -m pytest -q
 ```
 
-Run one deterministic environment step with a WG-CVaR checkpoint:
+The verifier checks every manifest hash, split disjointness, array dimensions, and the presence of all principal five-seed checkpoints.
+
+## Reproduce a held-out evaluation
+
+This command evaluates the seed-42 worst-group CVaR policy on the 299 confirmation days at the first all-method, all-seed passing vector C105, `[0.45, 0.5625, 0]`:
 
 ```bash
-python scripts/smoke_test.py
+python src/evaluate_crdc_policy.py \
+  --run_dir models/WG_CVAR_PPO/env33_seed42_gamma0.9/20260918-confirm-opsd-wg-ref-seed42 \
+  --theta 0.45,0.5625,0 \
+  --days_metadata data/inputs/confirmation_days.csv \
+  --device cpu \
+  --out_dir reproduced/wg_seed42_c105
 ```
 
-## Reproduce evaluations
+The command writes `daily.csv` and `summary.json`. Additional commands for the capacity grid, projection, local AC-OPF, model mismatch, and capacitor mechanism are documented in [docs/REPRODUCIBILITY.md](docs/REPRODUCIBILITY.md).
 
-Re-evaluate the frozen uniform and stress job tables:
+## Key frozen evidence
 
-```bash
-python src/run_locked_projection_confirmation.py
-```
+- C100 `[0.45, 0.375, 0]` is rejected by the confirmation protocol.
+- C105 `[0.45, 0.5625, 0]` is the first vector on the frozen path with zero event days for both controllers, before and after projection, across five seeds and 299 days per seed.
+- A zero count in one 299-day seed corresponds to a one-sided exact 95% upper event-rate bound of 0.9969%, not a proof of universal safety.
+- The local AC-OPF comparator is a feasible nonconvex operational reference, not a certified global lower bound.
+- The 69-bus results test protocol portability and are not used to claim a new capacity boundary.
 
-Rerun the three-stage capacity-planning protocol:
+## License and data attribution
 
-```bash
-python src/run_final_capacity_planning.py
-```
-
-The complete planning run is computationally intensive. New outputs are written to `reproduced/`; the frozen files under `data/results/` are not overwritten by default. See [`docs/REPRODUCIBILITY.md`](docs/REPRODUCIBILITY.md) for the evaluation hierarchy and metric conventions.
-
-## Action and capacity definitions
-
-The shared policy receives the network state and capacity vector `theta = [s_pv, s_svc, q_cap]`. It outputs four normalised continuous actions: reactive-power commands for PV inverters at zero-based buses 17, 21, and 24, and for the centralised SVC at zero-based bus 32. The environment maps these commands to device-specific reactive-power limits before AC power flow.
-
-## Licence and provenance
-
-Code is provided under the repository licence. Benchmark and environment provenance is documented in [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md). PyTorch checkpoints should only be loaded from trusted sources.
+Code is released under the license in [LICENSE](LICENSE). Third-party software and data notices are listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). The OPSD source URL, DOI, transformation, and SHA-256 checksums are recorded in `data/inputs/metadata.json`.

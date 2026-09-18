@@ -1,32 +1,74 @@
 # Reproducibility guide
 
-## Evaluation hierarchy
+Run all commands from the repository root. Paths in released checkpoint configurations are repository-relative; the evaluator also resolves profile arrays by filename under `data/inputs`.
 
-The repository preserves three distinct evaluation levels.
+## 1. Integrity and tests
 
-1. **Locked controller evaluation:** 1,000 shared jobs for each of the uniform and stress sets, evaluated by policy seeds 42, 43, and 44. Raw and AC-projected WG-CVaR and Concat outputs are retained.
-2. **Three-stage capacity planning:** 2,000 candidates are screened, 300 are refined, and 37 are confirmed. A candidate is feasible only when every WG-CVaR seed satisfies the empirical event-day threshold.
-3. **Profile-unique confirmation:** each confirmed configuration is evaluated on the same 200 distinct held-out daily profiles for every policy seed.
+```bash
+python scripts/verify_release.py
+python -m pytest -q
+```
 
-The controller comparison and capacity-boundary result answer different questions. The former compares operating loss under matched projected safety. The latter uses WG-CVaR's own worst-seed feasibility rule and does not depend on WG-CVaR outperforming Concat for every training seed.
+## 2. Frozen data split
 
-## Risk and energy conventions
+The split is defined by:
 
-- A voltage-event job contains at least one 15-minute step outside `[0.95, 1.05]` pu or a power-flow failure.
-- Planning uses an empirical event-day tolerance of `epsilon = 0.01` for every policy seed.
-- The AC projection uses the internal guard band `[0.9505, 1.0495]` pu.
-- Daily line-loss energy is the sum of simulated active line loss over 96 15-minute steps.
-- Projection intervention is the fraction of control steps whose raw policy action is modified.
-- The resource index is `50*s_pv + 50*s_svc + 2*q_cap`; it is a transparent normalised study index, not CAPEX.
+- `data/inputs/training_days.csv`: 50 days;
+- `data/inputs/selection_days.csv`: 17 days;
+- `data/inputs/confirmation_days.csv`: 299 days.
 
-## Checkpoints
+All rows refer to the same processed 366-day OPSD profile arrays. Source attribution, normalization, mapping, dimensions, and checksums are in `data/inputs/metadata.json`.
 
-Each `models/<family>/seed<seed>/` directory contains the exact configuration, training CSV files, and checkpoint used in the frozen evaluation. PyTorch checkpoint files should only be loaded from trusted sources.
+## 3. Controller evaluation
 
-## Expected compute
+Example for the seed-42 worst-group CVaR policy at C105:
 
-`scripts/verify_release.py` completes in seconds and requires no GPU. Replaying the locked jobs requires repeated AC power flow and benefits mainly from CPU parallelism. Training and the complete 2,000-candidate planning pipeline are substantially more expensive; GPU acceleration is used for policy training and inference, while AC power-flow evaluation remains CPU-bound.
+```bash
+python src/evaluate_crdc_policy.py \
+  --run_dir models/WG_CVAR_PPO/env33_seed42_gamma0.9/20260918-confirm-opsd-wg-ref-seed42 \
+  --theta 0.45,0.5625,0 \
+  --days_metadata data/inputs/confirmation_days.csv \
+  --device cpu \
+  --out_dir reproduced/wg_seed42_c105
+```
 
-## Output isolation
+Replace the run directory with the corresponding `CONCAT_SCALAR_CORRECTED` directory to evaluate the comparison controller. The evaluator records daily event indicators, voltage extrema, power-flow failures, and line-loss energy.
 
-Reproduction commands write to `reproduced/`. The frozen data under `data/results/` are never overwritten by default.
+## 4. Capacity and projection analyses
+
+The exact candidate and execution tables are in `data/jobs`. Batch evaluation is provided by:
+
+```bash
+python src/evaluate_capacity_job_table.py --help
+```
+
+The AC power-flow safety projection implementation is `src/physics_safety_projection.py`. Frozen projection results, activation counts, failure counts, and runtime tables are under `data/results/opsd_secondary_evaluations`.
+
+## 5. Local AC-OPF comparison
+
+The nonconvex local comparator is implemented in `src/ac_opf_vvc_baseline.py`. Both profile arrays must be supplied explicitly:
+
+```bash
+python src/ac_opf_vvc_baseline.py --help
+```
+
+The final representative-vector and learned-controller results are under:
+
+- `data/results/opsd_secondary_evaluations/ac_opf_final_representatives`;
+- `data/results/opsd_secondary_evaluations/ac_opf_final_learned_controllers`;
+- `data/results/opsd_secondary_evaluations/ac_opf_final_comparison`.
+
+## 6. Model mismatch and mechanism analyses
+
+Use the following entry points for new runs:
+
+```bash
+python src/evaluate_projection_model_mismatch.py --help
+python src/evaluate_capacitor_mechanism.py --help
+```
+
+The fixed mismatch definitions and frozen outputs are in `data/results/opsd_secondary_evaluations/model_mismatch_final`. Capacitor-pair jobs and outputs are in the corresponding `capacitor_mechanism_jobs` and `capacitor_mechanism` directories.
+
+## 7. Evidence provenance
+
+`data/results/final_evidence_manifest.csv` and `.json` identify the frozen analysis evidence from which this release was assembled. `data/release_manifest.json` independently verifies the public package. Environment metadata is under `data/results/environment`.

@@ -1,0 +1,11 @@
+method,seed,total_steps,training_episodes,model_state_values,group_count_min,group_count_max,unique_training_days,training_day_count_min,training_day_count_max,training_event_days,training_pf_fail_steps,wall_seconds,transitions_per_second,checkpoint
+wg,42,57600,600,374539,75,75,50,12,12,151,0,4852.016904592514,11.871351879561807,runs\WG_CVAR_PPO\env33_seed42_gamma0.9\20260918-confirm-opsd-wg-ref-seed42\models\checkpoint.pth
+wg,43,57600,600,374539,75,75,50,12,12,139,0,4857.751750469208,11.857337089001398,runs\WG_CVAR_PPO\env33_seed43_gamma0.9\20260918-confirm-opsd-wg-ref-seed43\models\checkpoint.pth
+wg,44,57600,600,374539,75,75,50,12,12,197,0,4822.303751945496,11.944498514172201,runs\WG_CVAR_PPO\env33_seed44_gamma0.9\20260918-confirm-opsd-wg-ref-seed44\models\checkpoint.pth
+wg,45,57600,600,374539,75,75,50,12,12,123,0,4816.1558573246,11.95974584427114,runs\WG_CVAR_PPO\env33_seed45_gamma0.9\20260918-confirm-opsd-wg-ref-seed45\models\checkpoint.pth
+wg,46,57600,600,374539,75,75,50,12,12,122,0,4864.007059812546,11.842088075057163,runs\WG_CVAR_PPO\env33_seed46_gamma0.9\20260918-confirm-opsd-wg-ref-seed46\models\checkpoint.pth
+concat,42,57600,600,187657,75,75,50,12,12,158,0,4834.813749790192,11.913592328659934,runs\CONCAT_SCALAR_CORRECTED\env33_seed42_gamma0.9\20260918-confirm-opsd-concat-ref-seed42\models\checkpoint.pth
+concat,43,57600,600,187657,75,75,50,12,12,202,0,4814.961626768112,11.962712159486543,runs\CONCAT_SCALAR_CORRECTED\env33_seed43_gamma0.9\20260918-confirm-opsd-concat-ref-seed43\models\checkpoint.pth
+concat,44,57600,600,187657,75,75,50,12,12,250,0,4811.993085861206,11.970092012235567,runs\CONCAT_SCALAR_CORRECTED\env33_seed44_gamma0.9\20260918-confirm-opsd-concat-ref-seed44\models\checkpoint.pth
+concat,45,57600,600,187657,75,75,50,12,12,194,0,4818.7139980793,11.953396699401312,runs\CONCAT_SCALAR_CORRECTED\env33_seed45_gamma0.9\20260918-confirm-opsd-concat-ref-seed45\models\checkpoint.pth
+concat,46,57600,600,187657,75,75,50,12,12,230,0,4812.620299816132,11.968531987075863,runs\CONCAT_SCALAR_CORRECTED\env33_seed46_gamma0.9\20260918-confirm-opsd-concat-ref-seed46\models\checkpoint.pth

@@ -119,18 +119,18 @@ class MLPRegression(nn.Module):
     def __init__(self, input_dim, output_dim, hidden_sizes=(64,64), activation=nn.Tanh):
         """
             @param int - input_dim
-            @param int - output_dim
+            @param int - output_dim 
             @param list - hidden_sizes : such as [32,32,32]
-        """
+        """ 
         super().__init__()
         self.net = mlp([input_dim] + list(hidden_sizes) + [output_dim], activation)
 
     def forward(self, x):
         """
             @param tensor - x: shape [batch, input dim]
-
+            
             @return tensor - out : shape [batch, output dim]
-        """
+        """ 
         out = self.net(x)
         return out
 
@@ -141,7 +141,7 @@ class MLPCategorical(nn.Module):
             @param int - input_dim
             @param int - output_dim, default 2
             @param list - hidden_sizes : such as [32,32,32]
-        """
+        """ 
         super().__init__()
         self.logits_net = mlp([input_dim] + list(hidden_sizes) + [output_dim], activation, dropout=dropout)
 
@@ -150,7 +150,7 @@ class MLPCategorical(nn.Module):
             @param tensor - x: shape [batch, input dim]
 
             @return tensor - out : shape [batch, 2]
-        """
+        """ 
         logits = self.logits_net(x)
         #out = Categorical(logits=logits)
         output = F.log_softmax(logits, dim=1)
@@ -168,7 +168,7 @@ class GRURegression(nn.Module):
 
     def initial_hidden(self, batch_size, **kwargs):
         return CUDA(torch.zeros(batch_size, self.hidden_dim, **kwargs))
-
+        
 
     def forward(self, x, h=None):
         '''

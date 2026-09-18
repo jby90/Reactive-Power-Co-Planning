@@ -1,0 +1,106 @@
+{
+  "platform": "Windows-10-10.0.26200-SP0",
+  "machine": "AMD64",
+  "processor": "13th Gen Intel(R) Core(TM) i9-13900K",
+  "nvidia_gpus": [
+    "NVIDIA GeForce RTX 4090, 616.92, 24564 MiB",
+    "NVIDIA GeForce RTX 4090, 616.92, 24564 MiB"
+  ],
+  "environments": {
+    "training_gpu": {
+      "executable": "C:\\Users\\Jin\\anaconda3\\envs\\evrl-gpu\\python.exe",
+      "python": "3.11.14",
+      "implementation": "CPython",
+      "packages": {
+        "numpy": "2.3.5",
+        "pandas": "2.3.3",
+        "scipy": "1.16.3",
+        "torch": "2.10.0+cu126",
+        "pandapower": "3.5.4",
+        "matplotlib": "3.10.8",
+        "sklearn": "1.8.0"
+      },
+      "cuda": {
+        "available": true,
+        "runtime": "12.6",
+        "devices": [
+          "NVIDIA GeForce RTX 4090"
+        ]
+      }
+    },
+    "evaluation_compat": {
+      "executable": "C:\\Users\\Jin\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+      "python": "3.10.0",
+      "implementation": "CPython",
+      "packages": {
+        "numpy": "2.2.6",
+        "pandas": "2.2.3",
+        "scipy": "1.15.3",
+        "torch": "2.9.1+cpu",
+        "pandapower": "unavailable: ImportError",
+        "matplotlib": "3.10.3",
+        "sklearn": "1.7.2"
+      },
+      "cuda": {
+        "available": false,
+        "runtime": null,
+        "devices": []
+      }
+    },
+    "analysis_base": {
+      "executable": "C:\\Users\\Jin\\anaconda3\\python.exe",
+      "python": "3.11.3",
+      "implementation": "CPython",
+      "packages": {
+        "numpy": "1.24.3",
+        "pandas": "1.5.3",
+        "scipy": "1.10.1",
+        "torch": "2.9.1+cpu",
+        "pandapower": "3.1.2",
+        "matplotlib": "3.7.1",
+        "sklearn": "1.2.2"
+      },
+      "cuda": {
+        "available": false,
+        "runtime": null,
+        "devices": []
+      }
+    }
+  },
+  "critical_file_sha256": {
+    "Env.py": "97c468b6d9fd2b0d17883f0b09e089acdb9b9acb47b442b17323ec7282c79efa",
+    "PPO_theta_crdc.py": "e63fe07b6fac64349d187369271488398b43c6d38e950be312aa00586182ffb0",
+    "PPO_theta_wg_cvar.py": "86a8737c26b81627e3fe36c75062f31e9453480e4a21656f468b42f794b8696a",
+    "PPO_theta_concat_corrected.py": "f4b6757a7d2f3dcdf74d49438bf6f3e4f88fa8ae0a93930a4fbe95dc39f69d86",
+    "physics_safety_projection.py": "e2f49b8c869d4f734fab80d14a35c3dc664e318c84cbea578e2be8641ae46e67",
+    "python310_evaluation_compat.py": "80378ab5030ea577015cc4deafb90a45a6ef47d00e287668868a1f625f36a261",
+    "evaluate_capacity_job_table.py": "5f1d7e4f797e3ba0e87c05cb963215f58de761075a8bde317a768c4f8ec1733c",
+    "evaluate_projection_model_mismatch.py": "d6db6414c767dbb6246f00c60b5b797b40b576e033f111842981ab96a23b8ab4",
+    "ac_opf_nested_envelope.py": "df21222afe54933a514e48d9593f4eabc5823389ce056c1586a681a93480e74d",
+    "ac_opf_vvc_baseline.py": "bff6fda93faa8059862ab121f73bde0eeb3329b2b28c8efb7a31e4af3ace6d65",
+    "prepare_opsd_revision_profiles.py": "140e3c3e3fc720198bcf5ef352d9bf34e6aa5c508061853ad02ad2aa2b5d6b50",
+    "build_opf_imitation_dataset.py": "a4b5e4c13c461737d337105051463543efb13d590b26eb174c8e77ce1d7ab8f5",
+    "generate_opf_teacher_jobs.py": "76735812b8c751db8e1dfb1f1c5a535998cefc4e46fed164a17837fccb71ca89",
+    "pretrain_policy_from_opf.py": "93206a9d92ccc83574e3cc1c6d9a440c3b7784910fbdb3ed04473baa6ac1e59a",
+    "run_opf_policy_pretraining.py": "9be9b352b31f98c1971538a225640da59f982990addbed68a0211a9071285e8c",
+    "generate_revision_capacity_grid.py": "efb3f0b3acad42fcf78f279f8a27048e016b018fd49ec6cfebfa72e4900cd84d",
+    "summarize_revision_pareto.py": "428223349ace96269c1ab966d04028322bd3afd3f36c7fb150e56070cf10811e",
+    "run_opsd_confirmatory_training.py": "2ed1bf0041e30d2bfc9e220256b60cf070db17cad1a3f309ff2e05d7064811f3",
+    "run_opsd_confirmatory_evaluation.py": "60c9738a312ab53d461e5d59019941c33fa66da1223c519d308373a0fd45a386",
+    "run_opsd_component_ablation.py": "2ba0da2228c3572f610d731c5cb015de55251256fc0853f01db30ab77008f0ad",
+    "run_opsd_training_sensitivity.py": "5548771bb41e6d0522e3286391a5528c2c656dd6ce55c4d739f8e8a7480ee19f",
+    "run_opsd_secondary_evaluations.py": "3e6714beb2541cf5cd9cae2600d73f1101f49200451b4d7c7bc4336c0b30e631",
+    "run_opsd_portability_training.py": "f64df6ceed6627977902104dbc8be24a8cca0c67903cd29f9848e34355e0a4e3",
+    "run_opsd_portability_evaluation.py": "5fc16d84d8faf926754ebf0cf6f3602e193d003d6d734a12edcefb3c5598171c",
+    "run_opsd_revision_suite.py": "caa8453f779f1341ff6fe0a2d9226af6f471929d16eea4be391ebca80fcdda94",
+    "evaluate_capacitor_mechanism.py": "66ab0fba50487db8d34870cd3374ddd28136a8b101e08e669db90124eaf23f1d",
+    "generate_capacitor_mechanism_jobs.py": "8387671b5deb34070bcb8d620983ba0406f11caf69a39df834136847420f3355",
+    "summarize_component_ablation.py": "eb050d34c3be79a973be51df5a4f5297c88597491cb64193f3d44500248daccd",
+    "summarize_confirmatory_controllers.py": "ab89106c2f710a02555e2724414a8b63b3a353b65e2cf096de0c0b6274b10be5",
+    "summarize_confirmatory_training.py": "a2bfcc722e005fd4678f4f50a77c29ddf5ffe7ca5a469004426ca28c91b5055e",
+    "summarize_revision_system.py": "febb5f311471c7bedad738a23b9aacfc67582a03afc8c2a017cb3b89726d160e",
+    "freeze_revision_artifacts.py": "5dfba7b99dd4d173ea1a03fcaf159812e6eda2376cb82d72b8559dec0ce92cd6",
+    "statistics_utils.py": "26de1f3604c0a9a57227a59fc96147110ad9519b155354fbc5c3d2393adf5da9",
+    "make_revision_profile_figure.py": "4f699358fbb1657c77075e98b87384aee1b10fd053149b80dfb9a83072b00f76"
+  }
+}

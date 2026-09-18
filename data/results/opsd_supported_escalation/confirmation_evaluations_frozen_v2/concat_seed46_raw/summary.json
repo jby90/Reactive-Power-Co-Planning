@@ -1,0 +1,56 @@
+{
+  "jobs": 299,
+  "projected": false,
+  "risk": 0.0,
+  "pf_fail_rate": 0.0,
+  "mean_daily_loss_mwh": 1.525118514719929,
+  "mean_intervention_rate": 0.0,
+  "projection_failure_steps": 0,
+  "projection_activation_steps": 0,
+  "projection_iterations": 0,
+  "power_flow_previews": 0,
+  "steps_within_0_001_of_reporting_limit": 0,
+  "steps_within_0_001_of_projection_guard": 0,
+  "actor_mean_ms": 0.2732644788284639,
+  "projection_mean_ms": 0.0,
+  "execution_mean_ms": 16.41474723036975,
+  "balance_audit_mean_ms": 1.0559837444113207,
+  "online_path_mean_ms": 16.68801170919821,
+  "completed_steps": 28704,
+  "timing_ms": {
+    "actor": {
+      "mean": 0.2732644788284639,
+      "median": 0.2758000046014786,
+      "p95": 0.36868499992124254,
+      "p99": 0.4103000026225345,
+      "max": 1.4140000057523139
+    },
+    "projection": {
+      "mean": 0.0,
+      "median": 0.0,
+      "p95": 0.0,
+      "p99": 0.0,
+      "max": 0.0
+    },
+    "ac_execution": {
+      "mean": 16.41474723036975,
+      "median": 17.005999998218613,
+      "p95": 21.27518500055885,
+      "p99": 21.94189099856885,
+      "max": 25.210799991327804
+    },
+    "online_total": {
+      "mean": 16.68801170919821,
+      "median": 17.278200000873767,
+      "p95": 21.60359999834327,
+      "p99": 22.283872998450533,
+      "max": 25.643299995863345
+    }
+  },
+  "worst_vmin": 0.9501200728329163,
+  "worst_vmax": 1.0272542014096344,
+  "max_p_balance_residual_mw": 9.994481801195443e-08,
+  "max_q_balance_residual_mvar": 9.997610322942663e-08,
+  "jobs_csv": "data/results/opsd_supported_escalation\\confirmation_jobs_frozen_v2\\jobs.csv",
+  "projection_config": null
+}

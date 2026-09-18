@@ -1,0 +1,23 @@
+{
+  "seed": 46,
+  "training_examples": 16032,
+  "validation_examples": 4128,
+  "validation_days": [
+    56,
+    60,
+    143,
+    182,
+    217,
+    282,
+    289,
+    299,
+    318,
+    330
+  ],
+  "best_validation_mse": 1.2877424524049275e-05,
+  "best_epoch": 192,
+  "dataset_sha256": "70681ffaa97166c40f69f0d7f28526cd2d7632f072e6d2b3b82ab900a9135908",
+  "checkpoint": "data/results/opf_policy_initialisation\\policy_init_seed46.pth",
+  "checkpoint_sha256": "0ee72e629021181f090eee9cdcd15dc86767718246a25f5a85e59276a87e40c0",
+  "device": "cuda"
+}

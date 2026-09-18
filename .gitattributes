@@ -1,7 +1,8 @@
-* text=auto eol=lf
 *.npy binary
-*.mat binary
+*.npz binary
 *.pth binary
-*.png binary
-*.pdf binary
-*.svg binary
+*.mat binary
+*.csv text eol=lf
+*.json text eol=lf
+*.py text eol=lf
+*.md text eol=lf

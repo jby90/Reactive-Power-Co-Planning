@@ -1,0 +1,11 @@
+{
+  "uncertainty_unit": "mismatch replicate after averaging the 17 matched days",
+  "bootstrap_draws": 10000,
+  "bootstrap_seed": 20260919,
+  "single_replicate_levels": [
+    "none",
+    "topology_a",
+    "topology_b"
+  ],
+  "single_replicate_interval": "not estimated"
+}

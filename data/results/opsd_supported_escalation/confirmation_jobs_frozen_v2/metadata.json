@@ -1,0 +1,9 @@
+{
+  "candidates_csv": "data/results/opsd_supported_escalation\\selected_candidate.csv",
+  "candidates_sha256": "0bcc3e93149780ad0af5ee63c039ac06ea49a25477b6aecabecb2be1946849e2",
+  "days_csv": "data/results/opsd_profiles\\confirmation_days.csv",
+  "days_sha256": "cb0e1698c4d496e202b639cf5feb7c711053709938518335f91eb2a3586b7fe2",
+  "candidate_count": 1,
+  "day_count": 299,
+  "job_count": 299
+}

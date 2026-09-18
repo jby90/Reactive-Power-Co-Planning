@@ -1,0 +1,18 @@
+{
+  "jobs": 1020,
+  "risk": 0.08529411764705883,
+  "pf_fail_rate": 0.0,
+  "projection_failure_steps": 0,
+  "mean_intervention_rate": 0.0,
+  "mean_daily_loss_mwh": 1.62721812579219,
+  "worst_actual_vmin": 0.943024756944905,
+  "worst_actual_vmax": 1.0372790858619683,
+  "mismatch": {
+    "r_std": 0.05,
+    "x_std": 0.05,
+    "load_std": 0.02,
+    "pv_std": 0.02,
+    "replicates": 20,
+    "topology_reconfiguration": "tie32_open18"
+  }
+}

@@ -1,0 +1,5 @@
+pair_id,pair_role,candidate_id,pv_s_scale,svc_q_scale,cap_total_mvar,selection_loss_delta_mwh
+0,most_negative_selection_loss_delta,100,0.45,0.375,0.0,-0.031152763291261598
+0,most_negative_selection_loss_delta,101,0.45,0.375,0.25,-0.031152763291261598
+1,most_positive_selection_loss_delta,415,1.5,0.375,0.0,-0.021089210713075346
+1,most_positive_selection_loss_delta,416,1.5,0.375,0.25,-0.021089210713075346

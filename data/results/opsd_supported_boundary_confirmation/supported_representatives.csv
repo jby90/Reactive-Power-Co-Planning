@@ -1,0 +1,4 @@
+candidate_id,pv_s_scale,svc_q_scale,cap_total_mvar,pv_nameplate_mva,svc_nameplate_mvar,evaluated_days,event_days,pf_fail_days,projection_failure_steps,mean_daily_loss_mwh,max_daily_loss_mwh,mean_intervention_rate,max_intervention_rate,worst_vmin,worst_vmax,risk_hat,risk_upper_95,selection_eligible,pareto,representative_role
+100,0.45,0.375,0.0,6.037383539249433,0.75,17,0,0,0,1.491213909898596,2.69094632748527,0.0,0.0,0.9522938045562828,1.0148985591811557,0.0,0.16156611126074,True,True,supported_lower_corner
+101,0.45,0.375,0.25,6.037383539249433,0.75,17,0,0,0,1.4600611466073343,2.687030570092913,0.0,0.0,0.9532816897521404,1.01698772816155,0.0,0.16156611126074,True,True,matched_capacitor_addition
+267,0.9,1.5,0.5,12.074767078498866,3.0,17,0,0,0,1.447627108385011,2.6562956120540018,0.0,0.0,0.9562305253989852,1.018884420026322,0.0,0.16156611126074,True,True,supported_lowest_selection_loss

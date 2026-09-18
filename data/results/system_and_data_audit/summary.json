@@ -1,0 +1,239 @@
+{
+  "systems": {
+    "33": {
+      "env_id": 33,
+      "buses": 33,
+      "lines_total": 37,
+      "lines_in_service": 32,
+      "loads": 32,
+      "slack_buses": [
+        0
+      ],
+      "inverter_buses_zero_based": [
+        17,
+        21,
+        24
+      ],
+      "svc_buses_zero_based": [
+        32
+      ],
+      "fixed_capacitor_buses_zero_based": [
+        20,
+        8
+      ],
+      "base_active_load_mw": 3.715,
+      "base_reactive_load_mvar": 2.3,
+      "profile_peak_active_load_mw": 3.715,
+      "profile_peak_reactive_load_mvar": 2.3,
+      "profile_peak_pv_mw": 3.0,
+      "base_inverter_rating_mva_each": [
+        4.47213595499958,
+        4.47213595499958,
+        4.47213595499958
+      ],
+      "base_svc_rating_mvar_each": [
+        2.0
+      ],
+      "minimum_pv_scale_without_active_power_clipping": 0.22360679774997896,
+      "profile_steps": 35136,
+      "profile_days": 366,
+      "load_profile_shape": [
+        35136,
+        32
+      ],
+      "generation_profile_shape": [
+        35136,
+        3
+      ],
+      "checkpoint": "runs\\WG_CVAR_PPO\\env33_seed42_gamma0.9\\20260918-confirm-opsd-wg-ref-seed42\\models\\checkpoint.pth",
+      "checkpoint_sha256": "5d7be4bada8bc3bffdc5555a550603038778db9ceebede833143a9b2209be4e6",
+      "checkpoint_step": 57600,
+      "training_elapsed_seconds": 4837.6093282699585,
+      "training_transitions_per_second": 11.906707650698015,
+      "configuration": {
+        "episode_len": 96,
+        "pv_s_scale_min": 0.225,
+        "pv_s_scale_max": 1.5,
+        "svc_q_scale_min": 0.0,
+        "svc_q_scale_max": 1.5,
+        "cap_total_min": 0.0,
+        "cap_total_max": 1.0,
+        "svc_absorption_ratio": 0.0,
+        "action_parameterization": "reference_mvar",
+        "sampling_pv_s_scale_min": 0.45,
+        "sampling_svc_q_scale_min": 0.375
+      }
+    },
+    "69": {
+      "env_id": 69,
+      "buses": 69,
+      "lines_total": 68,
+      "lines_in_service": 68,
+      "loads": 48,
+      "slack_buses": [
+        0
+      ],
+      "inverter_buses_zero_based": [
+        5,
+        23,
+        44,
+        57
+      ],
+      "svc_buses_zero_based": [
+        13
+      ],
+      "fixed_capacitor_buses_zero_based": [
+        63,
+        64
+      ],
+      "base_active_load_mw": 3.8021,
+      "base_reactive_load_mvar": 2.6947,
+      "profile_peak_active_load_mw": 3.8021,
+      "profile_peak_reactive_load_mvar": 2.6947,
+      "profile_peak_pv_mw": 4.0,
+      "base_inverter_rating_mva_each": [
+        4.47213595499958,
+        4.47213595499958,
+        4.47213595499958,
+        4.47213595499958
+      ],
+      "base_svc_rating_mvar_each": [
+        2.0
+      ],
+      "minimum_pv_scale_without_active_power_clipping": 0.22360679774997896,
+      "profile_steps": 35136,
+      "profile_days": 366,
+      "load_profile_shape": [
+        35136,
+        48
+      ],
+      "generation_profile_shape": [
+        35136,
+        4
+      ],
+      "checkpoint": "runs\\WG_CVAR_PPO\\env69_seed42_gamma0.9\\20260918-portability-opsd-env69-wg-ref-seed42\\models\\checkpoint.pth",
+      "checkpoint_sha256": "6786cd347f7d3bfcd4190151462e100fafbd121dcafa6c6f6fb0ee7b5ebf71d1",
+      "checkpoint_step": 57600,
+      "training_elapsed_seconds": 5853.173612833023,
+      "training_transitions_per_second": 9.840815224361805,
+      "configuration": {
+        "episode_len": 96,
+        "pv_s_scale_min": 0.225,
+        "pv_s_scale_max": 1.5,
+        "svc_q_scale_min": 0.0,
+        "svc_q_scale_max": 1.5,
+        "cap_total_min": 0.0,
+        "cap_total_max": 1.0,
+        "svc_absorption_ratio": 0.0,
+        "action_parameterization": "reference_mvar",
+        "sampling_pv_s_scale_min": 0.45,
+        "sampling_svc_q_scale_min": 0.375
+      }
+    }
+  },
+  "temporal_data": {
+    "source": "Open Power System Data, Time series package 2020-10-06",
+    "source_url": "https://data.open-power-system-data.org/time_series/2020-10-06/",
+    "source_doi": "https://doi.org/10.25832/time_series/2020-10-06",
+    "primary_source": "ENTSO-E Transparency Platform",
+    "source_file": "data/results/external_data\\opsd_time_series_2020-10-06\\time_series_15min_singleindex.csv",
+    "source_file_sha256": "194f3ee7d110d04389751602132899172cdd8b7ca73c07d6e9009ddac066b2a1",
+    "window_start_utc": "2017-01-01 00:00:00+00:00",
+    "window_end_utc_inclusive": "2018-01-01 23:45:00+00:00",
+    "time_resolution_minutes": 15,
+    "days": 366,
+    "load_column": "DE_load_actual_entsoe_transparency",
+    "solar_column": "DE_solar_profile",
+    "mapping": "The common normalized temporal load factor scales the original IEEE 33-bus spatial load allocation; the common normalized solar factor drives three PV units.",
+    "normalisation": "Each selected source series is divided by its maximum over the frozen 366-day window.",
+    "not_a_field_feeder_claim": "The public German system-level profiles provide traceable temporal shapes; they are not measurements from the IEEE 33-bus feeder.",
+    "load_shape": [
+      35136,
+      32
+    ],
+    "solar_shape": [
+      35136,
+      3
+    ],
+    "load_npy_sha256": "b76af37275bafb7c11b2bc3a349f24d732b192b487a7a5ffc9d277cf9736c3cb",
+    "solar_npy_sha256": "0bd06ab38910ce288b83722465913cc32f22e34a94da532f70def0ecacbd7204",
+    "unique_joint_daily_profiles": 366,
+    "split_seed": 20260918,
+    "split_counts": {
+      "training": 50,
+      "selection": 17,
+      "confirmation": 299
+    },
+    "statistics": {
+      "load_reference_mw": 77852.94,
+      "solar_profile_reference": 0.684,
+      "load_factor_percentiles": {
+        "0.0": 0.38646864203201575,
+        "0.05": 0.517187758098795,
+        "0.5": 0.7174416277664015,
+        "0.95": 0.9243025375791845,
+        "1.0": 1.0
+      },
+      "solar_factor_percentiles": {
+        "0.0": 0.0,
+        "0.5": 0.002046783625730994,
+        "0.9": 0.529093567251462,
+        "0.99": 0.8568713450292397,
+        "1.0": 1.0
+      }
+    }
+  },
+  "split_files": {
+    "training": {
+      "path": "data/results/opsd_profiles\\training_days.csv",
+      "sha256": "886dc3d75b53d5a68cb2948a64279730530216dc5e9f017ac37113a3c081b868"
+    },
+    "selection": {
+      "path": "data/results/opsd_profiles\\selection_days.csv",
+      "sha256": "777fe66ed89cf618300d562f101f67c15cd7700a0dc034fe08bba4fd3d554e7a"
+    },
+    "confirmation": {
+      "path": "data/results/opsd_profiles\\confirmation_days.csv",
+      "sha256": "cb0e1698c4d496e202b639cf5feb7c711053709938518335f91eb2a3586b7fe2"
+    }
+  },
+  "capacity_grid": {
+    "days_csv": "data/results/opsd_profiles\\selection_days.csv",
+    "days_csv_sha256": "777fe66ed89cf618300d562f101f67c15cd7700a0dc034fe08bba4fd3d554e7a",
+    "day_count": 17,
+    "pv_levels": [
+      0.225,
+      0.3,
+      0.45,
+      0.6,
+      0.75,
+      0.9,
+      1.05,
+      1.2,
+      1.35,
+      1.5
+    ],
+    "svc_levels": [
+      0.0,
+      0.1875,
+      0.375,
+      0.5625,
+      0.75,
+      0.9375,
+      1.125,
+      1.3125,
+      1.5
+    ],
+    "cap_levels": [
+      0.0,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "candidate_count": 450,
+    "job_count": 7650,
+    "resource_rule": "componentwise physical capacities; no weighted resource index"
+  },
+  "interpretation": "OPSD provides public system-level temporal shapes that are mapped to fixed benchmark-feeder spatial allocations; these are not field measurements from either IEEE feeder."
+}

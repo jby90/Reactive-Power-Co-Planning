@@ -1,0 +1,9 @@
+{
+  "candidates_csv": "data/results/opsd_supported_boundary_confirmation\\candidates.csv",
+  "candidates_sha256": "82799ebcdf6d4bf6cf0c883a6589820031b2dec47197bf4cd7cd620f4e9f6788",
+  "days_csv": "data/results/opsd_profiles\\confirmation_days.csv",
+  "days_sha256": "cb0e1698c4d496e202b639cf5feb7c711053709938518335f91eb2a3586b7fe2",
+  "candidate_count": 2,
+  "day_count": 299,
+  "job_count": 598
+}

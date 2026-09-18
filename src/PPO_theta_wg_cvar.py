@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import json
 import time
 from collections import deque
@@ -15,7 +16,6 @@ import torch
 import torch.nn.functional as F
 import torch.optim as optim
 
-import Env
 from PPO_theta_crdc import (
     CRDCConfig,
     CRDCThetaEnvManager,
@@ -26,6 +26,7 @@ from PPO_theta_crdc import (
     SummaryWriter,
     capacity_group_id,
     compute_gae,
+    load_policy_initialisation,
     set_seed,
     standardise,
 )
@@ -140,8 +141,8 @@ class WGCVARPPOTrainer:
     def __init__(self, cfg: WGCVARConfig):
         self.cfg = cfg
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        load_pu = np.load(Env.DATA_DIR / "load96.npy")
-        gene_pu = np.load(Env.DATA_DIR / "gen96.npy")
+        load_pu = np.load(cfg.load_profile_path)
+        gene_pu = np.load(cfg.generation_profile_path)
         if cfg.env == 33:
             self.id_iber, self.id_svc = [17, 21, 24], [32]
         elif cfg.env == 69:
@@ -163,6 +164,14 @@ class WGCVARPPOTrainer:
             theta_max,
             log_std_init=cfg.log_std_init,
         ).to(self.device)
+        load_policy_initialisation(self.ac, cfg.policy_init_path)
+        self.policy_anchor = None
+        if cfg.policy_anchor_coef > 0.0:
+            if not cfg.policy_init_path:
+                raise ValueError("policy_anchor_coef requires policy_init_path")
+            self.policy_anchor = copy.deepcopy(self.ac).eval()
+            for parameter in self.policy_anchor.parameters():
+                parameter.requires_grad_(False)
         self.pi_opt = optim.Adam(self.ac.policy_parameters(), lr=cfg.pi_lr)
         self.vf_opt = optim.Adam(self.ac.value_parameters(), lr=cfg.vf_lr)
         self.risk = WorstGroupCVaRController(
@@ -198,10 +207,18 @@ class WGCVARPPOTrainer:
         self.update_rows: list[dict] = []
 
     def _theta_bounds(self) -> tuple[np.ndarray, np.ndarray]:
+        pv_lower = (
+            self.cfg.sampling_pv_s_scale_min
+            if self.cfg.sampling_pv_s_scale_min >= 0.0
+            else self.cfg.pv_s_scale_min
+        )
+        svc_lower = (
+            self.cfg.sampling_svc_q_scale_min
+            if self.cfg.sampling_svc_q_scale_min >= 0.0
+            else self.cfg.svc_q_scale_min
+        )
         return (
-            np.asarray(
-                [self.cfg.pv_s_scale_min, self.cfg.svc_q_scale_min, self.cfg.cap_total_min]
-            ),
+            np.asarray([pv_lower, svc_lower, self.cfg.cap_total_min]),
             np.asarray(
                 [self.cfg.pv_s_scale_max, self.cfg.svc_q_scale_max, self.cfg.cap_total_max]
             ),
@@ -224,6 +241,9 @@ class WGCVARPPOTrainer:
         pd.DataFrame(self.update_rows).to_csv(self.csv_dir / "updates.csv", index=False)
 
     def save_checkpoint(self) -> None:
+        elapsed = max(
+            time.time() - getattr(self, "training_start_time", time.time()), 0.0
+        )
         history = [
             [list(self.risk.history[group][direction]) for direction in range(2)]
             for group in range(8)
@@ -238,6 +258,10 @@ class WGCVARPPOTrainer:
                 "group_weights": self.risk.group_weights,
                 "total_step": self.total_step,
                 "update_index": self.update_index,
+                "training_elapsed_seconds": elapsed,
+                "training_transitions_per_second": (
+                    self.total_step / elapsed if elapsed > 0.0 else 0.0
+                ),
             },
             self.model_dir / "checkpoint.pth",
         )
@@ -253,6 +277,7 @@ class WGCVARPPOTrainer:
         episode_theta = np.asarray(self.mgr.theta, dtype=np.float32).copy()
         episode_group = self._group_id(episode_theta)
         start_time = time.time()
+        self.training_start_time = start_time
 
         while self.total_step < cfg.num_frames:
             self._anneal_log_std()
@@ -309,6 +334,7 @@ class WGCVARPPOTrainer:
                             "theta_pv": float(episode_theta[0]),
                             "theta_svc": float(episode_theta[1]),
                             "theta_cap": float(episode_theta[2]),
+                            "training_day_index": int(info.get("training_day_index", 0)),
                             "line_loss_mwh": -0.25 * episode_loss_reward,
                             "under_guard_excursion": episode_under_guard,
                             "over_guard_excursion": episode_over_guard,
@@ -362,7 +388,7 @@ class WGCVARPPOTrainer:
 
             indices = np.arange(len(rewards))
             metric_rows = {name: [] for name in (
-                "policy", "value_r", "value_u", "value_o", "entropy",
+                "policy", "policy_anchor", "value_r", "value_u", "value_o", "entropy",
             )}
             last_kl = 0.0
             for _iteration in range(cfg.train_iters):
@@ -383,6 +409,13 @@ class WGCVARPPOTrainer:
                         [surrogate[mb_group == group].mean() for group in present]
                     )
                     policy_loss = -(weights * objectives).sum()
+                    anchor_loss = torch.zeros((), device=self.device)
+                    if self.policy_anchor is not None:
+                        current_mu, _ = self.ac._pi(obs[mb], theta[mb])
+                        with torch.no_grad():
+                            anchor_mu, _ = self.policy_anchor._pi(obs[mb], theta[mb])
+                        anchor_loss = F.mse_loss(current_mu, anchor_mu)
+                        policy_loss = policy_loss + cfg.policy_anchor_coef * anchor_loss
                     if cfg.entropy_coef:
                         policy_loss -= cfg.entropy_coef * entropy.mean()
                     self.pi_opt.zero_grad()
@@ -405,6 +438,7 @@ class WGCVARPPOTrainer:
 
                     last_kl = float((old_logp[mb] - logp).mean().detach().cpu())
                     metric_rows["policy"].append(float(policy_loss.detach().cpu()))
+                    metric_rows["policy_anchor"].append(float(anchor_loss.detach().cpu()))
                     metric_rows["value_r"].append(float(loss_r.detach().cpu()))
                     metric_rows["value_u"].append(float(loss_u.detach().cpu()))
                     metric_rows["value_o"].append(float(loss_o.detach().cpu()))
@@ -417,11 +451,15 @@ class WGCVARPPOTrainer:
                 "update": self.update_index,
                 "total_step": self.total_step,
                 "policy_loss": float(np.mean(metric_rows["policy"])),
+                "policy_anchor_loss": float(np.mean(metric_rows["policy_anchor"])),
                 "reward_value_loss": float(np.mean(metric_rows["value_r"])),
                 "under_value_loss": float(np.mean(metric_rows["value_u"])),
                 "over_value_loss": float(np.mean(metric_rows["value_o"])),
                 "entropy": float(np.mean(metric_rows["entropy"])),
                 "approx_kl": last_kl,
+                "training_elapsed_seconds": time.time() - start_time,
+                "training_transitions_per_second": self.total_step
+                / max(time.time() - start_time, 1e-9),
             }
             for group in range(8):
                 row[f"group_weight_g{group}"] = group_weights[group]
@@ -496,10 +534,24 @@ def build_argparser() -> argparse.ArgumentParser:
     parser.add_argument("--pv_s_scale_max", type=float, default=1.5)
     parser.add_argument("--svc_q_scale_min", type=float, default=0.7)
     parser.add_argument("--svc_q_scale_max", type=float, default=1.5)
+    parser.add_argument("--svc_absorption_ratio", type=float, default=0.0)
     parser.add_argument("--cap_total_min", type=float, default=0.0)
     parser.add_argument("--cap_total_max", type=float, default=1.0)
     parser.add_argument("--cap_buses", type=str, default="20,8")
     parser.add_argument("--episode_len", type=int, default=96)
+    parser.add_argument("--training_days_csv", default="")
+    parser.add_argument("--training_day_seed", type=int, default=0)
+    parser.add_argument(
+        "--action_parameterization",
+        choices=["relative", "reference_mvar"],
+        default="relative",
+    )
+    parser.add_argument("--load_profile_path", default="load96.npy")
+    parser.add_argument("--generation_profile_path", default="gen96.npy")
+    parser.add_argument("--policy_init_path", default="")
+    parser.add_argument("--policy_anchor_coef", type=float, default=0.0)
+    parser.add_argument("--sampling_pv_s_scale_min", type=float, default=-1.0)
+    parser.add_argument("--sampling_svc_q_scale_min", type=float, default=-1.0)
     parser.add_argument("--enable_pq_curve", action="store_true")
     return parser
 
@@ -541,10 +593,20 @@ def main() -> None:
         pv_s_scale_max=args.pv_s_scale_max,
         svc_q_scale_min=args.svc_q_scale_min,
         svc_q_scale_max=args.svc_q_scale_max,
+        svc_absorption_ratio=args.svc_absorption_ratio,
         cap_total_min=args.cap_total_min,
         cap_total_max=args.cap_total_max,
         cap_buses=cap_buses,
         episode_len=args.episode_len,
+        training_days_csv=args.training_days_csv,
+        training_day_seed=args.training_day_seed,
+        action_parameterization=args.action_parameterization,
+        load_profile_path=args.load_profile_path,
+        generation_profile_path=args.generation_profile_path,
+        policy_init_path=args.policy_init_path,
+        policy_anchor_coef=args.policy_anchor_coef,
+        sampling_pv_s_scale_min=args.sampling_pv_s_scale_min,
+        sampling_svc_q_scale_min=args.sampling_svc_q_scale_min,
         enable_pq_curve=bool(args.enable_pq_curve),
     )
     set_seed(cfg.seed)

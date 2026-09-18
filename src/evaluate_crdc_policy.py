@@ -11,7 +11,6 @@ import pandas as pd
 import torch
 
 import Env
-from checkpoint_compat import install_numpy_pickle_aliases
 from PPO_theta_crdc import ConcatDirectionalActorCritic
 from PPO_theta_concat_corrected import BlindScalarActorCritic, ConcatScalarActorCritic
 
@@ -38,14 +37,85 @@ def device_ids(env_id: int) -> tuple[list[int], list[int]]:
     raise ValueError(f"Unsupported environment: {env_id}")
 
 
+def load_day_indices(path: str | Path) -> list[int]:
+    """Load held-out day indices from the released CSV or compatible JSON."""
+    source = Path(path)
+    if source.suffix.lower() == ".csv":
+        table = pd.read_csv(source)
+        if "day_index" not in table.columns:
+            raise ValueError(f"Day table must contain a day_index column: {source}")
+        return [int(day) for day in table["day_index"].tolist()]
+    payload = json.loads(source.read_text(encoding="utf-8"))
+    for key in ("final_day_indices", "day_indices"):
+        if key in payload:
+            return [int(day) for day in payload[key]]
+    raise ValueError(f"Day metadata must define final_day_indices or day_indices: {source}")
+
+
+def _resolve_profile_path(value: str, checkpoint_path: Path | None) -> Path:
+    path = Path(value).expanduser()
+    candidates = [path]
+    if not path.is_absolute():
+        candidates.append(Path(__file__).resolve().parent / path)
+        if checkpoint_path is not None:
+            candidates.append(checkpoint_path.resolve().parent / path)
+    # Released checkpoints retain their provenance path, but a clean clone keeps
+    # the same arrays under data/inputs. Fall back by filename when the recorded
+    # absolute path is not available on the current machine.
+    module_dir = Path(__file__).resolve().parent
+    candidates.extend(
+        [
+            module_dir / "data" / "inputs" / path.name,
+            module_dir.parent / "data" / "inputs" / path.name,
+            Path.cwd() / "data" / "inputs" / path.name,
+        ]
+    )
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate.resolve()
+    raise FileNotFoundError(f"Profile array not found: {value}")
+
+
+def load_profiles_from_cfg(
+    cfg: dict, checkpoint_path: Path | None = None
+) -> tuple[np.ndarray, np.ndarray]:
+    """Load the exact profiles recorded by a checkpoint, with legacy fallback."""
+    load_value = cfg.get("load_profile_path")
+    generation_value = cfg.get("generation_profile_path")
+    if bool(load_value) != bool(generation_value):
+        raise ValueError(
+            "Checkpoint must define both load_profile_path and generation_profile_path"
+        )
+    if load_value:
+        load_path = _resolve_profile_path(str(load_value), checkpoint_path)
+        generation_path = _resolve_profile_path(str(generation_value), checkpoint_path)
+    else:
+        root = Path(__file__).resolve().parent
+        load_path = root / "load96.npy"
+        generation_path = root / "gen96.npy"
+    load_pu = np.load(load_path)
+    gene_pu = np.load(generation_path)
+    if load_pu.ndim not in (1, 2) or gene_pu.ndim not in (1, 2):
+        raise ValueError("Profile arrays must be one- or two-dimensional")
+    if len(load_pu) != len(gene_pu):
+        raise ValueError("Load and generation profiles must have equal time lengths")
+    if len(load_pu) < STEPS_PER_DAY:
+        raise ValueError("Profile arrays must contain at least one 96-step day")
+    return load_pu, gene_pu
+
+
 def build_env(
     env_id: int,
     theta: np.ndarray,
     cap_buses: list[int],
     pv_generation_scale: float,
+    action_parameterization: str = "relative",
+    load_pu: np.ndarray | None = None,
+    gene_pu: np.ndarray | None = None,
+    svc_absorption_ratio: float = 0.0,
 ) -> Env.grid_case:
-    load_pu = np.load(Env.DATA_DIR / "load96.npy")
-    gene_pu = np.load(Env.DATA_DIR / "gen96.npy")
+    if load_pu is None or gene_pu is None:
+        load_pu, gene_pu = load_profiles_from_cfg({})
     id_iber, id_svc = device_ids(env_id)
     cap_total = float(theta[2])
     cap_q = [cap_total / len(cap_buses)] * len(cap_buses) if cap_total > 0 and cap_buses else []
@@ -59,15 +129,16 @@ def build_env(
         pv_s_scale=float(theta[0]),
         pv_generation_scale=float(pv_generation_scale),
         svc_q_scale=float(theta[1]),
+        svc_absorption_ratio=float(svc_absorption_ratio),
         cap_buses=cap_buses or None,
         cap_q_mvar=cap_q or None,
+        action_parameterization=action_parameterization,
     )
 
 
 def load_actor(
     run_dir: Path, obs_dim: int, act_dim: int, device: torch.device
 ) -> tuple[torch.nn.Module, dict]:
-    install_numpy_pickle_aliases()
     checkpoint_path = run_dir / "models" / "checkpoint.pth"
     payload = torch.load(checkpoint_path, map_location=device, weights_only=False)
     cfg = payload["cfg"]
@@ -154,10 +225,26 @@ def main() -> None:
     theta = np.asarray(parse_floats(args.theta), dtype=np.float32)
     if theta.shape != (3,):
         parser.error("--theta must contain exactly three values")
-    metadata = json.loads(Path(args.days_metadata).read_text(encoding="utf-8"))
-    days = [int(day) for day in metadata["final_day_indices"]]
+    days = load_day_indices(args.days_metadata)
     device = torch.device(args.device if torch.cuda.is_available() else "cpu")
-    env = build_env(args.env, theta, parse_ints(args.cap_buses), args.pv_generation_scale)
+    checkpoint_payload = torch.load(
+        Path(args.run_dir) / "models" / "checkpoint.pth",
+        map_location="cpu",
+        weights_only=False,
+    )
+    checkpoint_path = Path(args.run_dir) / "models" / "checkpoint.pth"
+    checkpoint_cfg = checkpoint_payload.get("cfg", {})
+    load_pu, gene_pu = load_profiles_from_cfg(checkpoint_cfg, checkpoint_path)
+    env = build_env(
+        args.env,
+        theta,
+        parse_ints(args.cap_buses),
+        args.pv_generation_scale,
+        str(checkpoint_cfg.get("action_parameterization", "relative")),
+        load_pu,
+        gene_pu,
+        float(checkpoint_cfg.get("svc_absorption_ratio", 0.0)),
+    )
     actor, checkpoint = load_actor(
         Path(args.run_dir), len(env.observation_space), len(env.action_space), device
     )
