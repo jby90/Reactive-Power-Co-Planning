@@ -651,6 +651,10 @@ def write_manuscript_results(
         f"student-training hours across {int(calibration_cost['student_fits'])} fits."
     )
     env69_index = confirmed_boundary_index(env69)
+    env69_selected = next(
+        (row for row in env69.get("points", []) if row.get("role") == "selected"),
+        None,
+    )
     portability = (
         "After feeder-specific adaptation, the protocol confirmed a 69-bus "
         "rejected/passed boundary at path "
@@ -664,6 +668,11 @@ def write_manuscript_results(
         first_external = env69_adaptation["first_external_attempt"]
         counterexample = env69_adaptation["counterexample_guided_adaptation"]
         final = env69_adaptation["untouched_2019_confirmation"]
+        env69_days = int(env69.get("confirmation_days_per_seed", 0))
+        env69_upper = max(
+            float(row["one_sided_clopper_pearson_upper_95"])
+            for row in env69_selected["seed_summaries"]
+        )
         portability += (
             " Direct reuse of the original student representation first failed: "
             f"the highest development point recorded {int(initial['event_seed_days'])}/"
@@ -674,9 +683,9 @@ def write_manuscript_results(
             "features and added "
             f"{int(counterexample['teacher_examples']):,} AC-OPF examples from "
             f"{int(counterexample['unique_failed_days'])} exposed tail days. On the "
-            "subsequent untouched 2019 window, the selected point recorded "
-            f"{int(final['selected_event_seed_days'])}/"
-            f"{int(final['selected_evaluated_seed_days'])} event seed--days while its "
+            "subsequent untouched 2019 window, every selected-point actor recorded "
+            f"0/{env69_days} event-days (one-sided 95\\% upper bound "
+            f"{tex_number(100.0 * env69_upper, 3)}\\%) while its "
             f"adjacent lower point recorded {int(final['adjacent_rejected_event_seed_days'])}."
         )
     env69_calibration = env69.get("_calibration_evidence", [])
