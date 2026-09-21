@@ -38,6 +38,10 @@ class CapacityConditionedActor(nn.Module):
         self.register_buffer("theta_min", torch.tensor(list(theta_min), dtype=torch.float32))
         self.register_buffer("theta_max", torch.tensor(list(theta_max), dtype=torch.float32))
         input_dim = obs_dim + 3
+        # Kept outside state_dict so historical actor checkpoints remain compatible.
+        self.observation_mean = torch.zeros(obs_dim, dtype=torch.float32)
+        self.observation_scale = torch.ones(obs_dim, dtype=torch.float32)
+        self.observation_mask = torch.ones(obs_dim, dtype=torch.float32)
 
         self.pi_fc1 = nn.Linear(input_dim, h1)
         self.pi_fc2 = nn.Linear(h1, h2)
@@ -57,7 +61,38 @@ class CapacityConditionedActor(nn.Module):
 
     def _features(self, obs: torch.Tensor, theta: torch.Tensor) -> torch.Tensor:
         normalised = normalise_theta(theta, self.theta_min, self.theta_max)
-        return torch.cat((obs, normalised), dim=-1)
+        mean = self.observation_mean.to(device=obs.device, dtype=obs.dtype)
+        scale = self.observation_scale.to(device=obs.device, dtype=obs.dtype)
+        mask = self.observation_mask.to(device=obs.device, dtype=obs.dtype)
+        transformed_obs = ((obs - mean) / scale) * mask
+        return torch.cat((transformed_obs, normalised), dim=-1)
+
+    def configure_observation_transform(
+        self,
+        mean: np.ndarray | torch.Tensor,
+        scale: np.ndarray | torch.Tensor,
+        mask: np.ndarray | torch.Tensor,
+    ) -> None:
+        """Install a training-fitted observation transform without changing topology."""
+        mean_tensor = torch.as_tensor(mean, dtype=torch.float32)
+        scale_tensor = torch.as_tensor(scale, dtype=torch.float32)
+        mask_tensor = torch.as_tensor(mask, dtype=torch.float32)
+        expected = self.observation_mean.shape
+        if (
+            mean_tensor.shape != expected
+            or scale_tensor.shape != expected
+            or mask_tensor.shape != expected
+        ):
+            raise ValueError(
+                "Observation transform shape mismatch: "
+                f"expected {tuple(expected)}, got mean={tuple(mean_tensor.shape)}, "
+                f"scale={tuple(scale_tensor.shape)}, mask={tuple(mask_tensor.shape)}"
+            )
+        if torch.any(scale_tensor <= 0):
+            raise ValueError("Observation scales must be strictly positive")
+        self.observation_mean = mean_tensor.clone()
+        self.observation_scale = scale_tensor.clone()
+        self.observation_mask = mask_tensor.clone()
 
     @staticmethod
     def _trunk(x: torch.Tensor, fc1: nn.Linear, fc2: nn.Linear) -> torch.Tensor:
@@ -84,6 +119,18 @@ def load_policy_initialisation(model: nn.Module, checkpoint_path: str) -> None:
         return
     payload = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
     source = payload.get("policy_state_dict", payload)
+    observation_transform = payload.get("observation_transform")
+    if observation_transform is not None:
+        if not hasattr(model, "configure_observation_transform"):
+            raise ValueError(
+                "Checkpoint contains an observation transform but the target model "
+                "does not support it"
+            )
+        model.configure_observation_transform(
+            observation_transform["mean"],
+            observation_transform["scale"],
+            observation_transform["mask"],
+        )
     policy_prefixes = ("pi_fc1.", "pi_fc2.", "pi_mu.", "pi_log_std")
     selected = {
         key: value for key, value in source.items() if key.startswith(policy_prefixes)

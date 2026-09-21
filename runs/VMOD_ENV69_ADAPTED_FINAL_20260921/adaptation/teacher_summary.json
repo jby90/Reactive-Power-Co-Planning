@@ -1,0 +1,19 @@
+{
+  "days": 14,
+  "capacity_levels": 1,
+  "all_capacity_converged_matched_days": 14,
+  "monotone_nonincreasing_loss": true,
+  "loss_monotonicity_tolerance_mwh": 0.0001,
+  "loss_monotonicity_relative_tolerance": 0.001,
+  "maximum_positive_loss_increase_mwh": 0.0,
+  "all_adjacent_pairs_nonincreasing_within_tolerance": false,
+  "minimum_adjacent_pair_matched_days": 0,
+  "risk": 0.0,
+  "direct_fallback_steps": 281,
+  "inherited_steps": 0,
+  "load_profile": "data\\vmod\\profiles69_external2018\\load_15min_366d.npy",
+  "generation_profile": "data\\vmod\\profiles69_external2018\\pv_15min_366d.npy",
+  "svc_absorption_ratio": 1.0,
+  "environment": 69,
+  "capacitor_buses": []
+}

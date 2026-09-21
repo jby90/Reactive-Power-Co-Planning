@@ -49,8 +49,12 @@ def prepare_profiles(
     pv_columns: int,
     load_reference: float,
     solar_reference: float,
+    selection_days: int = 17,
+    missing_policy: str = "reject",
 ) -> dict:
-    frame = extract_window(source, start=start, days=days)
+    frame = extract_window(
+        source, start=start, days=days, missing_policy=missing_policy
+    )
     load, solar, stats = build_profiles(
         frame,
         load_columns=load_columns,
@@ -61,7 +65,7 @@ def prepare_profiles(
     hashes = day_hashes(load, solar)
     if len(set(hashes)) != days:
         raise ValueError("External validation contains duplicate joint daily profiles")
-    splits = split_external_days(days, split_seed)
+    splits = split_external_days(days, split_seed, selection_days=selection_days)
     out_dir.mkdir(parents=True, exist_ok=True)
     load_path = out_dir / "load_15min_366d.npy"
     solar_path = out_dir / "pv_15min_366d.npy"
@@ -86,6 +90,12 @@ def prepare_profiles(
             "Uses the frozen development-window load and solar references; "
             "no external-validation value exceeded either reference."
         ),
+        "missing_data": {
+            "policy": frame.attrs.get("missing_policy", "reject"),
+            "values_before_repair": frame.attrs.get(
+                "missing_values_before_repair", {}
+            ),
+        },
         "statistics": stats,
         "load_shape": list(load.shape),
         "solar_shape": list(solar.shape),
@@ -143,6 +153,12 @@ def main() -> None:
     parser.add_argument("--start", default="2018-01-02T00:00:00Z")
     parser.add_argument("--days", type=int, default=366)
     parser.add_argument("--split_seed", type=int, default=20260921)
+    parser.add_argument("--selection_days", type=int, default=17)
+    parser.add_argument(
+        "--missing_policy",
+        choices=("reject", "interpolate_time"),
+        default="reject",
+    )
     parser.add_argument("--load_columns", type=int, required=True)
     parser.add_argument("--pv_columns", type=int, required=True)
     parser.add_argument("--load_reference", type=float, default=77852.94)
@@ -158,6 +174,8 @@ def main() -> None:
         args.pv_columns,
         args.load_reference,
         args.solar_reference,
+        args.selection_days,
+        args.missing_policy,
     )
     protocol = prepare_protocol(
         args.profile_out, args.source_protocol, args.protocol_out

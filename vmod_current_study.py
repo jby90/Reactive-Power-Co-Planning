@@ -29,6 +29,10 @@ EXTERNAL_PROTOCOL_69 = (
 )
 EXTERNAL_PROFILES_33 = ROOT / "data" / "vmod" / "profiles33_external2018"
 EXTERNAL_PROFILES_69 = ROOT / "data" / "vmod" / "profiles69_external2018"
+FINAL_PROTOCOL_69 = (
+    ROOT / "runs" / "VMOD_PROTOCOL_EXTERNAL2019_ENV69_FINAL_20260921"
+)
+FINAL_PROFILES_69 = ROOT / "data" / "vmod" / "profiles69_external2019"
 
 FINAL_ROOT = ROOT / "runs" / "VMOD_FINAL_STUDY_20260921"
 
@@ -56,11 +60,9 @@ def main_run_dir(margin: float | None = None) -> Path:
 
 def env69_run_dir(margin: float | None = None) -> Path:
     selected = read_selected_margin() if margin is None else float(margin)
-    return (
-        ROOT
-        / "runs"
-        / f"VMOD_ENV69_EXTENDED_REF15_EXTERNAL2018_MARGIN_{margin_label(selected)}_20260921"
-    )
+    if selected != 0.003:
+        raise RuntimeError("The audited 69-bus adaptation uses the frozen 0.003-pu margin")
+    return ROOT / "runs" / "VMOD_ENV69_ADAPTED_FINAL_20260921"
 
 
 def protocol_day_count(protocol_dir: Path, split: str) -> int:

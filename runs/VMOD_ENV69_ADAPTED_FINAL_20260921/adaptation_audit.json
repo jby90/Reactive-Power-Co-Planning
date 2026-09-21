@@ -1,0 +1,65 @@
+{
+  "role": "feeder-specific adaptation audit",
+  "zero_shot_transfer": false,
+  "initial_protocol_result": {
+    "status": "failed_development_gate",
+    "highest_path_point": "P14_pv150_svc1500",
+    "event_seed_days": 27,
+    "evaluated_seed_days": 50
+  },
+  "development_only_feature_screen": {
+    "seed": 42,
+    "evaluated_days": 10,
+    "candidates": [
+      {
+        "feature_mode": "all",
+        "standardized": true,
+        "event_days": 7
+      },
+      {
+        "feature_mode": "voltage_p",
+        "standardized": true,
+        "event_days": 0
+      },
+      {
+        "feature_mode": "p_bus",
+        "standardized": true,
+        "event_days": 0,
+        "selected": true,
+        "selection_reason": "zero events with lower mean line loss and larger lower-voltage margin"
+      }
+    ]
+  },
+  "first_external_attempt": {
+    "selected_point": "P09_pv075_svc1000",
+    "status": "failed_confirmation",
+    "event_seed_days": 21,
+    "evaluated_seed_days": 1745,
+    "adaptation_data_after_failure": true
+  },
+  "counterexample_guided_adaptation": {
+    "unique_failed_days": 14,
+    "teacher_capacity_point": "P09_pv075_svc1000",
+    "teacher_voltage_band_pu": [0.953, 1.047],
+    "complete_teacher_days": 14,
+    "teacher_examples": 1344,
+    "direct_ac_fallback_steps": 281,
+    "merged_examples": 40224,
+    "merged_unique_days": 53
+  },
+  "post_adaptation_2018_check": {
+    "status": "passed_nonindependent_check",
+    "event_seed_days": 0,
+    "evaluated_seed_days": 1830
+  },
+  "untouched_2019_confirmation": {
+    "window_start_utc": "2019-01-03 00:00:00+00:00",
+    "window_end_utc_inclusive": "2020-01-03 23:45:00+00:00",
+    "selected_point": "P09_pv075_svc1000",
+    "selected_event_seed_days": 0,
+    "selected_evaluated_seed_days": 1830,
+    "adjacent_rejected_point": "P08_pv075_svc0750",
+    "adjacent_rejected_event_seed_days": 1,
+    "boundary_confirmed": true
+  }
+}

@@ -1084,7 +1084,7 @@ def robustness_portability_runtime_figure() -> None:
     ax.set_xlim(-0.5, maximum_index + 0.5)
     ax.invert_yaxis()
     ax.set_xlabel("Capacity-path index")
-    panel_label(ax, "b", "Boundary transfer")
+    panel_label(ax, "b", "Adapted boundary")
     tidy_axis(ax, "x")
     ax.legend(
         handles=[

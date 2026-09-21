@@ -13,6 +13,12 @@ def test_external_split_is_disjoint_and_uses_all_days():
     assert len(set(splits["selection"]) | set(splits["confirmation"])) == 366
 
 
+def test_external_split_can_reserve_every_day_for_confirmation():
+    splits = split_external_days(366, 20260921, selection_days=0)
+    assert len(splits["selection"]) == 0
+    assert sorted(splits["confirmation"].tolist()) == list(range(366))
+
+
 def test_external_protocol_copies_only_validation_inputs(tmp_path: Path):
     profiles = tmp_path / "profiles"
     source = tmp_path / "source"

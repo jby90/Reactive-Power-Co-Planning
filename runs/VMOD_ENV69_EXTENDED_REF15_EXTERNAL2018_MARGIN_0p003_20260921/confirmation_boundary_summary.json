@@ -1,9 +1,0 @@
-{
-  "boundary_confirmed": false,
-  "confirmation_opened": false,
-  "selected_point_passed": false,
-  "adjacent_lower_point_failed": false,
-  "reason": "no point in the frozen extended path passed development calibration; external selection was not opened",
-  "development_calibration_summary": ".\\runs\\VMOD_ENV69_EXTENDED_REF15_EXTERNAL2018_MARGIN_0p003_20260921\\calibration_path_summary.csv",
-  "points": []
-}

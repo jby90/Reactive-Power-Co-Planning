@@ -1,0 +1,28 @@
+{
+  "examples": 1344,
+  "observation_dim": 212,
+  "action_dim": 5,
+  "unique_days": 14,
+  "unique_candidates": 1,
+  "excluded_nonconverged_jobs": 0,
+  "candidate_coverage": [
+    {
+      "candidate_id": 9,
+      "capacity_label": "P09_pv075_svc1000",
+      "attempted_days": 14,
+      "converged_days": 14,
+      "examples": 1344,
+      "excluded_nonconverged_days": 0
+    }
+  ],
+  "svc_absorption_ratio": 1.0,
+  "reference_pv_s_scale": 1.5,
+  "reference_svc_q_scale": 1.5,
+  "maximum_q_representation_error_mvar": 2.220446049250313e-16,
+  "mean_q_representation_error_mvar": 1.1629681695997043e-17,
+  "jobs_sha256": "e81a638080613fa967a3305e22fbd96dbda16f6372f39af94475c13e2062359b",
+  "opf_steps_sha256": "64b35c0024f2987ce074170a608983939a33c64d08a921870f0d9f03d4edb7ad",
+  "load_profile_sha256": "9ad8bd1477db15ff48141896d80576690ae9bf3b6e039bd662682e95adbd8de0",
+  "generation_profile_sha256": "def10c4683d687f71e2e7758a3105dae54cc9e92bfa24b571940e6d75e1117cb",
+  "dataset_sha256": "126084fe73925222321b90c15d8f7ea7695b8d134ba3de224a6b29c35b217ed6"
+}

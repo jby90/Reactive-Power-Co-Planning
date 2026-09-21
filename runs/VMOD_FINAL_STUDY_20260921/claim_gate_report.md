@@ -20,7 +20,7 @@ Core story supported: **True**
 - PASS: `ac_nodal_balance_verified`
 - PASS: `online_path_below_one_percent_of_control_interval`
 - PASS: `timing_diagnostic_below_one_percent_on_33_69_118_bus_cases`
-- FAIL: `sixty_nine_bus_boundary_confirmed`
+- PASS: `sixty_nine_bus_boundary_confirmed`
 
 ## Claim discipline
 

@@ -1,0 +1,23 @@
+{
+  "role": "untouched-window fixed-boundary confirmation",
+  "selected_path_index": 9,
+  "adjacent_rejected_path_index": 8,
+  "training_seeds": [
+    42,
+    43,
+    44,
+    45,
+    46
+  ],
+  "confirmation_days": 366,
+  "confirmation_days_sha256": "76341c8eaa69099fd8fa610c6f0fe03d3d84828941a7487f0a033d6d94e362e0",
+  "capacity_path_sha256": "21c6ebbb313ba83b0baff3dc08413a367c0c981c83c68918ba049d4685326a74",
+  "profile_metadata_sha256": "08549d565ec5d46a20dd896f9dfcc17d9d900b8804023f3bb0a5ee7697ae6b31",
+  "policy_checkpoint_sha256": {
+    "42": "51b416f33734552a6c9554d97941c0462c8079b4ecd147582c478f63e045ec14",
+    "43": "ccfa2839b9cd0fefed219a8d2627d59403ab6b6af5ff29167a8481292007b8bc",
+    "44": "4674fd866de219901c3fe8a8646e70aede7ca171e1a8974e72b6f756c3845b9d",
+    "45": "8e3debc5cab81c646cd3620c63e3dfd6cfa0e9086cccc9d7360542b418d5dc3d",
+    "46": "fb6a7c2d4ecfefef7c6115847dc2c0a190da88b7458b67bd54b4b2ad2907a015"
+  }
+}

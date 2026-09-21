@@ -238,7 +238,7 @@
     "ac_nodal_balance_verified": true,
     "online_path_below_one_percent_of_control_interval": true,
     "timing_diagnostic_below_one_percent_on_33_69_118_bus_cases": true,
-    "sixty_nine_bus_boundary_confirmed": false
+    "sixty_nine_bus_boundary_confirmed": true
   },
   "permitted_claims": {
     "raw_controller_empirically_feasible": true,
@@ -249,6 +249,7 @@
     "capacity_conditioning_improves_safety": false,
     "capacity_conditioning_is_noninferior_compression": true,
     "portable_to_second_benchmark": false,
+    "replicated_on_second_benchmark_after_feeder_adaptation": true,
     "formal_or_field_safety_guarantee": false,
     "global_or_economic_capacity_optimum": false,
     "core_story_supported": true
@@ -635,7 +636,9 @@
     }
   },
   "second_feeder_training": {
-    "dataset_unique_days_with_examples": 39,
+    "dataset_unique_days_with_examples": 53,
+    "initial_complete_teacher_days": 39,
+    "counterexample_teacher_days": 14,
     "requested_validation_days": [
       56,
       114,
@@ -657,7 +660,7 @@
       342
     ],
     "missing_validation_days": [],
-    "realised_training_days_per_seed": 31,
+    "realised_training_days_per_seed": 45,
     "realised_validation_days_per_seed": 8,
     "missing_days_reassigned_to_training": false
   },
@@ -671,8 +674,9 @@
     "power": ".\\runs\\VMOD_EXTERNAL2018_MARGIN_0p003_20260921\\power_balance_audit\\summary.json",
     "runtime": ".\\runs\\VMOD_EXTERNAL2018_MARGIN_0p003_20260921\\runtime_benchmark\\summary.json",
     "scalability": ".\\runs\\VMOD_EXTERNAL2018_MARGIN_0p003_20260921\\runtime_scalability\\summary.json",
-    "env69": ".\\runs\\VMOD_ENV69_EXTENDED_REF15_EXTERNAL2018_MARGIN_0p003_20260921\\confirmation_boundary_summary.json",
-    "env69_dataset": ".\\runs\\VMOD_ENV69_EXTENDED_REF15_EXTERNAL2018_MARGIN_0p003_20260921\\dataset\\manifest.json",
+    "env69": ".\\runs\\VMOD_ENV69_ADAPTED_FINAL_20260921\\confirmation_boundary_summary.json",
+    "env69_dataset": ".\\runs\\VMOD_ENV69_ADAPTED_FINAL_20260921\\dataset\\manifest.json",
+    "env69_adaptation": ".\\runs\\VMOD_ENV69_ADAPTED_FINAL_20260921\\adaptation_audit.json",
     "teacher": ".\\runs\\VMOD_EXTERNAL2018_MARGIN_0p003_20260921\\teacher\\summary.json",
     "dataset": ".\\runs\\VMOD_EXTERNAL2018_MARGIN_0p003_20260921\\dataset\\manifest.json"
   }

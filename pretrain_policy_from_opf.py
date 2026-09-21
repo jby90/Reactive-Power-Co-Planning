@@ -49,6 +49,42 @@ def resolve_frozen_validation_days(
     return realised, missing
 
 
+def observation_transform(
+    observations: np.ndarray,
+    train_indices: np.ndarray,
+    action_dim: int,
+    feature_mode: str,
+    standardize: bool,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Fit an auditable transform using only the student-training examples."""
+    obs_dim = observations.shape[1]
+    bus_remainder = obs_dim - int(action_dim)
+    if bus_remainder <= 0 or bus_remainder % 3:
+        raise ValueError(
+            "Expected observation layout [voltage, p, q, previous_action]"
+        )
+    bus_count = bus_remainder // 3
+    mask = np.zeros(obs_dim, dtype=np.float32)
+    if feature_mode == "all":
+        mask[:] = 1.0
+    elif feature_mode == "voltage_p":
+        mask[: 2 * bus_count] = 1.0
+    elif feature_mode == "p_bus":
+        mask[bus_count : 2 * bus_count] = 1.0
+    else:
+        raise ValueError(f"Unsupported observation feature mode: {feature_mode}")
+
+    mean = np.zeros(obs_dim, dtype=np.float32)
+    scale = np.ones(obs_dim, dtype=np.float32)
+    if standardize:
+        active = mask.astype(bool)
+        training = observations[train_indices]
+        mean[active] = training[:, active].mean(axis=0)
+        fitted_scale = training[:, active].std(axis=0)
+        scale[active] = np.where(fitted_scale > 1e-6, fitted_scale, 1.0)
+    return mean, scale, mask
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dataset", type=Path, required=True)
@@ -59,6 +95,20 @@ def main() -> None:
     parser.add_argument("--learning_rate", type=float, default=1e-3)
     parser.add_argument("--weight_decay", type=float, default=1e-5)
     parser.add_argument("--validation_days", type=int, default=10)
+    parser.add_argument(
+        "--observation_features",
+        choices=("all", "voltage_p", "p_bus"),
+        default="all",
+        help=(
+            "State components supplied to the actor. voltage_p and p_bus remove "
+            "reactive/action features that depend on the preceding control command."
+        ),
+    )
+    parser.add_argument(
+        "--standardize_observations",
+        action="store_true",
+        help="Fit per-feature mean and scale on student-training examples only.",
+    )
     parser.add_argument(
         "--validation_days_csv",
         type=Path,
@@ -121,6 +171,14 @@ def main() -> None:
         [1.5, 1.5, 1.0],
         log_std_init=-2.0,
     ).to(device)
+    obs_mean, obs_scale, obs_mask = observation_transform(
+        observations,
+        train_indices,
+        targets.shape[1],
+        args.observation_features,
+        args.standardize_observations,
+    )
+    model.configure_observation_transform(obs_mean, obs_scale, obs_mask)
     optimiser = torch.optim.AdamW(
         model.policy_parameters(),
         lr=args.learning_rate,
@@ -189,6 +247,13 @@ def main() -> None:
             ),
             "missing_validation_days": missing_validation_days,
             "config": vars(args),
+            "observation_transform": {
+                "feature_mode": args.observation_features,
+                "standardized": bool(args.standardize_observations),
+                "mean": obs_mean.tolist(),
+                "scale": obs_scale.tolist(),
+                "mask": obs_mask.tolist(),
+            },
         },
         checkpoint,
     )
@@ -218,6 +283,9 @@ def main() -> None:
         ),
         "best_validation_mse": best_loss,
         "best_epoch": int(pd.DataFrame(rows).validation_mse.idxmin() + 1),
+        "observation_feature_mode": args.observation_features,
+        "standardized_observations": bool(args.standardize_observations),
+        "active_observation_features": int(obs_mask.sum()),
         "dataset_sha256": file_hash(args.dataset),
         "checkpoint": str(checkpoint),
         "checkpoint_sha256": file_hash(checkpoint),

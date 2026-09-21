@@ -339,6 +339,12 @@ def portability_training_summary(
         raise ValueError("Second-feeder missing-validation accounting is inconsistent")
     return {
         "dataset_unique_days_with_examples": int(dataset_manifest["unique_days"]),
+        "initial_complete_teacher_days": int(
+            dataset_manifest.get("initial_complete_teacher_days", dataset_manifest["unique_days"])
+        ),
+        "counterexample_teacher_days": int(
+            dataset_manifest.get("counterexample_teacher_days", 0)
+        ),
         "requested_validation_days": requested_days,
         "realised_validation_days": realised_days,
         "missing_validation_days": missing_days,
@@ -646,11 +652,33 @@ def write_manuscript_results(
     )
     env69_index = confirmed_boundary_index(env69)
     portability = (
-        "The same protocol confirmed a 69-bus rejected/passed boundary at path "
-        f"index {int(env69_index)}."
+        "After feeder-specific adaptation, the protocol confirmed a 69-bus "
+        "rejected/passed boundary at path "
+        f"index {int(env69_index)} on an untouched annual window."
         if env69_index is not None
         else "No rejected/passed capacity boundary was confirmed on the 69-bus case."
     )
+    env69_adaptation = env69.get("_adaptation_evidence", {})
+    if env69_adaptation:
+        initial = env69_adaptation["initial_protocol_result"]
+        first_external = env69_adaptation["first_external_attempt"]
+        counterexample = env69_adaptation["counterexample_guided_adaptation"]
+        final = env69_adaptation["untouched_2019_confirmation"]
+        portability += (
+            " Direct reuse of the original student representation first failed: "
+            f"the highest development point recorded {int(initial['event_seed_days'])}/"
+            f"{int(initial['evaluated_seed_days'])} event seed--days, and the first "
+            f"external candidate later recorded {int(first_external['event_seed_days'])}/"
+            f"{int(first_external['evaluated_seed_days'])}. The adaptation retained "
+            "feeder-specific retraining, standardised the active-power observation "
+            "features and added "
+            f"{int(counterexample['teacher_examples']):,} AC-OPF examples from "
+            f"{int(counterexample['unique_failed_days'])} exposed tail days. On the "
+            "subsequent untouched 2019 window, the selected point recorded "
+            f"{int(final['selected_event_seed_days'])}/"
+            f"{int(final['selected_evaluated_seed_days'])} event seed--days while its "
+            f"adjacent lower point recorded {int(final['adjacent_rejected_event_seed_days'])}."
+        )
     env69_calibration = env69.get("_calibration_evidence", [])
     env69_dataset = env69.get("_dataset_evidence", {})
     if env69_index is None and env69_calibration:
@@ -671,7 +699,7 @@ def write_manuscript_results(
             "$\\times10^{-11}$~MVAr."
         )
     portability += (
-        f" The direct AC nodal-balance audit covered {int(power['audited_steps']):,} "
+        f" Separately, the principal 33-bus direct AC nodal-balance audit covered {int(power['audited_steps']):,} "
         f"executed steps with {int(power['power_flow_failures'])} power-flow failures; "
         "the maximum active and reactive residuals were "
         f"{tex_number(power['maximum_active_balance_residual_mw'] / 1e-7, 2)}"
@@ -684,8 +712,9 @@ def write_manuscript_results(
     if env69_training:
         portability += (
             " On the 69-bus teacher data, "
-            f"{int(env69_training['dataset_unique_days_with_examples'])} of 40 "
-            "pre-allocated fitting days supplied at least one complete trajectory. "
+            f"{int(env69_training['initial_complete_teacher_days'])} initial days and "
+            f"{int(env69_training['counterexample_teacher_days'])} adaptation days "
+            "supplied complete trajectories. "
             f"The frozen eight-day validation list retained "
             f"{int(env69_training['realised_validation_days_per_seed'])} available "
             "days; "
@@ -731,6 +760,7 @@ def main() -> None:
         "scalability": main_run / "runtime_scalability" / "summary.json",
         "env69": env69_run / "confirmation_boundary_summary.json",
         "env69_dataset": env69_run / "dataset" / "manifest.json",
+        "env69_adaptation": env69_run / "adaptation_audit.json",
         "teacher": main_run / "teacher" / "summary.json",
         "dataset": main_run / "dataset" / "manifest.json",
     }
@@ -867,6 +897,7 @@ def main() -> None:
         )
     )
     env69 = evidence["env69"]
+    env69["_adaptation_evidence"] = evidence["env69_adaptation"]
     env69_calibration = pd.read_csv(
         env69_run / "calibration_path_summary.csv"
     ).to_dict(orient="records")
@@ -964,7 +995,8 @@ def main() -> None:
         "capacity_conditioning_is_noninferior_compression": (
             conditioning_compression_gate
         ),
-        "portable_to_second_benchmark": portability_gate,
+        "portable_to_second_benchmark": False,
+        "replicated_on_second_benchmark_after_feeder_adaptation": portability_gate,
         "formal_or_field_safety_guarantee": False,
         "global_or_economic_capacity_optimum": False,
         "core_story_supported": core_story_gate,

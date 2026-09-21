@@ -1,0 +1,23 @@
+{
+  "role": "counterexample-guided feeder adaptation",
+  "examples": 40224,
+  "observation_dim": 212,
+  "action_dim": 5,
+  "unique_days": 53,
+  "unique_candidates": 15,
+  "initial_complete_teacher_days": 39,
+  "counterexample_teacher_days": 14,
+  "maximum_q_representation_error_mvar": 5.997335961627215e-11,
+  "observation_feature_mode": "p_bus",
+  "standardized_observations": true,
+  "base": {
+    "path": "runs\\VMOD_ENV69_EXTENDED_REF15_EXTERNAL2018_MARGIN_0p003_20260921\\dataset\\opf_imitation_dataset.npz",
+    "sha256": "4b849a38696cf963e9e9f9004fd6107010775fd76f7d5a15579bca7af0dd383d"
+  },
+  "augmentation": {
+    "path": "runs\\VMOD_ENV69_ADAPT_P_BUS_DEV_20260921\\adaptation\\dataset\\opf_imitation_dataset.npz",
+    "sha256": "126084fe73925222321b90c15d8f7ea7695b8d134ba3de224a6b29c35b217ed6",
+    "examples": 1344
+  },
+  "dataset_sha256": "9142867d4e9c4ce0ca90988df1be169e39659e1e8c6e35ce6168aa6366753ce1"
+}

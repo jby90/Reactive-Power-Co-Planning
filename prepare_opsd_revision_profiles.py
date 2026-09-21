@@ -29,6 +29,7 @@ def extract_window(
     source: Path,
     start: str = "2017-01-01T00:00:00Z",
     days: int = 366,
+    missing_policy: str = "reject",
 ) -> pd.DataFrame:
     frame = pd.read_csv(
         source,
@@ -48,10 +49,24 @@ def extract_window(
     expected_time = pd.date_range(start_time, periods=expected_rows, freq="15min")
     if not frame[TIMESTAMP_COLUMN].equals(pd.Series(expected_time, name=TIMESTAMP_COLUMN)):
         raise ValueError("Selected OPSD window is not a complete regular 15-minute series")
+    missing_before = {
+        column: int(frame[column].isna().sum())
+        for column in (LOAD_COLUMN, SOLAR_COLUMN)
+    }
+    if any(missing_before.values()):
+        if missing_policy != "interpolate_time":
+            raise ValueError("Selected OPSD window contains missing load or solar values")
+        indexed = frame.set_index(TIMESTAMP_COLUMN)
+        indexed[[LOAD_COLUMN, SOLAR_COLUMN]] = indexed[
+            [LOAD_COLUMN, SOLAR_COLUMN]
+        ].interpolate(method="time", limit_direction="both")
+        frame = indexed.reset_index()
     if frame[[LOAD_COLUMN, SOLAR_COLUMN]].isna().any().any():
-        raise ValueError("Selected OPSD window contains missing load or solar values")
+        raise ValueError("Missing OPSD values remain after deterministic repair")
     if (frame[[LOAD_COLUMN, SOLAR_COLUMN]] < 0).any().any():
         raise ValueError("Selected OPSD window contains negative load or solar values")
+    frame.attrs["missing_policy"] = missing_policy
+    frame.attrs["missing_values_before_repair"] = missing_before
     return frame
 
 
