@@ -1,0 +1,118 @@
+{
+  "protocol": "VMOD margin calibration followed by nested capacity-boundary mapping",
+  "environment": 33,
+  "pv_base_mva_at_scale_one": 13.4164078649987,
+  "svc_base_mvar_at_scale_one": 2.0,
+  "fit_days": 40,
+  "student_training_days": 32,
+  "student_validation_days": 8,
+  "calibration_days": 10,
+  "training_path_job_rows": 360,
+  "margins_pu": [
+    0.0,
+    0.001,
+    0.003,
+    0.005
+  ],
+  "capacity_path": [
+    {
+      "path_index": 0,
+      "label": "P00_pv0225_svc0000",
+      "pv_s_scale": 0.225,
+      "svc_q_scale": 0.0,
+      "cap_total_mvar": 0.0,
+      "pv_inverter_nameplate_mva": 3.0186917696247075,
+      "svc_nameplate_mvar": 0.0,
+      "fixed_shunt_mvar": 0.0
+    },
+    {
+      "path_index": 1,
+      "label": "P01_pv030_svc0000",
+      "pv_s_scale": 0.3,
+      "svc_q_scale": 0.0,
+      "cap_total_mvar": 0.0,
+      "pv_inverter_nameplate_mva": 4.02492235949961,
+      "svc_nameplate_mvar": 0.0,
+      "fixed_shunt_mvar": 0.0
+    },
+    {
+      "path_index": 2,
+      "label": "P02_pv030_svc01875",
+      "pv_s_scale": 0.3,
+      "svc_q_scale": 0.1875,
+      "cap_total_mvar": 0.0,
+      "pv_inverter_nameplate_mva": 4.02492235949961,
+      "svc_nameplate_mvar": 0.375,
+      "fixed_shunt_mvar": 0.0
+    },
+    {
+      "path_index": 3,
+      "label": "P03_pv030_svc0375",
+      "pv_s_scale": 0.3,
+      "svc_q_scale": 0.375,
+      "cap_total_mvar": 0.0,
+      "pv_inverter_nameplate_mva": 4.02492235949961,
+      "svc_nameplate_mvar": 0.75,
+      "fixed_shunt_mvar": 0.0
+    },
+    {
+      "path_index": 4,
+      "label": "P04_pv045_svc0375",
+      "pv_s_scale": 0.45,
+      "svc_q_scale": 0.375,
+      "cap_total_mvar": 0.0,
+      "pv_inverter_nameplate_mva": 6.037383539249415,
+      "svc_nameplate_mvar": 0.75,
+      "fixed_shunt_mvar": 0.0
+    },
+    {
+      "path_index": 5,
+      "label": "P05_pv045_svc05625",
+      "pv_s_scale": 0.45,
+      "svc_q_scale": 0.5625,
+      "cap_total_mvar": 0.0,
+      "pv_inverter_nameplate_mva": 6.037383539249415,
+      "svc_nameplate_mvar": 1.125,
+      "fixed_shunt_mvar": 0.0
+    },
+    {
+      "path_index": 6,
+      "label": "P06_pv045_svc0750",
+      "pv_s_scale": 0.45,
+      "svc_q_scale": 0.75,
+      "cap_total_mvar": 0.0,
+      "pv_inverter_nameplate_mva": 6.037383539249415,
+      "svc_nameplate_mvar": 1.5,
+      "fixed_shunt_mvar": 0.0
+    },
+    {
+      "path_index": 7,
+      "label": "P07_pv060_svc0750",
+      "pv_s_scale": 0.6,
+      "svc_q_scale": 0.75,
+      "cap_total_mvar": 0.0,
+      "pv_inverter_nameplate_mva": 8.04984471899922,
+      "svc_nameplate_mvar": 1.5,
+      "fixed_shunt_mvar": 0.0
+    },
+    {
+      "path_index": 8,
+      "label": "P08_pv075_svc0750",
+      "pv_s_scale": 0.75,
+      "svc_q_scale": 0.75,
+      "cap_total_mvar": 0.0,
+      "pv_inverter_nameplate_mva": 10.062305898749024,
+      "svc_nameplate_mvar": 1.5,
+      "fixed_shunt_mvar": 0.0
+    }
+  ],
+  "margin_selection_rule": "Choose the smallest margin whose five frozen policies have zero calibration event-days and zero PF failures at the pre-specified feasible reference point.",
+  "training_days_sha256": "886dc3d75b53d5a68cb2948a64279730530216dc5e9f017ac37113a3c081b868",
+  "fitting_days_sha256": "4e7326a323f07b31960090a82cfbca87d547797b580f6cac0dc7b7151a7ff4af",
+  "calibration_days_sha256": "c5b319209a63195a3a343cb682955bbb68043acbd1b9e9d000e0b5bf3f97ea4f",
+  "student_training_days_sha256": "4cf16fce67e0274894a175a52f947daea967ff40b844c274c1449de996a81b09",
+  "student_validation_days_sha256": "cdd8b01cf719f3e59f349dc3cab4a6a6d68489ed433d42efa947d1e2c635fd76",
+  "training_path_jobs_sha256": "6fc1b363bd1c5075cdfc5b93e2b13e7cf543b981c6c441fb354eec4efa83aa50",
+  "role": "pre-external development only",
+  "external_selection_or_confirmation_data_used": false
+}

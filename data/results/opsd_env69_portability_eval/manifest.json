@@ -1,8 +1,0 @@
-{
-  "feeder": "IEEE 69-bus benchmark implementation",
-  "training_seed": 42,
-  "capacity_vectors": 3,
-  "selection_days": 17,
-  "confirmation_days": 299,
-  "interpretation": "A code-portability and qualitative-behaviour check on a second benchmark topology; not evidence of field-feeder generalization."
-}

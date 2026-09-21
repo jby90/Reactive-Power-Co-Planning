@@ -1,0 +1,49 @@
+{
+  "algorithm": "VMOD raw feed-forward policy",
+  "theta": [
+    0.30000001192092896,
+    0.375,
+    0.0
+  ],
+  "environment": 33,
+  "svc_absorption_ratio": 1.0,
+  "days": 17,
+  "steps": 1632,
+  "actor_inference_ms": {
+    "mean": 0.19555882352941178,
+    "median": 0.18655,
+    "p95": 0.26237999999999995,
+    "p99": 0.3337490000000001,
+    "maximum": 0.5573
+  },
+  "nonlinear_ac_execution_ms": {
+    "mean": 19.411348345588237,
+    "median": 19.339199999999998,
+    "p95": 20.153679999999998,
+    "p99": 21.101169000000006,
+    "maximum": 102.9679
+  },
+  "total_online_path_ms": {
+    "mean": 19.608101102941177,
+    "median": 19.533749999999998,
+    "p95": 20.358715,
+    "p99": 21.293720000000008,
+    "maximum": 103.1359
+  },
+  "control_interval_ms": 900000.0,
+  "maximum_budget_fraction": 0.00011459544444444445,
+  "checkpoint_bytes": 380960,
+  "trainable_policy_parameters": 94216,
+  "hardware": {
+    "platform": "Windows-10-10.0.26200-SP0",
+    "processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+    "logical_cpu_count": 32
+  },
+  "software": {
+    "python": "3.11.3",
+    "torch": "2.9.1+cpu",
+    "pandapower": "3.1.2",
+    "numpy": "1.24.3"
+  },
+  "measurement_note": "Single-process CPU benchmark. The online VMOD path contains no optimisation, safety projection, or online OPF."
+}

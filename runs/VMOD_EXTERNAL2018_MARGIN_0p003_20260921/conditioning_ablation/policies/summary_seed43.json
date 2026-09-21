@@ -1,0 +1,29 @@
+{
+  "seed": 43,
+  "training_examples": 21024,
+  "validation_examples": 5856,
+  "dataset_unique_days_with_examples": 39,
+  "training_unique_days_with_examples": 31,
+  "validation_unique_days_with_examples": 8,
+  "validation_days": [
+    56,
+    114,
+    164,
+    217,
+    255,
+    287,
+    311,
+    342
+  ],
+  "best_validation_mse": 3.824294708465459e-06,
+  "best_epoch": 295,
+  "dataset_sha256": "23746c58371aef9d298bc9379300c69d39b709506035fab159c084ed4821c02f",
+  "checkpoint": ".\\runs\\VMOD_EXTERNAL2018_MARGIN_0p003_20260921\\conditioning_ablation\\policies\\policy_init_seed43.pth",
+  "checkpoint_sha256": "be4e80693a83839d3ed3a7c0f31dbffc1f0f053a06a24ff8baaaa374551d84e8",
+  "device": "cpu",
+  "training_wall_seconds": 51.76176449999912,
+  "training_example_updates": 6307200,
+  "training_example_updates_per_second": 121850.56017555406,
+  "trainable_policy_parameters": 94216,
+  "cuda_device_name": null
+}

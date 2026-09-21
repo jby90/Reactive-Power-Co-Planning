@@ -1,2 +1,0 @@
-candidate_id,pv_s_scale,svc_q_scale,cap_total_mvar,pv_nameplate_mva,svc_nameplate_mvar,evaluated_days,event_days,pf_fail_days,projection_failure_steps,mean_daily_loss_mwh,max_daily_loss_mwh,mean_intervention_rate,max_intervention_rate,worst_vmin,worst_vmax,risk_hat,risk_upper_95,selection_eligible,pareto,path_order,representative_role
-105,0.45,0.5625,0.0,6.037383539249433,1.125,17,0,0,0,1.484753111157771,2.698171272007821,0.0,0.0,0.9536555118339456,1.014931695045702,0.0,0.16156611126074,True,True,1,first_all_method_seed_selection_pass

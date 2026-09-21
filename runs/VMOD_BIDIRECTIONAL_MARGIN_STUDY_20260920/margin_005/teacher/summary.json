@@ -1,0 +1,22 @@
+{
+  "days": 40,
+  "capacity_levels": 9,
+  "all_capacity_converged_matched_days": 5,
+  "monotone_nonincreasing_loss": true,
+  "loss_monotonicity_tolerance_mwh": 0.0001,
+  "loss_monotonicity_relative_tolerance": 0.001,
+  "maximum_positive_loss_increase_mwh": 2.2919220605599477e-05,
+  "all_adjacent_pairs_nonincreasing_within_tolerance": true,
+  "minimum_adjacent_pair_matched_days": 5,
+  "risk": 0.24722222222222223,
+  "direct_fallback_steps": 0,
+  "inherited_steps": 9514,
+  "load_profile": "runs\\FROZEN_PROFILE_SOURCE\\opsd_profiles\\load_15min_366d.npy",
+  "generation_profile": "runs\\FROZEN_PROFILE_SOURCE\\opsd_profiles\\pv_15min_366d.npy",
+  "svc_absorption_ratio": 1.0,
+  "environment": 33,
+  "capacitor_buses": [
+    20,
+    8
+  ]
+}

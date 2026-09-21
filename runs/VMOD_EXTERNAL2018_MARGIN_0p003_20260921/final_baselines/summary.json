@@ -1,0 +1,455 @@
+{
+  "capacity_label": "P03_pv030_svc0375",
+  "theta": "0.3,0.375,0.0",
+  "vmod_event_days_across_five_seeds": 0,
+  "vmod_mean_seed_loss_mwh": 1.4249381846064546,
+  "vmod_selection": {
+    "event_days": 0,
+    "pf_fail_days": 0,
+    "mean_daily_loss_mwh": 1.4249381846064546,
+    "worst_minimum_voltage_pu": 0.9522897792887408,
+    "worst_maximum_voltage_pu": 1.0209819363376664,
+    "mean_absolute_normalized_action": 0.11386231394740293,
+    "normalized_action_saturation_fraction": 0.0,
+    "absolute_reactive_throughput_mvarh": 31.038314008572563,
+    "maximum_absolute_reactive_command_mvar": 0.8561158575507002
+  },
+  "vmod_confirmation": {
+    "event_days": 0,
+    "pf_fail_days": 0,
+    "mean_daily_loss_mwh": 1.5319667257005931,
+    "worst_minimum_voltage_pu": 0.9514797290398852,
+    "worst_maximum_voltage_pu": 1.036538280761175,
+    "mean_absolute_normalized_action": 0.11754009461509808,
+    "normalized_action_saturation_fraction": 0.0,
+    "absolute_reactive_throughput_mvarh": 32.268945156013835,
+    "maximum_absolute_reactive_command_mvar": 1.3416408398118889
+  },
+  "droop_tuning_days": 40,
+  "selection_days": 17,
+  "confirmation_days": 349,
+  "ac_opf_path_selection_dir": ".\\runs\\VMOD_EXTERNAL2018_MARGIN_0p003_20260921\\final_baselines\\ac_opf_path_selection",
+  "ac_opf_path_selection_points": 9,
+  "comparisons": [
+    {
+      "baseline": "droop",
+      "split": "selection",
+      "event_days": 13,
+      "pf_fail_days": 0,
+      "mean_daily_loss_mwh": 1.7269036087111531,
+      "worst_minimum_voltage_pu": 0.9356966540104568,
+      "worst_maximum_voltage_pu": 1.0092057352806731,
+      "mean_absolute_normalized_action": 0.03608953179255142,
+      "normalized_action_saturation_fraction": 0.0,
+      "absolute_reactive_throughput_mvarh": 10.005982654220471,
+      "maximum_absolute_reactive_command_mvar": 0.6259145101536335,
+      "paired_loss": {
+        "mean_mwh": -0.3019654241046988,
+        "seed_level_t_ci95_low_mwh": -0.30291360798676187,
+        "seed_level_t_ci95_high_mwh": -0.3010172402226357,
+        "seed_values": [
+          {
+            "seed": 42,
+            "paired_days": 17,
+            "vmod_minus_baseline_loss_mwh": -0.30153105142374287
+          },
+          {
+            "seed": 43,
+            "paired_days": 17,
+            "vmod_minus_baseline_loss_mwh": -0.3025371940996
+          },
+          {
+            "seed": 44,
+            "paired_days": 17,
+            "vmod_minus_baseline_loss_mwh": -0.30265711036928833
+          },
+          {
+            "seed": 45,
+            "paired_days": 17,
+            "vmod_minus_baseline_loss_mwh": -0.30084559445502895
+          },
+          {
+            "seed": 46,
+            "paired_days": 17,
+            "vmod_minus_baseline_loss_mwh": -0.30225617017583367
+          }
+        ]
+      }
+    },
+    {
+      "baseline": "no_control",
+      "split": "selection",
+      "event_days": 17,
+      "pf_fail_days": 0,
+      "mean_daily_loss_mwh": 2.140814912573652,
+      "worst_minimum_voltage_pu": 0.9177594846964382,
+      "worst_maximum_voltage_pu": 1.0091731784562306,
+      "mean_absolute_normalized_action": 0.0,
+      "normalized_action_saturation_fraction": 0.0,
+      "absolute_reactive_throughput_mvarh": 0.0,
+      "maximum_absolute_reactive_command_mvar": 0.0,
+      "paired_loss": {
+        "mean_mwh": -0.7158767279671976,
+        "seed_level_t_ci95_low_mwh": -0.7168249118492608,
+        "seed_level_t_ci95_high_mwh": -0.7149285440851344,
+        "seed_values": [
+          {
+            "seed": 42,
+            "paired_days": 17,
+            "vmod_minus_baseline_loss_mwh": -0.7154423552862417
+          },
+          {
+            "seed": 43,
+            "paired_days": 17,
+            "vmod_minus_baseline_loss_mwh": -0.7164484979620989
+          },
+          {
+            "seed": 44,
+            "paired_days": 17,
+            "vmod_minus_baseline_loss_mwh": -0.7165684142317872
+          },
+          {
+            "seed": 45,
+            "paired_days": 17,
+            "vmod_minus_baseline_loss_mwh": -0.7147568983175276
+          },
+          {
+            "seed": 46,
+            "paired_days": 17,
+            "vmod_minus_baseline_loss_mwh": -0.7161674740383325
+          }
+        ]
+      }
+    },
+    {
+      "baseline": "pilot_droop",
+      "split": "selection",
+      "event_days": 0,
+      "pf_fail_days": 0,
+      "mean_daily_loss_mwh": 2.475239385907643,
+      "worst_minimum_voltage_pu": 0.9525571275345698,
+      "worst_maximum_voltage_pu": 1.037805145668717,
+      "mean_absolute_normalized_action": 0.18480188426488603,
+      "normalized_action_saturation_fraction": 0.0,
+      "absolute_reactive_throughput_mvarh": 68.25774000157807,
+      "maximum_absolute_reactive_command_mvar": 1.3416408398118889,
+      "paired_loss": {
+        "mean_mwh": -1.0503012013011883,
+        "seed_level_t_ci95_low_mwh": -1.0512493851832514,
+        "seed_level_t_ci95_high_mwh": -1.0493530174191252,
+        "seed_values": [
+          {
+            "seed": 42,
+            "paired_days": 17,
+            "vmod_minus_baseline_loss_mwh": -1.0498668286202322
+          },
+          {
+            "seed": 43,
+            "paired_days": 17,
+            "vmod_minus_baseline_loss_mwh": -1.0508729712960891
+          },
+          {
+            "seed": 44,
+            "paired_days": 17,
+            "vmod_minus_baseline_loss_mwh": -1.0509928875657777
+          },
+          {
+            "seed": 45,
+            "paired_days": 17,
+            "vmod_minus_baseline_loss_mwh": -1.0491813716515184
+          },
+          {
+            "seed": 46,
+            "paired_days": 17,
+            "vmod_minus_baseline_loss_mwh": -1.050591947372323
+          }
+        ]
+      }
+    },
+    {
+      "baseline": "centralized_local_ac_opf",
+      "split": "selection",
+      "event_days": 0,
+      "pf_fail_days": 0,
+      "mean_daily_loss_mwh": 1.4207997061833562,
+      "direct_fallback_steps": 0,
+      "paired_loss": {
+        "mean_mwh": 0.004138478423098631,
+        "seed_level_t_ci95_low_mwh": 0.0031902945410355295,
+        "seed_level_t_ci95_high_mwh": 0.005086662305161732,
+        "seed_values": [
+          {
+            "seed": 42,
+            "paired_days": 17,
+            "vmod_minus_baseline_loss_mwh": 0.004572851104054535
+          },
+          {
+            "seed": 43,
+            "paired_days": 17,
+            "vmod_minus_baseline_loss_mwh": 0.003566708428197396
+          },
+          {
+            "seed": 44,
+            "paired_days": 17,
+            "vmod_minus_baseline_loss_mwh": 0.0034467921585090515
+          },
+          {
+            "seed": 45,
+            "paired_days": 17,
+            "vmod_minus_baseline_loss_mwh": 0.005258308072768425
+          },
+          {
+            "seed": 46,
+            "paired_days": 17,
+            "vmod_minus_baseline_loss_mwh": 0.003847732351963745
+          }
+        ]
+      }
+    },
+    {
+      "baseline": "zero_margin_opf_imitation",
+      "split": "selection",
+      "event_days": 3,
+      "pf_fail_days": 0,
+      "mean_daily_loss_mwh": 1.4208114210134046,
+      "worst_minimum_voltage_pu": 0.9498626396866598,
+      "worst_maximum_voltage_pu": 1.0209720146282617,
+      "mean_absolute_normalized_action": 0.11312265100468895,
+      "normalized_action_saturation_fraction": 0.0,
+      "absolute_reactive_throughput_mvarh": 30.76373615706975,
+      "maximum_absolute_reactive_command_mvar": 0.75,
+      "paired_loss": {
+        "mean_mwh": 0.004126763593050064,
+        "seed_level_t_ci95_low_mwh": 0.0030851891392174495,
+        "seed_level_t_ci95_high_mwh": 0.005168338046882679,
+        "seed_values": [
+          {
+            "seed": 42,
+            "paired_days": 17,
+            "vmod_event_days": 0,
+            "baseline_event_days": 1,
+            "vmod_minus_baseline_loss_mwh": 0.004151873283805886
+          },
+          {
+            "seed": 43,
+            "paired_days": 17,
+            "vmod_event_days": 0,
+            "baseline_event_days": 0,
+            "vmod_minus_baseline_loss_mwh": 0.003422253997751652
+          },
+          {
+            "seed": 44,
+            "paired_days": 17,
+            "vmod_event_days": 0,
+            "baseline_event_days": 1,
+            "vmod_minus_baseline_loss_mwh": 0.003990013109301589
+          },
+          {
+            "seed": 45,
+            "paired_days": 17,
+            "vmod_event_days": 0,
+            "baseline_event_days": 1,
+            "vmod_minus_baseline_loss_mwh": 0.005526298950417922
+          },
+          {
+            "seed": 46,
+            "paired_days": 17,
+            "vmod_event_days": 0,
+            "baseline_event_days": 0,
+            "vmod_minus_baseline_loss_mwh": 0.003543378623973274
+          }
+        ]
+      }
+    },
+    {
+      "baseline": "droop",
+      "split": "confirmation",
+      "event_days": 275,
+      "pf_fail_days": 0,
+      "mean_daily_loss_mwh": 1.8258214212478776,
+      "worst_minimum_voltage_pu": 0.932229482588066,
+      "worst_maximum_voltage_pu": 1.0190138346582116,
+      "mean_absolute_normalized_action": 0.038149403704065596,
+      "normalized_action_saturation_fraction": 0.0,
+      "absolute_reactive_throughput_mvarh": 10.669597387757817,
+      "maximum_absolute_reactive_command_mvar": 0.6260990363655419,
+      "paired_loss": {
+        "mean_mwh": -0.2938546955472845,
+        "seed_level_t_ci95_low_mwh": -0.2981422194397524,
+        "seed_level_t_ci95_high_mwh": -0.2895671716548166,
+        "seed_values": [
+          {
+            "seed": 42,
+            "paired_days": 349,
+            "vmod_minus_baseline_loss_mwh": -0.2954064441496484
+          },
+          {
+            "seed": 43,
+            "paired_days": 349,
+            "vmod_minus_baseline_loss_mwh": -0.2958171846410529
+          },
+          {
+            "seed": 44,
+            "paired_days": 349,
+            "vmod_minus_baseline_loss_mwh": -0.29720804748552504
+          },
+          {
+            "seed": 45,
+            "paired_days": 349,
+            "vmod_minus_baseline_loss_mwh": -0.2886032128226469
+          },
+          {
+            "seed": 46,
+            "paired_days": 349,
+            "vmod_minus_baseline_loss_mwh": -0.2922385886375494
+          }
+        ]
+      }
+    },
+    {
+      "baseline": "no_control",
+      "split": "confirmation",
+      "event_days": 347,
+      "pf_fail_days": 0,
+      "mean_daily_loss_mwh": 2.267842413910383,
+      "worst_minimum_voltage_pu": 0.9137539559978528,
+      "worst_maximum_voltage_pu": 1.0184149571678671,
+      "mean_absolute_normalized_action": 0.0,
+      "normalized_action_saturation_fraction": 0.0,
+      "absolute_reactive_throughput_mvarh": 0.0,
+      "maximum_absolute_reactive_command_mvar": 0.0,
+      "paired_loss": {
+        "mean_mwh": -0.7358756882097901,
+        "seed_level_t_ci95_low_mwh": -0.740163212102258,
+        "seed_level_t_ci95_high_mwh": -0.7315881643173222,
+        "seed_values": [
+          {
+            "seed": 42,
+            "paired_days": 349,
+            "vmod_minus_baseline_loss_mwh": -0.7374274368121538
+          },
+          {
+            "seed": 43,
+            "paired_days": 349,
+            "vmod_minus_baseline_loss_mwh": -0.7378381773035586
+          },
+          {
+            "seed": 44,
+            "paired_days": 349,
+            "vmod_minus_baseline_loss_mwh": -0.7392290401480307
+          },
+          {
+            "seed": 45,
+            "paired_days": 349,
+            "vmod_minus_baseline_loss_mwh": -0.7306242054851525
+          },
+          {
+            "seed": 46,
+            "paired_days": 349,
+            "vmod_minus_baseline_loss_mwh": -0.7342595813000551
+          }
+        ]
+      }
+    },
+    {
+      "baseline": "pilot_droop",
+      "split": "confirmation",
+      "event_days": 0,
+      "pf_fail_days": 0,
+      "mean_daily_loss_mwh": 2.648963889937263,
+      "worst_minimum_voltage_pu": 0.9506439462563812,
+      "worst_maximum_voltage_pu": 1.0444305507746507,
+      "mean_absolute_normalized_action": 0.19133396022033552,
+      "normalized_action_saturation_fraction": 0.0,
+      "absolute_reactive_throughput_mvarh": 70.67921585093595,
+      "maximum_absolute_reactive_command_mvar": 1.3416408398118889,
+      "paired_loss": {
+        "mean_mwh": -1.1169971642366696,
+        "seed_level_t_ci95_low_mwh": -1.1212846881291374,
+        "seed_level_t_ci95_high_mwh": -1.1127096403442018,
+        "seed_values": [
+          {
+            "seed": 42,
+            "paired_days": 349,
+            "vmod_minus_baseline_loss_mwh": -1.1185489128390333
+          },
+          {
+            "seed": 43,
+            "paired_days": 349,
+            "vmod_minus_baseline_loss_mwh": -1.118959653330438
+          },
+          {
+            "seed": 44,
+            "paired_days": 349,
+            "vmod_minus_baseline_loss_mwh": -1.12035051617491
+          },
+          {
+            "seed": 45,
+            "paired_days": 349,
+            "vmod_minus_baseline_loss_mwh": -1.1117456815120321
+          },
+          {
+            "seed": 46,
+            "paired_days": 349,
+            "vmod_minus_baseline_loss_mwh": -1.1153810573269345
+          }
+        ]
+      }
+    },
+    {
+      "baseline": "zero_margin_opf_imitation",
+      "split": "confirmation",
+      "event_days": 121,
+      "pf_fail_days": 0,
+      "mean_daily_loss_mwh": 1.5172449264831775,
+      "worst_minimum_voltage_pu": 0.9494957836536436,
+      "worst_maximum_voltage_pu": 1.0353099976718283,
+      "mean_absolute_normalized_action": 0.11580465653748447,
+      "normalized_action_saturation_fraction": 0.0,
+      "absolute_reactive_throughput_mvarh": 31.572491428089684,
+      "maximum_absolute_reactive_command_mvar": 0.8863402381330059,
+      "paired_loss": {
+        "mean_mwh": 0.014721799217415805,
+        "seed_level_t_ci95_low_mwh": 0.010690528508529567,
+        "seed_level_t_ci95_high_mwh": 0.018753069926302043,
+        "seed_values": [
+          {
+            "seed": 42,
+            "paired_days": 349,
+            "vmod_event_days": 0,
+            "baseline_event_days": 25,
+            "vmod_minus_baseline_loss_mwh": 0.012914547680923084
+          },
+          {
+            "seed": 43,
+            "paired_days": 349,
+            "vmod_event_days": 0,
+            "baseline_event_days": 21,
+            "vmod_minus_baseline_loss_mwh": 0.012783309370265073
+          },
+          {
+            "seed": 44,
+            "paired_days": 349,
+            "vmod_event_days": 0,
+            "baseline_event_days": 29,
+            "vmod_minus_baseline_loss_mwh": 0.012034776394810886
+          },
+          {
+            "seed": 45,
+            "paired_days": 349,
+            "vmod_event_days": 0,
+            "baseline_event_days": 25,
+            "vmod_minus_baseline_loss_mwh": 0.019839390253943087
+          },
+          {
+            "seed": 46,
+            "paired_days": 349,
+            "vmod_event_days": 0,
+            "baseline_event_days": 21,
+            "vmod_minus_baseline_loss_mwh": 0.01603697238713689
+          }
+        ]
+      }
+    }
+  ]
+}

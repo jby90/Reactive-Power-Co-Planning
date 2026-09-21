@@ -1,0 +1,11 @@
+{
+  "role": "post-development external validation protocol",
+  "source_protocol": "runs\\VMOD_PROTOCOL_MAIN_20260920",
+  "selection_days": 17,
+  "confirmation_days": 349,
+  "selection_days_sha256": "dfd394bbb30b91b77b067957e0c10dc5ef1763b461a412c8ae57dd8c5e449480",
+  "confirmation_days_sha256": "00b6530a9fccc0b023acbf7aa3538c0c7b4abe7d9f7cb09025185db6082ea7f0",
+  "capacity_path_sha256": "8da1e71e9d1c3bbe27bb237331f03cc2e6e151bb08ab7bafaabc584c6fb4e997",
+  "development_data_used_for_external_selection": false,
+  "development_data_used_for_external_confirmation": false
+}

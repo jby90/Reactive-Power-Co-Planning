@@ -1,0 +1,66 @@
+{
+  "selection_rule": "lexicographic PF failures, event days, then mean line loss",
+  "method": "pilot_droop",
+  "theta": [
+    0.3,
+    0.0,
+    0.0
+  ],
+  "environment": 33,
+  "svc_absorption_ratio": 1.0,
+  "training_day_count": 40,
+  "configurations": 44,
+  "breakpoint_curves": [
+    [
+      0.94,
+      0.97,
+      1.03,
+      1.06
+    ],
+    [
+      0.94,
+      0.98,
+      1.02,
+      1.06
+    ],
+    [
+      0.95,
+      0.98,
+      1.02,
+      1.05
+    ],
+    [
+      0.95,
+      0.99,
+      1.01,
+      1.05
+    ]
+  ],
+  "action_scales": [
+    0.1,
+    0.15,
+    0.2,
+    0.25,
+    0.3,
+    0.35,
+    0.4,
+    0.5,
+    0.6,
+    0.8,
+    1.0
+  ],
+  "best": {
+    "method": "pilot_droop",
+    "action_scale": 0.4,
+    "full_injection": 0.94,
+    "deadband_low": 0.97,
+    "deadband_high": 1.03,
+    "full_absorption": 1.06,
+    "evaluated_days": 40,
+    "event_days": 23,
+    "pf_fail_days": 0,
+    "mean_daily_line_loss_mwh": 3.077807215053536,
+    "worst_minimum_voltage_pu": 0.9325584517938376,
+    "worst_maximum_voltage_pu": 1.0435669084685264
+  }
+}

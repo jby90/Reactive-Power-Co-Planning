@@ -1,0 +1,22 @@
+{
+  "source": "Open Power System Data, Time series package 2020-10-06",
+  "source_url": "https://data.open-power-system-data.org/time_series/2020-10-06/",
+  "source_doi": "https://doi.org/10.25832/time_series/2020-10-06",
+  "primary_source": "ENTSO-E Transparency Platform",
+  "source_file_sha256": "194f3ee7d110d04389751602132899172cdd8b7ca73c07d6e9009ddac066b2a1",
+  "window_start_utc": "2017-01-01 00:00:00+00:00",
+  "window_end_utc_inclusive": "2018-01-01 23:45:00+00:00",
+  "time_resolution_minutes": 15,
+  "days": 366,
+  "load_column": "DE_load_actual_entsoe_transparency",
+  "solar_column": "DE_solar_profile",
+  "normalisation": "Each selected source series is divided by its maximum over the frozen 366-day window.",
+  "mapping": "The common load factor scales the original 33-bus spatial load allocation; the common solar factor drives three PV units.",
+  "scope_note": "These public German system-level profiles provide traceable temporal shapes and are not measurements from the IEEE 33-bus feeder.",
+  "load_shape": [35136, 32],
+  "solar_shape": [35136, 3],
+  "load_npy_sha256": "b76af37275bafb7c11b2bc3a349f24d732b192b487a7a5ffc9d277cf9736c3cb",
+  "solar_npy_sha256": "0bd06ab38910ce288b83722465913cc32f22e34a94da532f70def0ecacbd7204",
+  "unique_joint_daily_profiles": 366,
+  "split_seed": 20260918
+}

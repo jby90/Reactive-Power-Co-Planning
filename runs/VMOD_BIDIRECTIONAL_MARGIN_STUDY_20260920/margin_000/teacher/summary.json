@@ -1,0 +1,22 @@
+{
+  "days": 40,
+  "capacity_levels": 9,
+  "all_capacity_converged_matched_days": 12,
+  "monotone_nonincreasing_loss": true,
+  "loss_monotonicity_tolerance_mwh": 0.0001,
+  "loss_monotonicity_relative_tolerance": 0.001,
+  "maximum_positive_loss_increase_mwh": 1.5787631602037777e-07,
+  "all_adjacent_pairs_nonincreasing_within_tolerance": true,
+  "minimum_adjacent_pair_matched_days": 12,
+  "risk": 0.19722222222222222,
+  "direct_fallback_steps": 0,
+  "inherited_steps": 10035,
+  "load_profile": ".\\data\\vmod\\profiles33\\load_15min_366d.npy",
+  "generation_profile": ".\\data\\vmod\\profiles33\\pv_15min_366d.npy",
+  "svc_absorption_ratio": 1.0,
+  "environment": 33,
+  "capacitor_buses": [
+    20,
+    8
+  ]
+}

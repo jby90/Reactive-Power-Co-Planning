@@ -1,4 +1,0 @@
-candidate_id,capacity_label,pv_s_scale,svc_q_scale,cap_total_mvar
-0,low,0.225,0.0,0.0
-1,middle,0.75,0.75,0.5
-2,high,1.5,1.5,1.0

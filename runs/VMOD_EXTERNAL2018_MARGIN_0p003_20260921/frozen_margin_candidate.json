@@ -1,0 +1,146 @@
+{
+  "source_candidate": ".\\runs\\VMOD_BIDIRECTIONAL_MARGIN_STUDY_20260920\\margin_003",
+  "destination_run": ".\\runs\\VMOD_EXTERNAL2018_MARGIN_0p003_20260921",
+  "frozen_artifact_count": 23,
+  "files": [
+    {
+      "source": ".\\runs\\VMOD_BIDIRECTIONAL_MARGIN_STUDY_20260920\\margin_003\\teacher\\adjacent_pair_loss_summary.csv",
+      "destination": ".\\runs\\VMOD_EXTERNAL2018_MARGIN_0p003_20260921\\teacher\\adjacent_pair_loss_summary.csv",
+      "sha256": "81e0bb4304c3555e2b7c26d8ea3640180019adad31c3ce406d7a08fb79b04399",
+      "bytes": 1090
+    },
+    {
+      "source": ".\\runs\\VMOD_BIDIRECTIONAL_MARGIN_STUDY_20260920\\margin_003\\teacher\\capacity_summary.csv",
+      "destination": ".\\runs\\VMOD_EXTERNAL2018_MARGIN_0p003_20260921\\teacher\\capacity_summary.csv",
+      "sha256": "7d96c7cca3b370e58be30bc40b787ec79237064996c6373779a8144679f63532",
+      "bytes": 1519
+    },
+    {
+      "source": ".\\runs\\VMOD_BIDIRECTIONAL_MARGIN_STUDY_20260920\\margin_003\\teacher\\capacity_summary_matched_days.csv",
+      "destination": ".\\runs\\VMOD_EXTERNAL2018_MARGIN_0p003_20260921\\teacher\\capacity_summary_matched_days.csv",
+      "sha256": "de5f3514e9de6c13febabccc3127230dfbc23ce59dc50530fa9aa8b633bc53bc",
+      "bytes": 1003
+    },
+    {
+      "source": ".\\runs\\VMOD_BIDIRECTIONAL_MARGIN_STUDY_20260920\\margin_003\\teacher\\episodes.csv",
+      "destination": ".\\runs\\VMOD_EXTERNAL2018_MARGIN_0p003_20260921\\teacher\\episodes.csv",
+      "sha256": "296e215aed76c7d2babad08c5de92f7877f7241785b06a4da1d5d1d8805b5a67",
+      "bytes": 42305
+    },
+    {
+      "source": ".\\runs\\VMOD_BIDIRECTIONAL_MARGIN_STUDY_20260920\\margin_003\\teacher\\steps.csv",
+      "destination": ".\\runs\\VMOD_EXTERNAL2018_MARGIN_0p003_20260921\\teacher\\steps.csv",
+      "sha256": "357b15da4aa2cf99c4b6b57240004fcba5e1b0e01236dde93b715267c5be1fd7",
+      "bytes": 5985643
+    },
+    {
+      "source": ".\\runs\\VMOD_BIDIRECTIONAL_MARGIN_STUDY_20260920\\margin_003\\teacher\\summary.json",
+      "destination": ".\\runs\\VMOD_EXTERNAL2018_MARGIN_0p003_20260921\\teacher\\summary.json",
+      "sha256": "166f564a608091166d542c6647a47888d4dc90562b9b34577145e67b18129639",
+      "bytes": 771
+    },
+    {
+      "source": ".\\runs\\VMOD_BIDIRECTIONAL_MARGIN_STUDY_20260920\\margin_003\\dataset\\manifest.json",
+      "destination": ".\\runs\\VMOD_EXTERNAL2018_MARGIN_0p003_20260921\\dataset\\manifest.json",
+      "sha256": "6d59e3509890c2080fc6c95a8f36d28369024bfd7cc8cca6d5b5adb15b5104d0",
+      "bytes": 2694
+    },
+    {
+      "source": ".\\runs\\VMOD_BIDIRECTIONAL_MARGIN_STUDY_20260920\\margin_003\\dataset\\opf_imitation_dataset.npz",
+      "destination": ".\\runs\\VMOD_EXTERNAL2018_MARGIN_0p003_20260921\\dataset\\opf_imitation_dataset.npz",
+      "sha256": "daf5046c33f161774552845bf5fe95f8c32ae7ae21500c8ecfe03f9039d89c7d",
+      "bytes": 6974409
+    },
+    {
+      "source": ".\\runs\\VMOD_BIDIRECTIONAL_MARGIN_STUDY_20260920\\margin_003\\policies\\policy_init_seed42.pth",
+      "destination": ".\\runs\\VMOD_EXTERNAL2018_MARGIN_0p003_20260921\\policies\\policy_init_seed42.pth",
+      "sha256": "5b2af0b7f3bcff6a06ee1460a821912310113c8700b21327c248254cfedb7d0b",
+      "bytes": 380960
+    },
+    {
+      "source": ".\\runs\\VMOD_BIDIRECTIONAL_MARGIN_STUDY_20260920\\margin_003\\policies\\policy_init_seed43.pth",
+      "destination": ".\\runs\\VMOD_EXTERNAL2018_MARGIN_0p003_20260921\\policies\\policy_init_seed43.pth",
+      "sha256": "3c0c4541a38b82c646ff8af67bfc861b8e9a44f00524f2640c48dd15e380bcb1",
+      "bytes": 380960
+    },
+    {
+      "source": ".\\runs\\VMOD_BIDIRECTIONAL_MARGIN_STUDY_20260920\\margin_003\\policies\\policy_init_seed44.pth",
+      "destination": ".\\runs\\VMOD_EXTERNAL2018_MARGIN_0p003_20260921\\policies\\policy_init_seed44.pth",
+      "sha256": "b07b4008739b8b571ac3f7d5520f90d343f876aa6d9fe664fde9c2493990e49b",
+      "bytes": 380960
+    },
+    {
+      "source": ".\\runs\\VMOD_BIDIRECTIONAL_MARGIN_STUDY_20260920\\margin_003\\policies\\policy_init_seed45.pth",
+      "destination": ".\\runs\\VMOD_EXTERNAL2018_MARGIN_0p003_20260921\\policies\\policy_init_seed45.pth",
+      "sha256": "2a263e20e36206e3c2ac1c9f178ff851de1ef64e3b82396c656423751290ab4b",
+      "bytes": 380960
+    },
+    {
+      "source": ".\\runs\\VMOD_BIDIRECTIONAL_MARGIN_STUDY_20260920\\margin_003\\policies\\policy_init_seed46.pth",
+      "destination": ".\\runs\\VMOD_EXTERNAL2018_MARGIN_0p003_20260921\\policies\\policy_init_seed46.pth",
+      "sha256": "55892838cae357ab0e72772e1b3319fead218ba84d126a6d73f3a26382065443",
+      "bytes": 380960
+    },
+    {
+      "source": ".\\runs\\VMOD_BIDIRECTIONAL_MARGIN_STUDY_20260920\\margin_003\\policies\\summary_seed42.json",
+      "destination": ".\\runs\\VMOD_EXTERNAL2018_MARGIN_0p003_20260921\\policies\\summary_seed42.json",
+      "sha256": "52737183dde7d65e8b448b40865a87b84254a194ff3255a25cfcaae2581413aa",
+      "bytes": 1075
+    },
+    {
+      "source": ".\\runs\\VMOD_BIDIRECTIONAL_MARGIN_STUDY_20260920\\margin_003\\policies\\summary_seed43.json",
+      "destination": ".\\runs\\VMOD_EXTERNAL2018_MARGIN_0p003_20260921\\policies\\summary_seed43.json",
+      "sha256": "1a101bd35fc99e121fd98bfc0c6ff24e6d4073bd860e486abfee032e87b09906",
+      "bytes": 1077
+    },
+    {
+      "source": ".\\runs\\VMOD_BIDIRECTIONAL_MARGIN_STUDY_20260920\\margin_003\\policies\\summary_seed44.json",
+      "destination": ".\\runs\\VMOD_EXTERNAL2018_MARGIN_0p003_20260921\\policies\\summary_seed44.json",
+      "sha256": "f44c0de2dfa84985accc325782ac07fc276b86c0f11954caaff1fd87744a9e21",
+      "bytes": 1076
+    },
+    {
+      "source": ".\\runs\\VMOD_BIDIRECTIONAL_MARGIN_STUDY_20260920\\margin_003\\policies\\summary_seed45.json",
+      "destination": ".\\runs\\VMOD_EXTERNAL2018_MARGIN_0p003_20260921\\policies\\summary_seed45.json",
+      "sha256": "f981333cf73a566a55fa059f8488eeec513ee2b7a3cbeb24697818f9485d81b8",
+      "bytes": 1075
+    },
+    {
+      "source": ".\\runs\\VMOD_BIDIRECTIONAL_MARGIN_STUDY_20260920\\margin_003\\policies\\summary_seed46.json",
+      "destination": ".\\runs\\VMOD_EXTERNAL2018_MARGIN_0p003_20260921\\policies\\summary_seed46.json",
+      "sha256": "d809b4bd8210352eb7deed9b7b77bbc7a1207f0c7b813a8e11819151ca6d62ab",
+      "bytes": 1077
+    },
+    {
+      "source": ".\\runs\\VMOD_BIDIRECTIONAL_MARGIN_STUDY_20260920\\margin_003\\policies\\training_seed42.csv",
+      "destination": ".\\runs\\VMOD_EXTERNAL2018_MARGIN_0p003_20260921\\policies\\training_seed42.csv",
+      "sha256": "aa7eb745b2a35da591e66b6a8c86d8c1818623d45023ab5af7a8409843e6fbe8",
+      "bytes": 14845
+    },
+    {
+      "source": ".\\runs\\VMOD_BIDIRECTIONAL_MARGIN_STUDY_20260920\\margin_003\\policies\\training_seed43.csv",
+      "destination": ".\\runs\\VMOD_EXTERNAL2018_MARGIN_0p003_20260921\\policies\\training_seed43.csv",
+      "sha256": "7513b247bb4a0c7cf912f00e4859d366150309a5b332ffcddcd15d36f4dba51d",
+      "bytes": 14854
+    },
+    {
+      "source": ".\\runs\\VMOD_BIDIRECTIONAL_MARGIN_STUDY_20260920\\margin_003\\policies\\training_seed44.csv",
+      "destination": ".\\runs\\VMOD_EXTERNAL2018_MARGIN_0p003_20260921\\policies\\training_seed44.csv",
+      "sha256": "f3c268bddb7cabf8237716c8553b65e94e93cfa18bd180391ff845dbdb3cceeb",
+      "bytes": 14844
+    },
+    {
+      "source": ".\\runs\\VMOD_BIDIRECTIONAL_MARGIN_STUDY_20260920\\margin_003\\policies\\training_seed45.csv",
+      "destination": ".\\runs\\VMOD_EXTERNAL2018_MARGIN_0p003_20260921\\policies\\training_seed45.csv",
+      "sha256": "0a5e1d97477ec0569da63307d0061cdc1e045a22e404009828e9547339afba56",
+      "bytes": 14855
+    },
+    {
+      "source": ".\\runs\\VMOD_BIDIRECTIONAL_MARGIN_STUDY_20260920\\margin_003\\policies\\training_seed46.csv",
+      "destination": ".\\runs\\VMOD_EXTERNAL2018_MARGIN_0p003_20260921\\policies\\training_seed46.csv",
+      "sha256": "550bbc9a7d152fd7643b8f374f296badeef856117059e4ca3f3c410ac623e519",
+      "bytes": 14832
+    }
+  ],
+  "note": "The exact actors used to select the voltage margin are reused for capacity-path calibration, selection, and confirmation."
+}

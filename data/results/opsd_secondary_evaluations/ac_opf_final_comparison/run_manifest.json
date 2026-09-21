@@ -1,5 +1,0 @@
-{
-  "jobs_csv": "data/results/opsd_final_representative_selection_jobs\\jobs.csv",
-  "opf_episodes": "data/results/opsd_secondary_evaluations\\ac_opf_final_representatives\\episodes.csv",
-  "comparison_summary": "data/results/opsd_secondary_evaluations\\ac_opf_final_comparison\\summary.csv"
-}

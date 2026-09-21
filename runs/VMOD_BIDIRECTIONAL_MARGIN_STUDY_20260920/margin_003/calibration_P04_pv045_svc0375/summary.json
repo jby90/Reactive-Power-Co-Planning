@@ -1,0 +1,101 @@
+{
+  "theta": [
+    0.45,
+    0.375,
+    0.0
+  ],
+  "seeds": [
+    42,
+    43,
+    44,
+    45,
+    46
+  ],
+  "evaluated_days_per_seed": 10,
+  "svc_absorption_ratio": 1.0,
+  "environment": 33,
+  "capacitor_buses": [
+    20,
+    8
+  ],
+  "all_seeds_zero_events": true,
+  "all_seeds_zero_pf_failures": true,
+  "total_event_days": 0,
+  "total_pf_fail_days": 0,
+  "maximum_seed_event_days": 0,
+  "mean_seed_loss_mwh": 1.444762464211994,
+  "mean_seed_absolute_reactive_throughput_mvarh": 30.765831921810236,
+  "mean_seed_normalized_action_saturation_fraction": 0.0,
+  "seed_summaries": [
+    {
+      "seed": 42,
+      "evaluated_days": 10,
+      "event_days": 0,
+      "pf_fail_days": 0,
+      "mean_daily_line_loss_mwh": 1.4445243197246733,
+      "worst_minimum_voltage_pu": 0.9526620442648758,
+      "worst_maximum_voltage_pu": 1.0091000724491794,
+      "mean_absolute_normalized_action": 0.11306296477559954,
+      "mean_rms_normalized_action": 0.1588332998956759,
+      "normalized_action_saturation_fraction": 0.0,
+      "mean_daily_absolute_reactive_throughput_mvarh": 30.790872389047216,
+      "maximum_absolute_reactive_command_mvar": 0.75
+    },
+    {
+      "seed": 43,
+      "evaluated_days": 10,
+      "event_days": 0,
+      "pf_fail_days": 0,
+      "mean_daily_line_loss_mwh": 1.4433510758153465,
+      "worst_minimum_voltage_pu": 0.9526409959574959,
+      "worst_maximum_voltage_pu": 1.0091230891196,
+      "mean_absolute_normalized_action": 0.11274409352336079,
+      "mean_rms_normalized_action": 0.15873003967121274,
+      "normalized_action_saturation_fraction": 0.0,
+      "mean_daily_absolute_reactive_throughput_mvarh": 30.64772962234697,
+      "maximum_absolute_reactive_command_mvar": 0.7720541387036174
+    },
+    {
+      "seed": 44,
+      "evaluated_days": 10,
+      "event_days": 0,
+      "pf_fail_days": 0,
+      "mean_daily_line_loss_mwh": 1.4444053802449606,
+      "worst_minimum_voltage_pu": 0.9518403267698924,
+      "worst_maximum_voltage_pu": 1.0091797642852898,
+      "mean_absolute_normalized_action": 0.11290211743519954,
+      "mean_rms_normalized_action": 0.1584709823959903,
+      "normalized_action_saturation_fraction": 0.0,
+      "mean_daily_absolute_reactive_throughput_mvarh": 30.763281529644964,
+      "maximum_absolute_reactive_command_mvar": 0.75
+    },
+    {
+      "seed": 45,
+      "evaluated_days": 10,
+      "event_days": 0,
+      "pf_fail_days": 0,
+      "mean_daily_line_loss_mwh": 1.4465899190694713,
+      "worst_minimum_voltage_pu": 0.952509916440053,
+      "worst_maximum_voltage_pu": 1.009210196033493,
+      "mean_absolute_normalized_action": 0.11319049286345642,
+      "mean_rms_normalized_action": 0.15787799700718969,
+      "normalized_action_saturation_fraction": 0.0,
+      "mean_daily_absolute_reactive_throughput_mvarh": 30.986021826629212,
+      "maximum_absolute_reactive_command_mvar": 0.813571536782719
+    },
+    {
+      "seed": 46,
+      "evaluated_days": 10,
+      "event_days": 0,
+      "pf_fail_days": 0,
+      "mean_daily_line_loss_mwh": 1.4449416262055188,
+      "worst_minimum_voltage_pu": 0.9521251827759676,
+      "worst_maximum_voltage_pu": 1.0090775241567518,
+      "mean_absolute_normalized_action": 0.11256447937339545,
+      "mean_rms_normalized_action": 0.15822006989913806,
+      "normalized_action_saturation_fraction": 0.0,
+      "mean_daily_absolute_reactive_throughput_mvarh": 30.641254241382818,
+      "maximum_absolute_reactive_command_mvar": 0.8150636068024475
+    }
+  ]
+}

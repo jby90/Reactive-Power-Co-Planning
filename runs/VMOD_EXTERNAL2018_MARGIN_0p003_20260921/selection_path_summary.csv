@@ -1,0 +1,10 @@
+capacity_label,pv_s_scale,svc_q_scale,cap_total_mvar,path_index,pv_inverter_nameplate_mva,svc_nameplate_mvar,fixed_shunt_mvar,all_seeds_zero_events,all_seeds_zero_pf_failures,teacher_attempted_days,complete_teacher_trajectory_days,teacher_coverage_fraction,adequate_teacher_trajectory_support,total_event_days,maximum_seed_event_days,mean_seed_loss_mwh,worst_vmin,worst_vmax,passed_selection_gate,rejection_mechanism,selected_for_confirmation,adjacent_rejected_for_confirmation
+P00_pv0225_svc0000,0.225,0.0,0.0,0,3.0186917696247075,0.0,0.0,False,True,40,6,0.15,False,65,13,2.186780565975144,0.9321122858582925,1.0244849302549355,False,inadequate_teacher_trajectory_support,False,False
+P01_pv030_svc0000,0.3,0.0,0.0,1,4.02492235949961,0.0,0.0,False,True,40,11,0.275,False,55,11,2.6322199457726043,0.935104443305284,1.0439692334130481,False,inadequate_teacher_trajectory_support,False,False
+P02_pv030_svc01875,0.3,0.1875,0.0,2,4.02492235949961,0.375,0.0,False,True,40,29,0.725,False,10,4,1.7453011349455554,0.9416588690240297,1.0282982965065193,False,inadequate_teacher_trajectory_support,False,True
+P03_pv030_svc0375,0.3,0.375,0.0,3,4.02492235949961,0.75,0.0,True,True,40,39,0.975,True,0,0,1.4249381846064544,0.9522897792887409,1.0209819363376664,True,passed,True,False
+P04_pv045_svc0375,0.45,0.375,0.0,4,6.037383539249415,0.75,0.0,True,True,40,39,0.975,True,0,0,1.4237700571083731,0.9524035510847252,1.0209552504892496,True,passed,False,False
+P05_pv045_svc05625,0.45,0.5625,0.0,5,6.037383539249415,1.125,0.0,True,True,40,39,0.975,True,0,0,1.422037534856273,0.952479891505161,1.0207822887933222,True,passed,False,False
+P06_pv045_svc0750,0.45,0.75,0.0,6,6.037383539249415,1.5,0.0,True,True,40,39,0.975,True,0,0,1.422122110450212,0.9524990195940828,1.0207782130745826,True,passed,False,False
+P07_pv060_svc0750,0.6,0.75,0.0,7,8.04984471899922,1.5,0.0,True,True,40,39,0.975,True,0,0,1.422042138274826,0.9525692091059076,1.020863327550043,True,passed,False,False
+P08_pv075_svc0750,0.75,0.75,0.0,8,10.062305898749024,1.5,0.0,True,True,40,39,0.975,True,0,0,1.4220529571431697,0.9526234366366035,1.0209540209031953,True,passed,False,False

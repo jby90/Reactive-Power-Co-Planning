@@ -1,0 +1,31 @@
+{
+  "margin_pu": 0.001,
+  "teacher_voltage_band": [
+    0.951,
+    1.0490000000000002
+  ],
+  "svc_absorption_ratio": 1.0,
+  "fit_days": 40,
+  "calibration_days": 10,
+  "calibration_reference_label": "P04_pv045_svc0375",
+  "calibration_reference_theta": "0.45,0.375,0",
+  "all_seeds_zero_events": true,
+  "all_seeds_zero_pf_failures": true,
+  "total_event_days": 0,
+  "total_pf_fail_days": 0,
+  "maximum_seed_event_days": 0,
+  "mean_seed_loss_mwh": 1.4395693605130788,
+  "minimum_seed_voltage_pu": 0.9506153957876909,
+  "maximum_seed_voltage_pu": 1.0092047883174604,
+  "dataset_sha256": "5c5006410bf85b3dc61cc91dc03b05d4fa64d32e5730be7034eee586613e5b4a",
+  "jobs_csv": ".\\runs\\VMOD_PROTOCOL_MAIN_20260920\\training_path_jobs.csv",
+  "calibration_days_csv": ".\\runs\\VMOD_PROTOCOL_MAIN_20260920\\calibration_days.csv",
+  "student_validation_days_csv": ".\\runs\\VMOD_PROTOCOL_MAIN_20260920\\student_validation_days.csv",
+  "calibration_reference_teacher_attempted_days": 40,
+  "calibration_reference_teacher_converged_days": 39,
+  "calibration_reference_teacher_coverage_fraction": 0.975,
+  "adequate_calibration_teacher_support": true,
+  "direct_fallback_allowed": false,
+  "teacher_dir": ".\\runs\\VMOD_BIDIRECTIONAL_MARGIN_STUDY_20260920\\margin_001\\teacher",
+  "passed_calibration_gate": true
+}

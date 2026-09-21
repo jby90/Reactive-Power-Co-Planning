@@ -1,0 +1,29 @@
+{
+  "seed": 43,
+  "training_examples": 21792,
+  "validation_examples": 6048,
+  "dataset_unique_days_with_examples": 39,
+  "training_unique_days_with_examples": 31,
+  "validation_unique_days_with_examples": 8,
+  "validation_days": [
+    56,
+    114,
+    164,
+    217,
+    255,
+    287,
+    311,
+    342
+  ],
+  "best_validation_mse": 3.6175324567011558e-06,
+  "best_epoch": 264,
+  "dataset_sha256": "5c5006410bf85b3dc61cc91dc03b05d4fa64d32e5730be7034eee586613e5b4a",
+  "checkpoint": ".\\runs\\VMOD_BIDIRECTIONAL_MARGIN_STUDY_20260920\\margin_001\\policies\\policy_init_seed43.pth",
+  "checkpoint_sha256": "035c671fd81ce0404a3b156c9174e8de07f161d33caa12175729b6c98e1e59ac",
+  "device": "cuda",
+  "training_wall_seconds": 21.03138449997641,
+  "training_example_updates": 6537600,
+  "training_example_updates_per_second": 310849.720806889,
+  "trainable_policy_parameters": 94216,
+  "cuda_device_name": "NVIDIA GeForce RTX 4090"
+}

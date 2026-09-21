@@ -1,0 +1,48 @@
+{
+  "role": "post-development external validation",
+  "source": "Open Power System Data, Time series package 2020-10-06",
+  "source_url": "https://data.open-power-system-data.org/time_series/2020-10-06/",
+  "source_doi": "https://doi.org/10.25832/time_series/2020-10-06",
+  "source_file_sha256": "194f3ee7d110d04389751602132899172cdd8b7ca73c07d6e9009ddac066b2a1",
+  "window_start_utc": "2018-01-02 00:00:00+00:00",
+  "window_end_utc_inclusive": "2019-01-02 23:45:00+00:00",
+  "days": 366,
+  "steps_per_day": 96,
+  "split_seed": 20260921,
+  "selection_days": 17,
+  "confirmation_days": 349,
+  "normalisation": "Uses the frozen pre-external development-window load and solar references; no external-validation value exceeded either reference.",
+  "statistics": {
+    "load_reference_mw": 77852.94,
+    "solar_profile_reference": 0.684,
+    "load_values_above_reference": 0,
+    "solar_values_above_reference": 0,
+    "load_factor_percentiles": {
+      "0.0": 0.41380826465898396,
+      "0.05": 0.5336056030767753,
+      "0.5": 0.727302912388408,
+      "0.95": 0.9211153747051813,
+      "1.0": 0.9929669964936455
+    },
+    "solar_factor_percentiles": {
+      "0.0": 0.0,
+      "0.5": 0.0021929824561403508,
+      "0.9": 0.570906432748538,
+      "0.99": 0.8428289473684216,
+      "1.0": 0.9707602339181286
+    }
+  },
+  "load_shape": [
+    35136,
+    48
+  ],
+  "solar_shape": [
+    35136,
+    4
+  ],
+  "unique_joint_daily_profiles": 366,
+  "load_npy_sha256": "9ad8bd1477db15ff48141896d80576690ae9bf3b6e039bd662682e95adbd8de0",
+  "solar_npy_sha256": "def10c4683d687f71e2e7758a3105dae54cc9e92bfa24b571940e6d75e1117cb",
+  "selection_days_sha256": "dfd394bbb30b91b77b067957e0c10dc5ef1763b461a412c8ae57dd8c5e449480",
+  "confirmation_days_sha256": "00b6530a9fccc0b023acbf7aa3538c0c7b4abe7d9f7cb09025185db6082ea7f0"
+}

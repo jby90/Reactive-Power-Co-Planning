@@ -1,0 +1,113 @@
+{
+  "diagnostic_scope": "Architecture-and-AC-solver timing only. Zero actor commands and synthetic deterministic traces are used; no control-performance, safety, portability, or capacity-boundary claim is supported.",
+  "control_interval_ms": 900000.0,
+  "environments": [
+    {
+      "environment": 33,
+      "buses": 33,
+      "in_service_branches": 32,
+      "loads": 32,
+      "controlled_devices": 4,
+      "observation_dimension": 103,
+      "steps": 192,
+      "actor_inference_ms": {
+        "mean": 0.19017760416666665,
+        "median": 0.1819,
+        "p95": 0.25812,
+        "p99": 0.2959800000000001,
+        "maximum": 0.3255
+      },
+      "nonlinear_ac_execution_ms": {
+        "mean": 19.34135625,
+        "median": 19.22815,
+        "p95": 20.4485,
+        "p99": 21.471829,
+        "maximum": 22.5652
+      },
+      "total_online_path_ms": {
+        "mean": 19.532914583333334,
+        "median": 19.39695,
+        "p95": 20.659885,
+        "p99": 21.679683,
+        "maximum": 22.755
+      },
+      "maximum_budget_fraction": 2.5283333333333332e-05,
+      "trainable_policy_parameters": 94216
+    },
+    {
+      "environment": 69,
+      "buses": 69,
+      "in_service_branches": 68,
+      "loads": 48,
+      "controlled_devices": 5,
+      "observation_dimension": 212,
+      "steps": 192,
+      "actor_inference_ms": {
+        "mean": 0.20044843749999997,
+        "median": 0.19174999999999998,
+        "p95": 0.2593499999999999,
+        "p99": 0.3278810000000004,
+        "maximum": 0.6695
+      },
+      "nonlinear_ac_execution_ms": {
+        "mean": 21.291293749999998,
+        "median": 20.7098,
+        "p95": 21.717095,
+        "p99": 28.328320000000016,
+        "maximum": 103.0213
+      },
+      "total_online_path_ms": {
+        "mean": 21.492853645833332,
+        "median": 20.90625,
+        "p95": 21.921375,
+        "p99": 28.510971000000016,
+        "maximum": 103.2728
+      },
+      "maximum_budget_fraction": 0.00011474755555555556,
+      "trainable_policy_parameters": 122378
+    },
+    {
+      "environment": 118,
+      "buses": 118,
+      "in_service_branches": 117,
+      "loads": 117,
+      "controlled_devices": 10,
+      "observation_dimension": 364,
+      "steps": 192,
+      "actor_inference_ms": {
+        "mean": 0.20866510416666664,
+        "median": 0.2049,
+        "p95": 0.27398,
+        "p99": 0.38576299999999997,
+        "maximum": 0.4292
+      },
+      "nonlinear_ac_execution_ms": {
+        "mean": 21.921478124999997,
+        "median": 21.9158,
+        "p95": 22.77983,
+        "p99": 23.139835,
+        "maximum": 25.1525
+      },
+      "total_online_path_ms": {
+        "mean": 22.131294791666665,
+        "median": 22.1115,
+        "p95": 23.00716,
+        "p99": 23.36368,
+        "maximum": 25.5405
+      },
+      "maximum_budget_fraction": 2.8378333333333336e-05,
+      "trainable_policy_parameters": 162580
+    }
+  ],
+  "hardware": {
+    "platform": "Windows-10-10.0.26200-SP0",
+    "processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+    "logical_cpu_count": 32
+  },
+  "software": {
+    "python": "3.11.3",
+    "torch": "2.9.1+cpu",
+    "pandapower": "3.1.2",
+    "numpy": "1.24.3"
+  }
+}

@@ -1,69 +1,47 @@
-# Reactive-Power Co-Planning
+# Variable-capacity model-informed OPF distillation (VMOD)
 
-This repository contains the code, frozen inputs, trained policies, job tables, and result tables for capacity-conditioned reactive-power control and resource screening on IEEE distribution-network benchmarks.
+This package contains the code, frozen temporal inputs, trained policies and
+machine-readable evidence for capacity-conditioned raw Volt--VAR control on
+33- and 69-bus distribution benchmarks.
 
-The released evidence separates three questions:
+## Key design
 
-1. whether a learned controller remains safe at a specified device-capacity vector;
-2. how an AC power-flow safety projection changes controller actions and outcomes; and
-3. which capacity vectors pass the fixed multi-seed screening and confirmation protocol.
-
-The principal 33-bus study uses 366 public 15-minute German load and solar temporal profiles from the Open Power System Data time-series package (2020-10-06). These system-level temporal shapes are mapped to the fixed spatial allocations of the benchmark feeder; they are not field measurements from that feeder. The frozen split contains 50 training, 17 selection, and 299 confirmation days.
-
-## Repository layout
-
-- `src/`: controller training, evaluation, safety projection, local AC-OPF comparison, mismatch analysis, and summary utilities.
-- `data/inputs/`: benchmark cases, processed temporal profiles, metadata, and frozen day splits.
-- `data/jobs/`: capacity-grid and confirmation job tables.
-- `data/results/`: source result tables used for the reported analyses.
-- `models/`: final multi-seed policies, ablation policies, sensitivity policies, portability policies, and policy-initialisation weights.
-- `tests/`: focused tests for profile loading, day-table loading, safety projection, and local AC-OPF.
-- `data/release_manifest.json`: SHA-256 and byte size for every released file except the manifest itself.
+- Selected teacher voltage margin: `0.003` pu.
+- Online execution: one actor forward pass, physical MVAr conversion and device clipping.
+- Evidence stages: 40 fitting days and 10 margin-calibration days from the 366-day development window beginning 1 January 2017, followed by 17 capacity-selection days and 349 confirmation days from a non-overlapping window beginning 2 January 2018.
+- Statistical unit: day within each independently trained seed; shared days are not pooled across seeds.
+- Capacity result: lowest confirmed tested point on a development-frozen physical path, not a global or economic optimum.
+- The 69-bus path was extended from 9 to 15 points by a frozen development-triggered rule before any external selection output. A development-only action-reference audit then set the fixed MVAr map to the already frozen 1.5-scale endpoint before rebuilding every student and opening external selection. Both audits are included with the protocol.
+- The included 118-bus run is an architecture-and-AC-solver timing diagnostic only, not a control or planning validation.
 
 ## Environment
 
-Python 3.11 is recommended. Install the tested package versions with:
-
 ```bash
-python -m pip install -r requirements.txt
+conda env create -f environment.yml
+conda activate vmod
+pytest -q
 ```
 
-PyTorch wheels are platform-specific. The recorded experiments used PyTorch 2.10.0 with CUDA 12.6; CPU evaluation is also supported.
+## Frozen evidence
 
-## Verify the release
+- `runs/VMOD_BIDIRECTIONAL_MARGIN_STUDY_20260920/`: margin calibration.
+- `runs/VMOD_PATH_MARGIN_CALIBRATION_20260921/`: path-wide margin decision.
+- `runs/VMOD_EXTERNAL2018_MARGIN_0p003_20260921/`: 33-bus training, selection, confirmation, baselines and audits.
+- `runs/VMOD_ENV69_EXTENDED_REF15_EXTERNAL2018_MARGIN_0p003_20260921/`: 69-bus portability test.
+- `runs/VMOD_ENV69_EXTERNAL2018_MARGIN_0p003_20260921/calibration/`: the nine compact development-calibration summaries that triggered the audited 69-bus path extension; no external-selection result is included there.
+- `runs/VMOD_FINAL_STUDY_20260921/`: claim gates and figure source data.
+- `SHA256SUMS.csv`: hashes for every released file.
 
-From the repository root:
-
-```bash
-python scripts/verify_release.py
-python -m pytest -q
-```
-
-The verifier checks every manifest hash, split disjointness, array dimensions, and the presence of all principal five-seed checkpoints.
-
-## Reproduce a held-out evaluation
-
-This command evaluates the seed-42 worst-group CVaR policy on the 299 confirmation days at the first all-method, all-seed passing vector C105, `[0.45, 0.5625, 0]`:
+To regenerate figures into `outputs/figures`, set `VMOD_FIGURE_OUT` and run:
 
 ```bash
-python src/evaluate_crdc_policy.py \
-  --run_dir models/WG_CVAR_PPO/env33_seed42_gamma0.9/20260918-confirm-opsd-wg-ref-seed42 \
-  --theta 0.45,0.5625,0 \
-  --days_metadata data/inputs/confirmation_days.csv \
-  --device cpu \
-  --out_dir reproduced/wg_seed42_c105
+set VMOD_FIGURE_OUT=outputs/figures
+python make_vmod_figures.py --figures all
 ```
 
-The command writes `daily.csv` and `summary.json`. Additional commands for the capacity grid, projection, local AC-OPF, model mismatch, and capacitor mechanism are documented in [docs/REPRODUCIBILITY.md](docs/REPRODUCIBILITY.md).
+The package reports empirical simulation evidence only. It does not provide a
+formal safety guarantee or an economically calibrated equipment optimum.
 
-## Key frozen evidence
-
-- C100 `[0.45, 0.375, 0]` is rejected by the confirmation protocol.
-- C105 `[0.45, 0.5625, 0]` is the first vector on the frozen path with zero event days for both controllers, before and after projection, across five seeds and 299 days per seed.
-- A zero count in one 299-day seed corresponds to a one-sided exact 95% upper event-rate bound of 0.9969%, not a proof of universal safety.
-- The local AC-OPF comparator is a feasible nonconvex operational reference, not a certified global lower bound.
-- The 69-bus results test protocol portability and are not used to claim a new capacity boundary.
-
-## License and data attribution
-
-Code is released under the license in [LICENSE](LICENSE). Third-party software and data notices are listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). The OPSD source URL, DOI, transformation, and SHA-256 checksums are recorded in `data/inputs/metadata.json`.
+Original VMOD code is licensed under `LICENSE`. Benchmark networks, derived
+temporal profiles and inherited environment code remain subject to their
+upstream terms; see `THIRD_PARTY_NOTICES.md`.

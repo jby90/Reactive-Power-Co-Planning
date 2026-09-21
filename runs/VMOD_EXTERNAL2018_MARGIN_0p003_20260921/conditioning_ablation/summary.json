@@ -1,0 +1,159 @@
+{
+  "selected_path_index": 3,
+  "capacity_label": "P03_pv030_svc0375",
+  "theta": [
+    0.3,
+    0.375,
+    0.0
+  ],
+  "shared_training_capacity_points": 9,
+  "fixed_training_capacity_points": 1,
+  "shared_training_examples_per_seed": 21024,
+  "fixed_training_examples_per_seed": 21024,
+  "training_example_updates_per_seed": 6307200,
+  "training_budget_matched": true,
+  "n_training_seeds": 5,
+  "primary_inference_split": "confirmation",
+  "primary_split_reason": "The 349 confirmation days did not participate in capacity-point selection; the 17-day selection comparison is retained as a diagnostic.",
+  "shared_minus_fixed_loss_mean_mwh": 0.0008865557110779669,
+  "seed_level_t_ci95_low_mwh": -0.003952851739809759,
+  "seed_level_t_ci95_high_mwh": 0.005725963161965693,
+  "seed_contrasts": [
+    {
+      "split": "confirmation",
+      "seed": 42,
+      "paired_days": 349,
+      "shared_event_days": 0,
+      "fixed_event_days": 0,
+      "shared_minus_fixed_loss_mwh": -0.0023818769988459675
+    },
+    {
+      "split": "confirmation",
+      "seed": 43,
+      "paired_days": 349,
+      "shared_event_days": 0,
+      "fixed_event_days": 0,
+      "shared_minus_fixed_loss_mwh": -0.0014125957526022602
+    },
+    {
+      "split": "confirmation",
+      "seed": 44,
+      "paired_days": 349,
+      "shared_event_days": 0,
+      "fixed_event_days": 0,
+      "shared_minus_fixed_loss_mwh": -0.0016116889694787937
+    },
+    {
+      "split": "confirmation",
+      "seed": 45,
+      "paired_days": 349,
+      "shared_event_days": 0,
+      "fixed_event_days": 0,
+      "shared_minus_fixed_loss_mwh": 0.006654953361093482
+    },
+    {
+      "split": "confirmation",
+      "seed": 46,
+      "paired_days": 349,
+      "shared_event_days": 0,
+      "fixed_event_days": 0,
+      "shared_minus_fixed_loss_mwh": 0.003183986915223374
+    }
+  ],
+  "split_summaries": {
+    "selection": {
+      "shared_minus_fixed_loss_mean_mwh": -0.0004944900915493757,
+      "seed_level_t_ci95_low_mwh": -0.001836907931553236,
+      "seed_level_t_ci95_high_mwh": 0.0008479277484544846,
+      "seed_contrasts": [
+        {
+          "split": "selection",
+          "seed": 42,
+          "paired_days": 17,
+          "shared_event_days": 0,
+          "fixed_event_days": 0,
+          "shared_minus_fixed_loss_mwh": -0.00017775887942257895
+        },
+        {
+          "split": "selection",
+          "seed": 43,
+          "paired_days": 17,
+          "shared_event_days": 0,
+          "fixed_event_days": 0,
+          "shared_minus_fixed_loss_mwh": -0.0014616911639092492
+        },
+        {
+          "split": "selection",
+          "seed": 44,
+          "paired_days": 17,
+          "shared_event_days": 0,
+          "fixed_event_days": 0,
+          "shared_minus_fixed_loss_mwh": -0.0011743735075824661
+        },
+        {
+          "split": "selection",
+          "seed": 45,
+          "paired_days": 17,
+          "shared_event_days": 0,
+          "fixed_event_days": 0,
+          "shared_minus_fixed_loss_mwh": 0.0012413249636203545
+        },
+        {
+          "split": "selection",
+          "seed": 46,
+          "paired_days": 17,
+          "shared_event_days": 0,
+          "fixed_event_days": 0,
+          "shared_minus_fixed_loss_mwh": -0.0008999518704529386
+        }
+      ]
+    },
+    "confirmation": {
+      "shared_minus_fixed_loss_mean_mwh": 0.0008865557110779669,
+      "seed_level_t_ci95_low_mwh": -0.003952851739809759,
+      "seed_level_t_ci95_high_mwh": 0.005725963161965693,
+      "seed_contrasts": [
+        {
+          "split": "confirmation",
+          "seed": 42,
+          "paired_days": 349,
+          "shared_event_days": 0,
+          "fixed_event_days": 0,
+          "shared_minus_fixed_loss_mwh": -0.0023818769988459675
+        },
+        {
+          "split": "confirmation",
+          "seed": 43,
+          "paired_days": 349,
+          "shared_event_days": 0,
+          "fixed_event_days": 0,
+          "shared_minus_fixed_loss_mwh": -0.0014125957526022602
+        },
+        {
+          "split": "confirmation",
+          "seed": 44,
+          "paired_days": 349,
+          "shared_event_days": 0,
+          "fixed_event_days": 0,
+          "shared_minus_fixed_loss_mwh": -0.0016116889694787937
+        },
+        {
+          "split": "confirmation",
+          "seed": 45,
+          "paired_days": 349,
+          "shared_event_days": 0,
+          "fixed_event_days": 0,
+          "shared_minus_fixed_loss_mwh": 0.006654953361093482
+        },
+        {
+          "split": "confirmation",
+          "seed": 46,
+          "paired_days": 349,
+          "shared_event_days": 0,
+          "fixed_event_days": 0,
+          "shared_minus_fixed_loss_mwh": 0.003183986915223374
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "droop_tuning": {
+    "development_only": true,
+    "coarse_action_scales": [
+      0.1,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "refinement_action_scales": [
+      0.04,
+      0.06,
+      0.08,
+      0.12,
+      0.14,
+      0.16,
+      0.18,
+      0.2,
+      0.22
+    ],
+    "breakpoint_curves": 3,
+    "unique_configurations_per_path_point": 42
+  },
+  "pilot_droop_tuning": {
+    "development_only": true,
+    "action_scales": [
+      0.1,
+      0.15,
+      0.2,
+      0.25,
+      0.3,
+      0.35,
+      0.4,
+      0.5,
+      0.6,
+      0.8,
+      1.0
+    ],
+    "breakpoint_curves": 4,
+    "unique_configurations_per_tuned_path_point": 44,
+    "independently_tuned_through_path_index": 3,
+    "higher_path_rule": "Freeze the P03 development-selected curve and apply it unchanged at every higher path point."
+  },
+  "selection_rule": "Tune conventional droop only on 40 development fitting days; choose the lowest point with zero events and PF failures on 17 selection days.",
+  "selected_path_indices": {
+    "pilot_droop": 3,
+    "droop": null,
+    "no_control": null
+  },
+  "adjacent_rejected_path_indices": {
+    "pilot_droop": 2,
+    "droop": null,
+    "no_control": null
+  },
+  "all_higher_points_pass": {
+    "pilot_droop": true,
+    "droop": false,
+    "no_control": false
+  },
+  "confirmation_rule": "A conventional-control boundary is confirmed only when its selected point passes the 349-day finite-sample gate, the adjacent lower point exhibits at least one voltage event or power-flow failure, and every higher tested path point passed external selection.",
+  "confirmation": [
+    {
+      "method": "pilot_droop",
+      "selected_path_index": 3,
+      "adjacent_rejected_path_index": 2,
+      "selected_point_passed": true,
+      "adjacent_lower_point_failed": true,
+      "all_higher_points_pass": true,
+      "boundary_confirmed": true,
+      "passed": true,
+      "points": {
+        "selected": {
+          "path_index": 3,
+          "capacity_label": "P03_pv030_svc0375",
+          "pv_inverter_nameplate_mva": 4.02492235949961,
+          "svc_nameplate_mvar": 0.75,
+          "event_days": 0,
+          "evaluated_days": 349,
+          "observed_event_rate": 0.0,
+          "one_sided_clopper_pearson_upper_95": 0.008547024811548625,
+          "pf_fail_days": 0,
+          "mean_daily_line_loss_mwh": 2.6489638899372627,
+          "mean_daily_absolute_reactive_throughput_mvarh": 70.67921585093593,
+          "passed": true
+        },
+        "adjacent_rejected": {
+          "path_index": 2,
+          "capacity_label": "P02_pv030_svc01875",
+          "pv_inverter_nameplate_mva": 4.02492235949961,
+          "svc_nameplate_mvar": 0.375,
+          "event_days": 57,
+          "evaluated_days": 349,
+          "observed_event_rate": 0.16332378223495703,
+          "one_sided_clopper_pearson_upper_95": 0.19941677792756168,
+          "pf_fail_days": 0,
+          "mean_daily_line_loss_mwh": 2.760787053248564,
+          "mean_daily_absolute_reactive_throughput_mvarh": 71.77524757331535,
+          "passed": false
+        }
+      }
+    },
+    {
+      "method": "droop",
+      "selected_path_index": null,
+      "adjacent_rejected_path_index": null,
+      "all_higher_points_pass": false,
+      "boundary_confirmed": false,
+      "passed": false
+    },
+    {
+      "method": "no_control",
+      "selected_path_index": null,
+      "adjacent_rejected_path_index": null,
+      "all_higher_points_pass": false,
+      "boundary_confirmed": false,
+      "passed": false
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "margin_pu": 0.003,
+  "svc_absorption_ratio": 1.0,
+  "environment": 69,
+  "reference_pv_s_scale": 1.5,
+  "reference_svc_q_scale": 1.5,
+  "capacitor_buses": "",
+  "fit_days": 40,
+  "calibration_days": 10,
+  "capacity_points": 15
+}

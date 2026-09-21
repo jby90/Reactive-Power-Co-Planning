@@ -1,0 +1,3 @@
+method,evaluated_days,event_days,pf_fail_days,mean_daily_line_loss_mwh,worst_minimum_voltage_pu,worst_maximum_voltage_pu,mean_absolute_normalized_action,mean_rms_normalized_action,normalized_action_saturation_fraction,mean_daily_absolute_reactive_throughput_mvarh,maximum_absolute_reactive_command_mvar,theta,action_scale,droop_breakpoints
+droop,17,13,0,1.7451391860348553,0.9327000897939327,1.009204500335073,0.03344995322564215,0.050092891135147775,0.0,9.437323552932211,0.44721360216395983,"[0.44999998807907104, 0.5625, 0.0]",0.1,"(0.95, 0.98, 1.02, 1.05)"
+no_control,17,17,0,2.140814912573652,0.9177594846964382,1.0091731784562306,0.0,0.0,0.0,0.0,0.0,"[0.44999998807907104, 0.5625, 0.0]",0.1,"(0.95, 0.98, 1.02, 1.05)"

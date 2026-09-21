@@ -1,0 +1,19 @@
+[
+  {
+    "method": "pilot_droop",
+    "evaluated_days": 349,
+    "event_days": 0,
+    "pf_fail_days": 0,
+    "mean_daily_line_loss_mwh": 2.6489638899372627,
+    "worst_minimum_voltage_pu": 0.9506439462563813,
+    "worst_maximum_voltage_pu": 1.0444305507746507,
+    "mean_absolute_normalized_action": 0.19133396022033558,
+    "mean_rms_normalized_action": 0.19399121885519763,
+    "normalized_action_saturation_fraction": 0.0,
+    "mean_daily_absolute_reactive_throughput_mvarh": 70.67921585093593,
+    "maximum_absolute_reactive_command_mvar": 1.3416408398118889,
+    "theta": "[0.30000001192092896, 0.375, 0.0]",
+    "action_scale": 0.3,
+    "droop_breakpoints": "(0.95, 0.99, 1.01, 1.05)"
+  }
+]

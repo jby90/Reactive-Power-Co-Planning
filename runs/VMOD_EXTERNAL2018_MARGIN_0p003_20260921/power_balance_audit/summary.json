@@ -1,0 +1,58 @@
+{
+  "environment": 33,
+  "theta": [
+    0.30000001192092896,
+    0.375,
+    0.0
+  ],
+  "seeds": [
+    42,
+    43,
+    44,
+    45,
+    46
+  ],
+  "audited_steps": 8160,
+  "power_flow_failures": 0,
+  "maximum_active_balance_residual_mw": 9.999512659737697e-08,
+  "maximum_reactive_balance_residual_mvar": 9.946808866151402e-08,
+  "solver": "pandapower backward/forward sweep nonlinear AC power flow",
+  "slack_treatment": "benchmark feeder external grid is the AC slack source",
+  "per_seed": [
+    {
+      "seed": 42,
+      "power_flow_failures": 0,
+      "audited_steps": 1632,
+      "maximum_active_balance_residual_mw": 9.99862596971074e-08,
+      "maximum_reactive_balance_residual_mvar": 9.883770024643468e-08
+    },
+    {
+      "seed": 43,
+      "power_flow_failures": 0,
+      "audited_steps": 1632,
+      "maximum_active_balance_residual_mw": 9.997188197066742e-08,
+      "maximum_reactive_balance_residual_mvar": 9.888483733233588e-08
+    },
+    {
+      "seed": 44,
+      "power_flow_failures": 0,
+      "audited_steps": 1632,
+      "maximum_active_balance_residual_mw": 9.988266091824627e-08,
+      "maximum_reactive_balance_residual_mvar": 9.842274183158306e-08
+    },
+    {
+      "seed": 45,
+      "power_flow_failures": 0,
+      "audited_steps": 1632,
+      "maximum_active_balance_residual_mw": 9.999512659737697e-08,
+      "maximum_reactive_balance_residual_mvar": 9.84247910951197e-08
+    },
+    {
+      "seed": 46,
+      "power_flow_failures": 0,
+      "audited_steps": 1632,
+      "maximum_active_balance_residual_mw": 9.963673898959191e-08,
+      "maximum_reactive_balance_residual_mvar": 9.946808866151402e-08
+    }
+  ]
+}

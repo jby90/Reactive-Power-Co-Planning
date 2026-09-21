@@ -1,0 +1,22 @@
+{
+  "decision_stage": "development only",
+  "external_selection_output_observed": false,
+  "persisted_external_selection_or_confirmation_output_count": 0,
+  "trigger": {
+    "source_run": "VMOD_ENV69_EXTENDED_EXTERNAL2018_MARGIN_0p003_20260921",
+    "source_dataset_manifest_sha256": "8c330ae725824f79b84e8a0206e87b4c0ab63f33414fade7bf6140cb54932446",
+    "source_dataset_sha256": "d92ccf0a9eaeab9944c56b7fb966df1df07f6a58fd6a78d467afb35e93fd9f7f",
+    "maximum_q_representation_error_mvar": 1.1269688899778743,
+    "mean_q_representation_error_mvar": 0.0004841690925968947,
+    "diagnosis": "The original 1.0-scale fixed-MVAr action map did not span the frozen 1.5-scale 69-bus path endpoint."
+  },
+  "correction_rule": {
+    "reference_pv_s_scale": 1.5,
+    "reference_svc_q_scale": 1.5,
+    "basis": "Use the maximum PV and SVC scale on the already frozen 69-bus capacity path.",
+    "teacher_regenerated": false,
+    "student_dataset_and_all_downstream_outputs_regenerated": true,
+    "external_data_used_to_choose_rule": false
+  },
+  "scope": "The 33-bus path and all 33-bus evidence retain their original 1.0-scale reference map."
+}

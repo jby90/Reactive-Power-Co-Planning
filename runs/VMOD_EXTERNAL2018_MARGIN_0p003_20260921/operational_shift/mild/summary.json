@@ -1,0 +1,117 @@
+{
+  "theta": [
+    0.3,
+    0.375,
+    0.0
+  ],
+  "seeds": [
+    42,
+    43,
+    44,
+    45,
+    46
+  ],
+  "days": 17,
+  "shift_replicates": 20,
+  "evaluated_shift_days": 1700,
+  "event_days": 0,
+  "event_rate": 0.0,
+  "seed_mean_event_rate": 0.0,
+  "seed_level_event_rate_ci95_low": 0.0,
+  "seed_level_event_rate_ci95_high": 0.0,
+  "replicate_mean_event_rate": 0.0,
+  "replicate_level_event_rate_ci95_low": 0.0,
+  "replicate_level_event_rate_ci95_high": 0.0,
+  "replicate_interval_available": true,
+  "replicate_event_rates": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "pf_fail_days": 0,
+  "mean_daily_line_loss_mwh": 1.425968826874209,
+  "worst_minimum_voltage_pu": 0.9510820965095351,
+  "worst_maximum_voltage_pu": 1.0215980827924636,
+  "shift": {
+    "r_std": 0.025,
+    "x_std": 0.025,
+    "load_std": 0.01,
+    "pv_std": 0.01,
+    "voltage_measurement_std": 0.0,
+    "power_measurement_relative_std": 0.0,
+    "observation_delay_steps": 0,
+    "topology_reconfiguration": "none"
+  },
+  "interpretation": "Empirical out-of-distribution stress test of a raw actor without online model use; not a formal robustness or safety guarantee.",
+  "seed_summaries": [
+    {
+      "seed": 42,
+      "evaluated_shift_days": 340,
+      "event_days": 0,
+      "pf_fail_days": 0,
+      "mean_daily_line_loss_mwh": 1.426337282123718,
+      "worst_minimum_voltage_pu": 0.9517772862380596,
+      "worst_maximum_voltage_pu": 1.0206982965474536,
+      "event_rate": 0.0
+    },
+    {
+      "seed": 43,
+      "evaluated_shift_days": 340,
+      "event_days": 0,
+      "pf_fail_days": 0,
+      "mean_daily_line_loss_mwh": 1.425350452289533,
+      "worst_minimum_voltage_pu": 0.9516654252829617,
+      "worst_maximum_voltage_pu": 1.0206399432773974,
+      "event_rate": 0.0
+    },
+    {
+      "seed": 44,
+      "evaluated_shift_days": 340,
+      "event_days": 0,
+      "pf_fail_days": 0,
+      "mean_daily_line_loss_mwh": 1.4251080955308988,
+      "worst_minimum_voltage_pu": 0.9513224612870522,
+      "worst_maximum_voltage_pu": 1.0205675227474218,
+      "event_rate": 0.0
+    },
+    {
+      "seed": 45,
+      "evaluated_shift_days": 340,
+      "event_days": 0,
+      "pf_fail_days": 0,
+      "mean_daily_line_loss_mwh": 1.4272841094043822,
+      "worst_minimum_voltage_pu": 0.9517520440835548,
+      "worst_maximum_voltage_pu": 1.0215980827924636,
+      "event_rate": 0.0
+    },
+    {
+      "seed": 46,
+      "evaluated_shift_days": 340,
+      "event_days": 0,
+      "pf_fail_days": 0,
+      "mean_daily_line_loss_mwh": 1.425764195022513,
+      "worst_minimum_voltage_pu": 0.9510820965095351,
+      "worst_maximum_voltage_pu": 1.0213408151331747,
+      "event_rate": 0.0
+    }
+  ],
+  "seed_level_event_rate_interval_method": "percentile bootstrap over independently trained actors; 10000 resamples; seed 20260921",
+  "replicate_level_event_rate_interval_method": "percentile bootstrap over matched shift realisations; 10000 resamples; seed 20260921"
+}

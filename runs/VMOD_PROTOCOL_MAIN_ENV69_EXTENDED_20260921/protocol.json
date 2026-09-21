@@ -1,0 +1,201 @@
+{
+  "protocol": "VMOD 69-bus development-triggered extended capacity path",
+  "environment": 69,
+  "pv_base_mva_at_scale_one": 17.8885438199983,
+  "svc_base_mvar_at_scale_one": 2.0,
+  "fit_days": 40,
+  "student_training_days": 32,
+  "student_validation_days": 8,
+  "calibration_days": 10,
+  "training_path_job_rows": 600,
+  "margins_pu": [
+    0.0,
+    0.001,
+    0.003,
+    0.005
+  ],
+  "capacity_path": [
+    {
+      "path_index": 0,
+      "label": "P00_pv0225_svc0000",
+      "pv_s_scale": 0.225,
+      "svc_q_scale": 0.0,
+      "cap_total_mvar": 0.0,
+      "pv_inverter_nameplate_mva": 4.024922359499618,
+      "svc_nameplate_mvar": 0.0,
+      "fixed_shunt_mvar": 0.0
+    },
+    {
+      "path_index": 1,
+      "label": "P01_pv030_svc0000",
+      "pv_s_scale": 0.3,
+      "svc_q_scale": 0.0,
+      "cap_total_mvar": 0.0,
+      "pv_inverter_nameplate_mva": 5.36656314599949,
+      "svc_nameplate_mvar": 0.0,
+      "fixed_shunt_mvar": 0.0
+    },
+    {
+      "path_index": 2,
+      "label": "P02_pv030_svc01875",
+      "pv_s_scale": 0.3,
+      "svc_q_scale": 0.1875,
+      "cap_total_mvar": 0.0,
+      "pv_inverter_nameplate_mva": 5.36656314599949,
+      "svc_nameplate_mvar": 0.375,
+      "fixed_shunt_mvar": 0.0
+    },
+    {
+      "path_index": 3,
+      "label": "P03_pv030_svc0375",
+      "pv_s_scale": 0.3,
+      "svc_q_scale": 0.375,
+      "cap_total_mvar": 0.0,
+      "pv_inverter_nameplate_mva": 5.36656314599949,
+      "svc_nameplate_mvar": 0.75,
+      "fixed_shunt_mvar": 0.0
+    },
+    {
+      "path_index": 4,
+      "label": "P04_pv045_svc0375",
+      "pv_s_scale": 0.45,
+      "svc_q_scale": 0.375,
+      "cap_total_mvar": 0.0,
+      "pv_inverter_nameplate_mva": 8.049844718999235,
+      "svc_nameplate_mvar": 0.75,
+      "fixed_shunt_mvar": 0.0
+    },
+    {
+      "path_index": 5,
+      "label": "P05_pv045_svc05625",
+      "pv_s_scale": 0.45,
+      "svc_q_scale": 0.5625,
+      "cap_total_mvar": 0.0,
+      "pv_inverter_nameplate_mva": 8.049844718999235,
+      "svc_nameplate_mvar": 1.125,
+      "fixed_shunt_mvar": 0.0
+    },
+    {
+      "path_index": 6,
+      "label": "P06_pv045_svc0750",
+      "pv_s_scale": 0.45,
+      "svc_q_scale": 0.75,
+      "cap_total_mvar": 0.0,
+      "pv_inverter_nameplate_mva": 8.049844718999235,
+      "svc_nameplate_mvar": 1.5,
+      "fixed_shunt_mvar": 0.0
+    },
+    {
+      "path_index": 7,
+      "label": "P07_pv060_svc0750",
+      "pv_s_scale": 0.6,
+      "svc_q_scale": 0.75,
+      "cap_total_mvar": 0.0,
+      "pv_inverter_nameplate_mva": 10.73312629199898,
+      "svc_nameplate_mvar": 1.5,
+      "fixed_shunt_mvar": 0.0
+    },
+    {
+      "path_index": 8,
+      "label": "P08_pv075_svc0750",
+      "pv_s_scale": 0.75,
+      "svc_q_scale": 0.75,
+      "cap_total_mvar": 0.0,
+      "pv_inverter_nameplate_mva": 13.416407864998725,
+      "svc_nameplate_mvar": 1.5,
+      "fixed_shunt_mvar": 0.0
+    },
+    {
+      "path_index": 9,
+      "label": "P09_pv075_svc1000",
+      "pv_s_scale": 0.75,
+      "svc_q_scale": 1.0,
+      "cap_total_mvar": 0.0,
+      "pv_inverter_nameplate_mva": 13.416407864998725,
+      "svc_nameplate_mvar": 2.0,
+      "fixed_shunt_mvar": 0.0
+    },
+    {
+      "path_index": 10,
+      "label": "P10_pv100_svc1000",
+      "pv_s_scale": 1.0,
+      "svc_q_scale": 1.0,
+      "cap_total_mvar": 0.0,
+      "pv_inverter_nameplate_mva": 17.8885438199983,
+      "svc_nameplate_mvar": 2.0,
+      "fixed_shunt_mvar": 0.0
+    },
+    {
+      "path_index": 11,
+      "label": "P11_pv100_svc1250",
+      "pv_s_scale": 1.0,
+      "svc_q_scale": 1.25,
+      "cap_total_mvar": 0.0,
+      "pv_inverter_nameplate_mva": 17.8885438199983,
+      "svc_nameplate_mvar": 2.5,
+      "fixed_shunt_mvar": 0.0
+    },
+    {
+      "path_index": 12,
+      "label": "P12_pv125_svc1250",
+      "pv_s_scale": 1.25,
+      "svc_q_scale": 1.25,
+      "cap_total_mvar": 0.0,
+      "pv_inverter_nameplate_mva": 22.360679774997877,
+      "svc_nameplate_mvar": 2.5,
+      "fixed_shunt_mvar": 0.0
+    },
+    {
+      "path_index": 13,
+      "label": "P13_pv125_svc1500",
+      "pv_s_scale": 1.25,
+      "svc_q_scale": 1.5,
+      "cap_total_mvar": 0.0,
+      "pv_inverter_nameplate_mva": 22.360679774997877,
+      "svc_nameplate_mvar": 3.0,
+      "fixed_shunt_mvar": 0.0
+    },
+    {
+      "path_index": 14,
+      "label": "P14_pv150_svc1500",
+      "pv_s_scale": 1.5,
+      "svc_q_scale": 1.5,
+      "cap_total_mvar": 0.0,
+      "pv_inverter_nameplate_mva": 26.83281572999745,
+      "svc_nameplate_mvar": 3.0,
+      "fixed_shunt_mvar": 0.0
+    }
+  ],
+  "margin_selection_rule": "Choose the smallest margin whose five frozen policies have zero calibration event-days and zero PF failures at the pre-specified feasible reference point.",
+  "training_days_sha256": "886dc3d75b53d5a68cb2948a64279730530216dc5e9f017ac37113a3c081b868",
+  "fitting_days_sha256": "4e7326a323f07b31960090a82cfbca87d547797b580f6cac0dc7b7151a7ff4af",
+  "calibration_days_sha256": "c5b319209a63195a3a343cb682955bbb68043acbd1b9e9d000e0b5bf3f97ea4f",
+  "student_training_days_sha256": "4cf16fce67e0274894a175a52f947daea967ff40b844c274c1449de996a81b09",
+  "student_validation_days_sha256": "cdd8b01cf719f3e59f349dc3cab4a6a6d68489ed433d42efa947d1e2c635fd76",
+  "training_path_jobs_sha256": "b78cbf63a77310af6f4f98b3874069b7c7ae8053b4344398e81b394d248f5835",
+  "second_feeder_path_extension": {
+    "trigger": "all original nine points failed development calibration",
+    "rule": "alternate +0.25 SVC and PV scale increments from (0.75,0.75) to the actor-domain endpoint (1.50,1.50)",
+    "external_selection_outputs_observed": false,
+    "trigger_evidence": {
+      "original_points": 9,
+      "development_total_event_days_by_point": [
+        40,
+        29,
+        25,
+        25,
+        24,
+        25,
+        23,
+        23,
+        23
+      ],
+      "all_original_points_failed_development_calibration": true,
+      "external_selection_summary_existed": false,
+      "persisted_external_selection_output_count": 0
+    }
+  },
+  "capacity_path_sha256": "21c6ebbb313ba83b0baff3dc08413a367c0c981c83c68918ba049d4685326a74",
+  "role": "pre-external development only",
+  "external_selection_or_confirmation_data_used": false
+}

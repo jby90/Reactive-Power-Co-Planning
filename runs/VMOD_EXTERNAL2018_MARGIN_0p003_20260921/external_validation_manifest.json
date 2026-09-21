@@ -1,0 +1,11 @@
+{
+  "role": "post-development external validation",
+  "selected_margin_pu": 0.003,
+  "path_calibration_summary": ".\\runs\\VMOD_PATH_MARGIN_CALIBRATION_20260921\\summary.json",
+  "source_candidate": ".\\runs\\VMOD_BIDIRECTIONAL_MARGIN_STUDY_20260920\\margin_003",
+  "frozen_artifact_manifest": ".\\runs\\VMOD_EXTERNAL2018_MARGIN_0p003_20260921\\frozen_margin_candidate.json",
+  "frozen_artifact_count": 23,
+  "profile_metadata": ".\\data\\vmod\\profiles33_external2018\\metadata.json",
+  "protocol_metadata": ".\\runs\\VMOD_PROTOCOL_EXTERNAL2018_20260921\\external_validation_protocol.json",
+  "development_selection_results_used": false
+}

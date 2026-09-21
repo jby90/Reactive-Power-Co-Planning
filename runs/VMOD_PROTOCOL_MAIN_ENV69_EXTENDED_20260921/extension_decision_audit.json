@@ -1,0 +1,50 @@
+{
+  "timestamp_utc": "2026-09-20T23:44:52.137640+00:00",
+  "decision": "extend the 69-bus capacity path before external selection output",
+  "trigger": {
+    "original_points": 9,
+    "development_total_event_days_by_point": [
+      40,
+      29,
+      25,
+      25,
+      24,
+      25,
+      23,
+      23,
+      23
+    ],
+    "all_original_points_failed_development_calibration": true,
+    "external_selection_summary_existed": false,
+    "persisted_external_selection_output_count": 0
+  },
+  "extension_points": [
+    [
+      0.75,
+      1.0
+    ],
+    [
+      1.0,
+      1.0
+    ],
+    [
+      1.0,
+      1.25
+    ],
+    [
+      1.25,
+      1.25
+    ],
+    [
+      1.25,
+      1.5
+    ],
+    [
+      1.5,
+      1.5
+    ]
+  ],
+  "source_capacity_path_sha256": "cdbb0ee22961ea874fcaa1cb218cf148428a3af2757602bf37db7660c32966ee",
+  "extended_capacity_path_sha256": "21c6ebbb313ba83b0baff3dc08413a367c0c981c83c68918ba049d4685326a74",
+  "external_selection_output_observed": false
+}

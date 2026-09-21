@@ -1,0 +1,90 @@
+{
+  "examples": 27840,
+  "observation_dim": 103,
+  "action_dim": 4,
+  "unique_days": 39,
+  "unique_candidates": 9,
+  "excluded_nonconverged_jobs": 70,
+  "candidate_coverage": [
+    {
+      "candidate_id": 0,
+      "capacity_label": "P00_pv0225_svc0000",
+      "attempted_days": 40,
+      "converged_days": 8,
+      "examples": 768,
+      "excluded_nonconverged_days": 32
+    },
+    {
+      "candidate_id": 1,
+      "capacity_label": "P01_pv030_svc0000",
+      "attempted_days": 40,
+      "converged_days": 16,
+      "examples": 1536,
+      "excluded_nonconverged_days": 24
+    },
+    {
+      "candidate_id": 2,
+      "capacity_label": "P02_pv030_svc01875",
+      "attempted_days": 40,
+      "converged_days": 32,
+      "examples": 3072,
+      "excluded_nonconverged_days": 8
+    },
+    {
+      "candidate_id": 3,
+      "capacity_label": "P03_pv030_svc0375",
+      "attempted_days": 40,
+      "converged_days": 39,
+      "examples": 3744,
+      "excluded_nonconverged_days": 1
+    },
+    {
+      "candidate_id": 4,
+      "capacity_label": "P04_pv045_svc0375",
+      "attempted_days": 40,
+      "converged_days": 39,
+      "examples": 3744,
+      "excluded_nonconverged_days": 1
+    },
+    {
+      "candidate_id": 5,
+      "capacity_label": "P05_pv045_svc05625",
+      "attempted_days": 40,
+      "converged_days": 39,
+      "examples": 3744,
+      "excluded_nonconverged_days": 1
+    },
+    {
+      "candidate_id": 6,
+      "capacity_label": "P06_pv045_svc0750",
+      "attempted_days": 40,
+      "converged_days": 39,
+      "examples": 3744,
+      "excluded_nonconverged_days": 1
+    },
+    {
+      "candidate_id": 7,
+      "capacity_label": "P07_pv060_svc0750",
+      "attempted_days": 40,
+      "converged_days": 39,
+      "examples": 3744,
+      "excluded_nonconverged_days": 1
+    },
+    {
+      "candidate_id": 8,
+      "capacity_label": "P08_pv075_svc0750",
+      "attempted_days": 40,
+      "converged_days": 39,
+      "examples": 3744,
+      "excluded_nonconverged_days": 1
+    }
+  ],
+  "svc_absorption_ratio": 1.0,
+  "maximum_q_representation_error_mvar": 5.0754316192821445e-11,
+  "mean_q_representation_error_mvar": 1.1963086011352468e-12,
+  "jobs_sha256": "6fc1b363bd1c5075cdfc5b93e2b13e7cf543b981c6c441fb354eec4efa83aa50",
+  "opf_steps_sha256": "30b47a8b0dc4606f6a05d5ccda0ca6bd8af1fad897552b2378e0f15b86738462",
+  "load_profile_sha256": "b76af37275bafb7c11b2bc3a349f24d732b192b487a7a5ffc9d277cf9736c3cb",
+  "generation_profile_sha256": "0bd06ab38910ce288b83722465913cc32f22e34a94da532f70def0ecacbd7204",
+  "dataset_sha256": "5c5006410bf85b3dc61cc91dc03b05d4fa64d32e5730be7034eee586613e5b4a"
+}

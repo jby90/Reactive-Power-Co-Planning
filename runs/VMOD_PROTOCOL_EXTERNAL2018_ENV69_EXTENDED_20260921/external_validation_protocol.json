@@ -1,0 +1,12 @@
+{
+  "role": "post-development external validation protocol",
+  "source_protocol": ".\\runs\\VMOD_PROTOCOL_MAIN_ENV69_EXTENDED_20260921",
+  "selection_days": 17,
+  "confirmation_days": 349,
+  "selection_days_sha256": "dfd394bbb30b91b77b067957e0c10dc5ef1763b461a412c8ae57dd8c5e449480",
+  "confirmation_days_sha256": "00b6530a9fccc0b023acbf7aa3538c0c7b4abe7d9f7cb09025185db6082ea7f0",
+  "capacity_path_sha256": "21c6ebbb313ba83b0baff3dc08413a367c0c981c83c68918ba049d4685326a74",
+  "development_triggered_extension_frozen_before_external_outputs": true,
+  "external_selection_results_used_to_define_path": false,
+  "external_confirmation_results_used_to_define_path": false
+}

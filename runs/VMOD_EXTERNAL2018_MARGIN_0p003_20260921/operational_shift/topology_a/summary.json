@@ -1,0 +1,98 @@
+{
+  "theta": [
+    0.3,
+    0.375,
+    0.0
+  ],
+  "seeds": [
+    42,
+    43,
+    44,
+    45,
+    46
+  ],
+  "days": 17,
+  "shift_replicates": 1,
+  "evaluated_shift_days": 85,
+  "event_days": 25,
+  "event_rate": 0.29411764705882354,
+  "seed_mean_event_rate": 0.29411764705882354,
+  "seed_level_event_rate_ci95_low": 0.29411764705882354,
+  "seed_level_event_rate_ci95_high": 0.29411764705882354,
+  "seed_level_event_rate_interval_method": "percentile bootstrap over independently trained actors; 10000 resamples; seed 20260921",
+  "replicate_mean_event_rate": 0.29411764705882354,
+  "replicate_level_event_rate_ci95_low": 0.29411764705882354,
+  "replicate_level_event_rate_ci95_high": 0.29411764705882354,
+  "replicate_interval_available": false,
+  "replicate_level_event_rate_interval_method": "percentile bootstrap over matched shift realisations; 10000 resamples; seed 20260921",
+  "replicate_event_rates": [
+    0.29411764705882354
+  ],
+  "pf_fail_days": 0,
+  "mean_daily_line_loss_mwh": 1.5362076129058961,
+  "worst_minimum_voltage_pu": 0.9476979442918966,
+  "worst_maximum_voltage_pu": 1.03139067911349,
+  "shift": {
+    "r_std": 0.0,
+    "x_std": 0.0,
+    "load_std": 0.0,
+    "pv_std": 0.0,
+    "voltage_measurement_std": 0.0,
+    "power_measurement_relative_std": 0.0,
+    "observation_delay_steps": 0,
+    "topology_reconfiguration": "tie32_open18"
+  },
+  "interpretation": "Empirical out-of-distribution stress test of a raw actor without online model use; not a formal robustness or safety guarantee.",
+  "seed_summaries": [
+    {
+      "seed": 42,
+      "evaluated_shift_days": 17,
+      "event_days": 5,
+      "pf_fail_days": 0,
+      "mean_daily_line_loss_mwh": 1.5367603316104372,
+      "worst_minimum_voltage_pu": 0.9488239136146642,
+      "worst_maximum_voltage_pu": 1.0303141044955102,
+      "event_rate": 0.29411764705882354
+    },
+    {
+      "seed": 43,
+      "evaluated_shift_days": 17,
+      "event_days": 5,
+      "pf_fail_days": 0,
+      "mean_daily_line_loss_mwh": 1.5365632308142403,
+      "worst_minimum_voltage_pu": 0.9489419269041326,
+      "worst_maximum_voltage_pu": 1.0304229161592102,
+      "event_rate": 0.29411764705882354
+    },
+    {
+      "seed": 44,
+      "evaluated_shift_days": 17,
+      "event_days": 5,
+      "pf_fail_days": 0,
+      "mean_daily_line_loss_mwh": 1.5359287603757454,
+      "worst_minimum_voltage_pu": 0.9484812815653823,
+      "worst_maximum_voltage_pu": 1.0301522179323936,
+      "event_rate": 0.29411764705882354
+    },
+    {
+      "seed": 45,
+      "evaluated_shift_days": 17,
+      "event_days": 5,
+      "pf_fail_days": 0,
+      "mean_daily_line_loss_mwh": 1.5362945476349796,
+      "worst_minimum_voltage_pu": 0.9489727832608865,
+      "worst_maximum_voltage_pu": 1.03139067911349,
+      "event_rate": 0.29411764705882354
+    },
+    {
+      "seed": 46,
+      "evaluated_shift_days": 17,
+      "event_days": 5,
+      "pf_fail_days": 0,
+      "mean_daily_line_loss_mwh": 1.5354911940940765,
+      "worst_minimum_voltage_pu": 0.9476979442918966,
+      "worst_maximum_voltage_pu": 1.0309785347979805,
+      "event_rate": 0.29411764705882354
+    }
+  ]
+}
