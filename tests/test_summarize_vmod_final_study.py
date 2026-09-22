@@ -65,6 +65,10 @@ def _fixtures(tmp_path, core_story_supported=True):
             "loss_seed_sd_mwh": 0.02,
             "loss_ci95_low_mwh": -0.08,
             "loss_ci95_high_mwh": -0.02,
+            "vmod_minus_droop_throughput_mean_mvarh": -1.50,
+            "throughput_ci95_low_mvarh": -1.75,
+            "throughput_ci95_high_mvarh": -1.25,
+            "total_seed_day_pairs": 1745,
         },
         "offline_computation": {
             "teacher_accumulated_solver_seconds": 7200.0,
@@ -127,6 +131,9 @@ def _fixtures(tmp_path, core_story_supported=True):
         "maximum_reactive_balance_residual_mvar": 2e-9,
     }
     runtime = {
+        "actor_inference_ms": {
+            "median": 0.187,
+        },
         "total_online_path_ms": {
             "p95": 31.25,
             "maximum": 48.5,
@@ -170,24 +177,22 @@ def test_write_manuscript_results_for_passing_core_story(tmp_path, monkeypatch):
     assert "0.855\\%" in text
     assert "over 349 days" in text
     assert "31.250~ms" in text
+    assert "Median actor inference required 0.187~ms" in text
     assert "118-bus total path required 64.125~ms" in text
-    assert "does not validate 118-bus control performance" in text
     assert "Measurements used Test CPU with Python 3.11.3" in text
     assert "PyTorch 2.9.1, pandapower 3.1.2" in text
     assert "confirmed a 69-bus rejected/passed boundary at path index 4" in text
     assert "direct AC nodal-balance audit covered 8,160 executed steps" in text
     assert "reduced mean daily line loss" in text
     assert "seed-level standard deviation of 0.0200~MWh/day" in text
+    assert "1.50~MVArh/day" in text
+    assert "all 1,745 paired seed--day comparisons" in text
     assert "2.00 solver-hours" in text
-    assert "94,216 trainable policy parameters" in text
-    assert "39 of 40 allocated fitting days" in text
-    assert "31 parameter-training and 8 early-stopping days" in text
-    assert "complete four-candidate margin-calibration procedure" in text
-    assert "8.00 teacher solver-hours" in text
-    assert "2.00 student-training hours across 20 fits" in text
+    assert "teacher generation accumulated 8.00 solver-hours" in text
+    assert "20 student fits accumulated 2.00 training hours" in text
     assert "shared capacity-conditioned actors" in text
     assert "[0, 0, 0, 0, 0] and [1, 1, 1, 1, 1]" in text
-    assert "did not increase any seed's confirmation event count" in text
+    assert "no detected selected-point loss penalty" in text
 
 
 def test_write_manuscript_results_exposes_failed_gate(tmp_path, monkeypatch):
@@ -416,6 +421,9 @@ def test_paired_boundary_outcomes_uses_seed_level_contrasts():
     assert result["vmod_minus_droop_loss_mean_mwh"] < 0
     assert result["loss_ci95_high_mwh"] < 0
     assert result["loss_seed_sd_mwh"] > 0
+    assert result["total_seed_day_pairs"] == 15
+    assert result["loss_better_seed_day_pairs"] == 15
+    assert result["throughput_better_seed_day_pairs"] == 15
 
 
 def test_core_story_requires_every_method_and_evidence_gate():

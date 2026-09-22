@@ -1,0 +1,45 @@
+{
+  "seed": 46,
+  "training_examples": 21024,
+  "validation_examples": 5856,
+  "dataset_unique_days_with_examples": 29,
+  "training_unique_days_with_examples": 22,
+  "validation_unique_days_with_examples": 7,
+  "validation_days": [
+    56,
+    114,
+    164,
+    217,
+    255,
+    287,
+    342
+  ],
+  "requested_validation_days": [
+    56,
+    114,
+    164,
+    217,
+    255,
+    287,
+    311,
+    342
+  ],
+  "missing_validation_days": [
+    311
+  ],
+  "validation_day_policy": "frozen_available_subset_without_reassignment",
+  "best_validation_mse": 2.4432081318082055e-06,
+  "best_epoch": 281,
+  "observation_feature_mode": "all",
+  "standardized_observations": false,
+  "active_observation_features": 103,
+  "dataset_sha256": "c0390893e347283bff32fefaf9b70a445237dbfd28d6bb9e43327c96bf114d1c",
+  "checkpoint": ".\\runs\\VMOD_EXTERNAL2018_MARGIN_0p003_20260921\\path_conditioning_baseline\\P02_pv030_svc01875\\fixed\\policies\\policy_init_seed46.pth",
+  "checkpoint_sha256": "2dfedba983a71569f16027a571368900c0a67c6762abdb69bcf0eaacba1a9c6a",
+  "device": "cpu",
+  "training_wall_seconds": 50.97664629999781,
+  "training_example_updates": 6307200,
+  "training_example_updates_per_second": 123727.24488155021,
+  "trainable_policy_parameters": 94216,
+  "cuda_device_name": null
+}

@@ -1,0 +1,187 @@
+{
+  "candidate_ids": [
+    2,
+    3,
+    4
+  ],
+  "frozen_config": {
+    "band_weight": 1000.0,
+    "centering_weight": 0.0,
+    "reactive_weight": 0.01,
+    "movement_weight": 0.01,
+    "voltage_margin_pu": 0.003
+  },
+  "sensitivity_manifest": {
+    "representative_step": 31633,
+    "perturbation_mvar": 0.01,
+    "realised_perturbations_mvar": [
+      0.01,
+      0.01,
+      0.01,
+      0.01
+    ],
+    "shape": [
+      33,
+      4
+    ],
+    "maximum_absolute_sensitivity_pu_per_mvar": 0.061307424587342396
+  },
+  "results": [
+    {
+      "capacity_label": "P02_pv030_svc01875",
+      "split": "selection",
+      "label": "P02_pv030_svc01875::selection",
+      "theta": [
+        0.3,
+        0.1875,
+        0.0
+      ],
+      "config": {
+        "band_weight": 1000.0,
+        "centering_weight": 0.0,
+        "reactive_weight": 0.01,
+        "movement_weight": 0.01,
+        "voltage_margin_pu": 0.003
+      },
+      "days": 17,
+      "event_days": 1,
+      "pf_fail_days": 0,
+      "solver_failures": 0,
+      "mean_daily_loss_mwh": 1.9325032361758996,
+      "mean_daily_absolute_reactive_throughput_mvarh": 14.167844770703404,
+      "worst_minimum_voltage_pu": 0.9476616695148559,
+      "worst_maximum_voltage_pu": 1.0195898776391579,
+      "mean_online_optimisation_ms": 0.6593832720762507
+    },
+    {
+      "capacity_label": "P02_pv030_svc01875",
+      "split": "confirmation",
+      "label": "P02_pv030_svc01875::confirmation",
+      "theta": [
+        0.3,
+        0.1875,
+        0.0
+      ],
+      "config": {
+        "band_weight": 1000.0,
+        "centering_weight": 0.0,
+        "reactive_weight": 0.01,
+        "movement_weight": 0.01,
+        "voltage_margin_pu": 0.003
+      },
+      "days": 349,
+      "event_days": 62,
+      "pf_fail_days": 0,
+      "solver_failures": 0,
+      "mean_daily_loss_mwh": 2.068534015086491,
+      "mean_daily_absolute_reactive_throughput_mvarh": 17.020549631128667,
+      "worst_minimum_voltage_pu": 0.9442455401297782,
+      "worst_maximum_voltage_pu": 1.0221136228907057,
+      "mean_online_optimisation_ms": 0.6612671561670931
+    },
+    {
+      "capacity_label": "P03_pv030_svc0375",
+      "split": "selection",
+      "label": "P03_pv030_svc0375::selection",
+      "theta": [
+        0.3,
+        0.375,
+        0.0
+      ],
+      "config": {
+        "band_weight": 1000.0,
+        "centering_weight": 0.0,
+        "reactive_weight": 0.01,
+        "movement_weight": 0.01,
+        "voltage_margin_pu": 0.003
+      },
+      "days": 17,
+      "event_days": 0,
+      "pf_fail_days": 0,
+      "solver_failures": 0,
+      "mean_daily_loss_mwh": 1.7124551524510507,
+      "mean_daily_absolute_reactive_throughput_mvarh": 9.816573617838534,
+      "worst_minimum_voltage_pu": 0.9518351030820763,
+      "worst_maximum_voltage_pu": 1.0091731784562306,
+      "mean_online_optimisation_ms": 0.7510699754822567
+    },
+    {
+      "capacity_label": "P03_pv030_svc0375",
+      "split": "confirmation",
+      "label": "P03_pv030_svc0375::confirmation",
+      "theta": [
+        0.3,
+        0.375,
+        0.0
+      ],
+      "config": {
+        "band_weight": 1000.0,
+        "centering_weight": 0.0,
+        "reactive_weight": 0.01,
+        "movement_weight": 0.01,
+        "voltage_margin_pu": 0.003
+      },
+      "days": 349,
+      "event_days": 0,
+      "pf_fail_days": 0,
+      "solver_failures": 0,
+      "mean_daily_loss_mwh": 1.8051925736914032,
+      "mean_daily_absolute_reactive_throughput_mvarh": 11.277225629580746,
+      "worst_minimum_voltage_pu": 0.9516212268738384,
+      "worst_maximum_voltage_pu": 1.0184149571678671,
+      "mean_online_optimisation_ms": 0.7609202811586185
+    },
+    {
+      "capacity_label": "P04_pv045_svc0375",
+      "split": "selection",
+      "label": "P04_pv045_svc0375::selection",
+      "theta": [
+        0.45,
+        0.375,
+        0.0
+      ],
+      "config": {
+        "band_weight": 1000.0,
+        "centering_weight": 0.0,
+        "reactive_weight": 0.01,
+        "movement_weight": 0.01,
+        "voltage_margin_pu": 0.003
+      },
+      "days": 17,
+      "event_days": 0,
+      "pf_fail_days": 0,
+      "solver_failures": 0,
+      "mean_daily_loss_mwh": 1.712455154892272,
+      "mean_daily_absolute_reactive_throughput_mvarh": 9.81657344531794,
+      "worst_minimum_voltage_pu": 0.9518351030820762,
+      "worst_maximum_voltage_pu": 1.0091731784562306,
+      "mean_online_optimisation_ms": 0.7556984681344806
+    },
+    {
+      "capacity_label": "P04_pv045_svc0375",
+      "split": "confirmation",
+      "label": "P04_pv045_svc0375::confirmation",
+      "theta": [
+        0.45,
+        0.375,
+        0.0
+      ],
+      "config": {
+        "band_weight": 1000.0,
+        "centering_weight": 0.0,
+        "reactive_weight": 0.01,
+        "movement_weight": 0.01,
+        "voltage_margin_pu": 0.003
+      },
+      "days": 349,
+      "event_days": 0,
+      "pf_fail_days": 0,
+      "solver_failures": 0,
+      "mean_daily_loss_mwh": 1.8051925699926665,
+      "mean_daily_absolute_reactive_throughput_mvarh": 11.277225936871998,
+      "worst_minimum_voltage_pu": 0.9516212268738382,
+      "worst_maximum_voltage_pu": 1.0184149571678671,
+      "mean_online_optimisation_ms": 0.76358633894171
+    }
+  ]
+}

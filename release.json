@@ -2,7 +2,7 @@
   "selected_margin_pu": 0.003,
   "main_run": "VMOD_EXTERNAL2018_MARGIN_0p003_20260921",
   "env69_run": "VMOD_ENV69_ADAPTED_FINAL_20260921",
-  "files_including_manifest": 696,
+  "files_including_manifest": 781,
   "neutrality_audit_passed": true,
-  "source_claim_gate_sha256": "0e1b841921f7a386e0760e11eef6f3205108d9d6b51d5422919efb3b29107d6b"
+  "source_claim_gate_sha256": "faca8a9c57e05280d2407412c27e27af5970500c7b0c35d1a0846b9aec3e1975"
 }

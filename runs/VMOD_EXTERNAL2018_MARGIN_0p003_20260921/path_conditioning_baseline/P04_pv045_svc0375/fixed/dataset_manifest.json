@@ -1,0 +1,21 @@
+{
+  "candidate_id": 4,
+  "original_candidate_examples": 3744,
+  "original_candidate_days": 39,
+  "available_frozen_validation_days": [
+    56,
+    114,
+    164,
+    217,
+    255,
+    287,
+    311,
+    342
+  ],
+  "missing_frozen_validation_days": [],
+  "target_training_examples": 21024,
+  "target_validation_examples": 5856,
+  "released_dataset_examples": 26880,
+  "resampling_seed": 20260925,
+  "resampling": "deterministic within-split oversampling to match the shared actor example and optimiser-step budget"
+}

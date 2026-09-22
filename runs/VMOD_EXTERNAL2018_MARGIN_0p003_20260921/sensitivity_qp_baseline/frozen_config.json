@@ -1,0 +1,35 @@
+{
+  "selection_rule": "lexicographic development-only minimisation of AC failures, event-days, optimiser failures, and mean daily line loss",
+  "representative_step": 31633,
+  "config": {
+    "band_weight": 1000.0,
+    "centering_weight": 0.0,
+    "reactive_weight": 0.01,
+    "movement_weight": 0.01,
+    "voltage_margin_pu": 0.003
+  },
+  "development_result": {
+    "label": "config_00",
+    "theta": [
+      0.3,
+      0.375,
+      0.0
+    ],
+    "config": {
+      "band_weight": 1000.0,
+      "centering_weight": 0.0,
+      "reactive_weight": 0.01,
+      "movement_weight": 0.01,
+      "voltage_margin_pu": 0.003
+    },
+    "days": 40,
+    "event_days": 0,
+    "pf_fail_days": 0,
+    "solver_failures": 0,
+    "mean_daily_loss_mwh": 1.7643763583822416,
+    "mean_daily_absolute_reactive_throughput_mvarh": 10.602924237851704,
+    "worst_minimum_voltage_pu": 0.9517460794446095,
+    "worst_maximum_voltage_pu": 1.021297380618913,
+    "mean_online_optimisation_ms": 0.743828541677279
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "representative_step": 31633,
+  "perturbation_mvar": 0.01,
+  "realised_perturbations_mvar": [
+    0.01,
+    0.01,
+    0.01,
+    0.01
+  ],
+  "shape": [
+    33,
+    4
+  ],
+  "maximum_absolute_sensitivity_pu_per_mvar": 0.061307424587342396
+}

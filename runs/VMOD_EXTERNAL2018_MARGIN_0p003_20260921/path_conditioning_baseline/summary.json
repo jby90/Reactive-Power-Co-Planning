@@ -1,0 +1,414 @@
+{
+  "candidate_ids": [
+    2,
+    3,
+    4
+  ],
+  "comparison": "shared capacity-conditioned actor versus fixed-capacity actors",
+  "training_examples_per_seed": 21024,
+  "validation_examples_per_seed": 5856,
+  "training_example_updates_per_seed": 6307200,
+  "seeds": [
+    42,
+    43,
+    44,
+    45,
+    46
+  ],
+  "points": [
+    {
+      "candidate_id": 2,
+      "capacity_label": "P02_pv030_svc01875",
+      "theta": [
+        0.3,
+        0.1875,
+        0.0
+      ],
+      "dataset_manifest": {
+        "candidate_id": 2,
+        "original_candidate_examples": 2784,
+        "original_candidate_days": 29,
+        "available_frozen_validation_days": [
+          56,
+          114,
+          164,
+          217,
+          255,
+          287,
+          342
+        ],
+        "missing_frozen_validation_days": [
+          311
+        ],
+        "target_training_examples": 21024,
+        "target_validation_examples": 5856,
+        "released_dataset_examples": 26880,
+        "resampling_seed": 20260923,
+        "resampling": "deterministic within-split oversampling to match the shared actor example and optimiser-step budget"
+      },
+      "training_budget_matched": true,
+      "split_summaries": {
+        "selection": {
+          "shared_minus_fixed_loss_mean_mwh": 0.047413187211869955,
+          "seed_level_t_ci95_low_mwh": -0.010085663013683042,
+          "seed_level_t_ci95_high_mwh": 0.10491203743742294,
+          "seed_contrasts": [
+            {
+              "split": "selection",
+              "seed": 42,
+              "paired_days": 17,
+              "shared_event_days": 1,
+              "fixed_event_days": 1,
+              "shared_minus_fixed_loss_mwh": 0.025335514947970875
+            },
+            {
+              "split": "selection",
+              "seed": 43,
+              "paired_days": 17,
+              "shared_event_days": 1,
+              "fixed_event_days": 1,
+              "shared_minus_fixed_loss_mwh": 0.0011070104582545908
+            },
+            {
+              "split": "selection",
+              "seed": 44,
+              "paired_days": 17,
+              "shared_event_days": 3,
+              "fixed_event_days": 1,
+              "shared_minus_fixed_loss_mwh": 0.056055841212600016
+            },
+            {
+              "split": "selection",
+              "seed": 45,
+              "paired_days": 17,
+              "shared_event_days": 4,
+              "fixed_event_days": 1,
+              "shared_minus_fixed_loss_mwh": 0.12248776421652717
+            },
+            {
+              "split": "selection",
+              "seed": 46,
+              "paired_days": 17,
+              "shared_event_days": 1,
+              "fixed_event_days": 1,
+              "shared_minus_fixed_loss_mwh": 0.0320798052239971
+            }
+          ],
+          "shared_total_event_days": 10,
+          "fixed_total_event_days": 5,
+          "shared_all_seeds_zero_events": false,
+          "fixed_all_seeds_zero_events": false
+        },
+        "confirmation": {
+          "shared_minus_fixed_loss_mean_mwh": 0.043074643069781635,
+          "seed_level_t_ci95_low_mwh": -0.01231676951241506,
+          "seed_level_t_ci95_high_mwh": 0.09846605565197833,
+          "seed_contrasts": [
+            {
+              "split": "confirmation",
+              "seed": 42,
+              "paired_days": 349,
+              "shared_event_days": 63,
+              "fixed_event_days": 62,
+              "shared_minus_fixed_loss_mwh": 0.021440626593800777
+            },
+            {
+              "split": "confirmation",
+              "seed": 43,
+              "paired_days": 349,
+              "shared_event_days": 62,
+              "fixed_event_days": 62,
+              "shared_minus_fixed_loss_mwh": -0.0002662776368412379
+            },
+            {
+              "split": "confirmation",
+              "seed": 44,
+              "paired_days": 349,
+              "shared_event_days": 76,
+              "fixed_event_days": 62,
+              "shared_minus_fixed_loss_mwh": 0.05012737933275039
+            },
+            {
+              "split": "confirmation",
+              "seed": 45,
+              "paired_days": 349,
+              "shared_event_days": 94,
+              "fixed_event_days": 62,
+              "shared_minus_fixed_loss_mwh": 0.1161193868170978
+            },
+            {
+              "split": "confirmation",
+              "seed": 46,
+              "paired_days": 349,
+              "shared_event_days": 62,
+              "fixed_event_days": 62,
+              "shared_minus_fixed_loss_mwh": 0.027952100242100462
+            }
+          ],
+          "shared_total_event_days": 357,
+          "fixed_total_event_days": 310,
+          "shared_all_seeds_zero_events": false,
+          "fixed_all_seeds_zero_events": false
+        }
+      }
+    },
+    {
+      "candidate_id": 3,
+      "capacity_label": "P03_pv030_svc0375",
+      "theta": [
+        0.3,
+        0.375,
+        0.0
+      ],
+      "dataset_manifest": {
+        "candidate_id": 3,
+        "original_candidate_examples": 3744,
+        "target_training_examples": 21024,
+        "target_validation_examples": 5856,
+        "released_dataset_examples": 26880,
+        "resampling": "deterministic within-split oversampling to match the shared actor's example and optimizer-step budget",
+        "resampling_seed": 20260921
+      },
+      "training_budget_matched": true,
+      "split_summaries": {
+        "selection": {
+          "shared_minus_fixed_loss_mean_mwh": -0.0004944900915493757,
+          "seed_level_t_ci95_low_mwh": -0.001836907931553236,
+          "seed_level_t_ci95_high_mwh": 0.0008479277484544846,
+          "seed_contrasts": [
+            {
+              "split": "selection",
+              "seed": 42,
+              "paired_days": 17,
+              "shared_event_days": 0,
+              "fixed_event_days": 0,
+              "shared_minus_fixed_loss_mwh": -0.00017775887942257895
+            },
+            {
+              "split": "selection",
+              "seed": 43,
+              "paired_days": 17,
+              "shared_event_days": 0,
+              "fixed_event_days": 0,
+              "shared_minus_fixed_loss_mwh": -0.0014616911639092492
+            },
+            {
+              "split": "selection",
+              "seed": 44,
+              "paired_days": 17,
+              "shared_event_days": 0,
+              "fixed_event_days": 0,
+              "shared_minus_fixed_loss_mwh": -0.0011743735075824661
+            },
+            {
+              "split": "selection",
+              "seed": 45,
+              "paired_days": 17,
+              "shared_event_days": 0,
+              "fixed_event_days": 0,
+              "shared_minus_fixed_loss_mwh": 0.0012413249636203545
+            },
+            {
+              "split": "selection",
+              "seed": 46,
+              "paired_days": 17,
+              "shared_event_days": 0,
+              "fixed_event_days": 0,
+              "shared_minus_fixed_loss_mwh": -0.0008999518704529386
+            }
+          ],
+          "shared_total_event_days": 0,
+          "fixed_total_event_days": 0,
+          "shared_all_seeds_zero_events": true,
+          "fixed_all_seeds_zero_events": true
+        },
+        "confirmation": {
+          "shared_minus_fixed_loss_mean_mwh": 0.0008865557110779669,
+          "seed_level_t_ci95_low_mwh": -0.003952851739809759,
+          "seed_level_t_ci95_high_mwh": 0.005725963161965693,
+          "seed_contrasts": [
+            {
+              "split": "confirmation",
+              "seed": 42,
+              "paired_days": 349,
+              "shared_event_days": 0,
+              "fixed_event_days": 0,
+              "shared_minus_fixed_loss_mwh": -0.0023818769988459675
+            },
+            {
+              "split": "confirmation",
+              "seed": 43,
+              "paired_days": 349,
+              "shared_event_days": 0,
+              "fixed_event_days": 0,
+              "shared_minus_fixed_loss_mwh": -0.0014125957526022602
+            },
+            {
+              "split": "confirmation",
+              "seed": 44,
+              "paired_days": 349,
+              "shared_event_days": 0,
+              "fixed_event_days": 0,
+              "shared_minus_fixed_loss_mwh": -0.0016116889694787937
+            },
+            {
+              "split": "confirmation",
+              "seed": 45,
+              "paired_days": 349,
+              "shared_event_days": 0,
+              "fixed_event_days": 0,
+              "shared_minus_fixed_loss_mwh": 0.006654953361093482
+            },
+            {
+              "split": "confirmation",
+              "seed": 46,
+              "paired_days": 349,
+              "shared_event_days": 0,
+              "fixed_event_days": 0,
+              "shared_minus_fixed_loss_mwh": 0.003183986915223374
+            }
+          ],
+          "shared_total_event_days": 0,
+          "fixed_total_event_days": 0,
+          "shared_all_seeds_zero_events": true,
+          "fixed_all_seeds_zero_events": true
+        }
+      }
+    },
+    {
+      "candidate_id": 4,
+      "capacity_label": "P04_pv045_svc0375",
+      "theta": [
+        0.45,
+        0.375,
+        0.0
+      ],
+      "dataset_manifest": {
+        "candidate_id": 4,
+        "original_candidate_examples": 3744,
+        "original_candidate_days": 39,
+        "available_frozen_validation_days": [
+          56,
+          114,
+          164,
+          217,
+          255,
+          287,
+          311,
+          342
+        ],
+        "missing_frozen_validation_days": [],
+        "target_training_examples": 21024,
+        "target_validation_examples": 5856,
+        "released_dataset_examples": 26880,
+        "resampling_seed": 20260925,
+        "resampling": "deterministic within-split oversampling to match the shared actor example and optimiser-step budget"
+      },
+      "training_budget_matched": true,
+      "split_summaries": {
+        "selection": {
+          "shared_minus_fixed_loss_mean_mwh": 0.0002081315887702544,
+          "seed_level_t_ci95_low_mwh": -0.0009410962651565723,
+          "seed_level_t_ci95_high_mwh": 0.001357359442697081,
+          "seed_contrasts": [
+            {
+              "split": "selection",
+              "seed": 42,
+              "paired_days": 17,
+              "shared_event_days": 0,
+              "fixed_event_days": 0,
+              "shared_minus_fixed_loss_mwh": 0.0007924603165832186
+            },
+            {
+              "split": "selection",
+              "seed": 43,
+              "paired_days": 17,
+              "shared_event_days": 0,
+              "fixed_event_days": 0,
+              "shared_minus_fixed_loss_mwh": -0.0005430757941239895
+            },
+            {
+              "split": "selection",
+              "seed": 44,
+              "paired_days": 17,
+              "shared_event_days": 0,
+              "fixed_event_days": 0,
+              "shared_minus_fixed_loss_mwh": -0.000445233743773777
+            },
+            {
+              "split": "selection",
+              "seed": 45,
+              "paired_days": 17,
+              "shared_event_days": 0,
+              "fixed_event_days": 0,
+              "shared_minus_fixed_loss_mwh": 0.0015556879776287085
+            },
+            {
+              "split": "selection",
+              "seed": 46,
+              "paired_days": 17,
+              "shared_event_days": 0,
+              "fixed_event_days": 0,
+              "shared_minus_fixed_loss_mwh": -0.00031918081246288843
+            }
+          ],
+          "shared_total_event_days": 0,
+          "fixed_total_event_days": 0,
+          "shared_all_seeds_zero_events": true,
+          "fixed_all_seeds_zero_events": true
+        },
+        "confirmation": {
+          "shared_minus_fixed_loss_mean_mwh": 0.001793122790950084,
+          "seed_level_t_ci95_low_mwh": -0.0020902734567869044,
+          "seed_level_t_ci95_high_mwh": 0.005676519038687072,
+          "seed_contrasts": [
+            {
+              "split": "confirmation",
+              "seed": 42,
+              "paired_days": 349,
+              "shared_event_days": 0,
+              "fixed_event_days": 0,
+              "shared_minus_fixed_loss_mwh": 0.0012110102617154458
+            },
+            {
+              "split": "confirmation",
+              "seed": 43,
+              "paired_days": 349,
+              "shared_event_days": 0,
+              "fixed_event_days": 0,
+              "shared_minus_fixed_loss_mwh": -0.00023627593317690574
+            },
+            {
+              "split": "confirmation",
+              "seed": 44,
+              "paired_days": 349,
+              "shared_event_days": 0,
+              "fixed_event_days": 0,
+              "shared_minus_fixed_loss_mwh": -0.001282859788324503
+            },
+            {
+              "split": "confirmation",
+              "seed": 45,
+              "paired_days": 349,
+              "shared_event_days": 0,
+              "fixed_event_days": 0,
+              "shared_minus_fixed_loss_mwh": 0.0067622055258713615
+            },
+            {
+              "split": "confirmation",
+              "seed": 46,
+              "paired_days": 349,
+              "shared_event_days": 0,
+              "fixed_event_days": 0,
+              "shared_minus_fixed_loss_mwh": 0.0025115338886650216
+            }
+          ],
+          "shared_total_event_days": 0,
+          "fixed_total_event_days": 0,
+          "shared_all_seeds_zero_events": true,
+          "fixed_all_seeds_zero_events": true
+        }
+      }
+    }
+  ]
+}

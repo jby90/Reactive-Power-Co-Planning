@@ -28,6 +28,8 @@ pytest -q
 - `runs/VMOD_BIDIRECTIONAL_MARGIN_STUDY_20260920/`: margin calibration.
 - `runs/VMOD_PATH_MARGIN_CALIBRATION_20260921/`: path-wide margin decision.
 - `runs/VMOD_EXTERNAL2018_MARGIN_0p003_20260921/`: 33-bus training, selection, confirmation, baselines and audits.
+- `runs/VMOD_EXTERNAL2018_MARGIN_0p003_20260921/sensitivity_qp_baseline/`: development-tuned fixed-sensitivity online-optimisation baseline at P02--P04; reproduce with `run_vmod_sensitivity_qp_baseline.py`.
+- `runs/VMOD_EXTERNAL2018_MARGIN_0p003_20260921/path_conditioning_baseline/`: matched-budget capacity-specific students at P02--P04; reproduce with `run_vmod_path_conditioning_baseline.py`.
 - `runs/VMOD_ENV69_ADAPTED_FINAL_20260921/`: 69-bus adaptation audit, merged data, final policies and untouched-window fixed-boundary confirmation.
 - `runs/VMOD_PROTOCOL_EXTERNAL2019_ENV69_FINAL_20260921/`: frozen 2019 confirmation protocol for the adapted 69-bus P08/P09 pair.
 - `runs/VMOD_ENV69_EXTERNAL2018_MARGIN_0p003_20260921/calibration/`: the nine compact development-calibration summaries that triggered the audited 69-bus path extension; no external-selection result is included there.

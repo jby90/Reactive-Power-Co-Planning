@@ -1,0 +1,24 @@
+{
+  "label": "P02_pv030_svc01875::selection",
+  "theta": [
+    0.3,
+    0.1875,
+    0.0
+  ],
+  "config": {
+    "band_weight": 1000.0,
+    "centering_weight": 0.0,
+    "reactive_weight": 0.01,
+    "movement_weight": 0.01,
+    "voltage_margin_pu": 0.003
+  },
+  "days": 17,
+  "event_days": 1,
+  "pf_fail_days": 0,
+  "solver_failures": 0,
+  "mean_daily_loss_mwh": 1.9325032361758996,
+  "mean_daily_absolute_reactive_throughput_mvarh": 14.167844770703404,
+  "worst_minimum_voltage_pu": 0.9476616695148559,
+  "worst_maximum_voltage_pu": 1.0195898776391579,
+  "mean_online_optimisation_ms": 0.6593832720762507
+}
