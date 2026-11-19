@@ -1,0 +1,3 @@
+path_id,point_order,capacity_label,pv_s_scale,svc_q_scale,total_event_days,maximum_seed_event_days,total_pf_fail_days,mean_seed_loss_mwh,worst_minimum_voltage_pu,worst_maximum_voltage_pu,mean_seed_reactive_throughput_mvarh,all_seeds_zero_events,all_seeds_zero_pf_failures,operational_pass
+heterogeneous_boundary,0,P02,0.3,0.1875,364,95,0,1.9028183004536239,0.9286633574338302,1.049921333217274,35.48509111754437,False,True,False
+heterogeneous_boundary,1,P03,0.3,0.375,0,0,0,1.5352829845612437,0.9501398579942175,1.0491475299515858,32.279113288293104,True,True,True

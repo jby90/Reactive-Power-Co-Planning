@@ -1,0 +1,58 @@
+{
+  "scope": "Frozen-actor operational sensitivity only; no teacher-support gate, investment objective, or global-optimality claim.",
+  "capacity_table": "data/vmod/revision_heterogeneous_boundary.csv",
+  "days_metadata": "runs/VMOD_PROTOCOL_EXTERNAL2018_20260921/confirmation_days.csv",
+  "profile_dir": "data/vmod/profiles33_external2018_heterogeneous",
+  "seeds": [
+    42,
+    43,
+    44,
+    45,
+    46
+  ],
+  "evaluated_days_per_seed": 349,
+  "paths": [
+    {
+      "path_id": "heterogeneous_boundary",
+      "first_operational_pass_label": "P03",
+      "first_operational_pass_order": 1,
+      "all_higher_tested_points_pass": true
+    }
+  ],
+  "points": [
+    {
+      "path_id": "heterogeneous_boundary",
+      "point_order": 0,
+      "capacity_label": "P02",
+      "pv_s_scale": 0.3,
+      "svc_q_scale": 0.1875,
+      "total_event_days": 364,
+      "maximum_seed_event_days": 95,
+      "total_pf_fail_days": 0,
+      "mean_seed_loss_mwh": 1.9028183004536239,
+      "worst_minimum_voltage_pu": 0.9286633574338302,
+      "worst_maximum_voltage_pu": 1.049921333217274,
+      "mean_seed_reactive_throughput_mvarh": 35.48509111754437,
+      "all_seeds_zero_events": false,
+      "all_seeds_zero_pf_failures": true,
+      "operational_pass": false
+    },
+    {
+      "path_id": "heterogeneous_boundary",
+      "point_order": 1,
+      "capacity_label": "P03",
+      "pv_s_scale": 0.3,
+      "svc_q_scale": 0.375,
+      "total_event_days": 0,
+      "maximum_seed_event_days": 0,
+      "total_pf_fail_days": 0,
+      "mean_seed_loss_mwh": 1.5352829845612437,
+      "worst_minimum_voltage_pu": 0.9501398579942175,
+      "worst_maximum_voltage_pu": 1.0491475299515858,
+      "mean_seed_reactive_throughput_mvarh": 32.279113288293104,
+      "all_seeds_zero_events": true,
+      "all_seeds_zero_pf_failures": true,
+      "operational_pass": true
+    }
+  ]
+}

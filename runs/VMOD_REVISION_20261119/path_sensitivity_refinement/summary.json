@@ -1,0 +1,64 @@
+{
+  "scope": "Frozen-actor operational sensitivity only; no teacher-support gate, investment objective, or global-optimality claim.",
+  "capacity_table": "data/vmod/revision_capacity_refinement.csv",
+  "days_metadata": "runs/VMOD_PROTOCOL_EXTERNAL2018_20260921/selection_days.csv",
+  "profile_dir": "data/vmod/profiles33_external2018",
+  "seeds": [
+    42,
+    43,
+    44,
+    45,
+    46
+  ],
+  "evaluated_days_per_seed": 17,
+  "paths": [
+    {
+      "path_id": "fine_svc_lower",
+      "first_operational_pass_label": null,
+      "first_operational_pass_order": null,
+      "all_higher_tested_points_pass": false
+    },
+    {
+      "path_id": "svc_first_lower",
+      "first_operational_pass_label": null,
+      "first_operational_pass_order": null,
+      "all_higher_tested_points_pass": false
+    }
+  ],
+  "points": [
+    {
+      "path_id": "fine_svc_lower",
+      "point_order": 0,
+      "capacity_label": "F01",
+      "pv_s_scale": 0.3,
+      "svc_q_scale": 0.234375,
+      "total_event_days": 1,
+      "maximum_seed_event_days": 1,
+      "total_pf_fail_days": 0,
+      "mean_seed_loss_mwh": 1.5724035855906606,
+      "worst_minimum_voltage_pu": 0.9477922095631632,
+      "worst_maximum_voltage_pu": 1.021315414929846,
+      "mean_seed_reactive_throughput_mvarh": 32.19339896578174,
+      "all_seeds_zero_events": false,
+      "all_seeds_zero_pf_failures": true,
+      "operational_pass": false
+    },
+    {
+      "path_id": "svc_first_lower",
+      "point_order": 0,
+      "capacity_label": "S01",
+      "pv_s_scale": 0.225,
+      "svc_q_scale": 0.1875,
+      "total_event_days": 18,
+      "maximum_seed_event_days": 5,
+      "total_pf_fail_days": 0,
+      "mean_seed_loss_mwh": 1.6375465563410239,
+      "worst_minimum_voltage_pu": 0.9373610549647741,
+      "worst_maximum_voltage_pu": 1.0215452796737057,
+      "mean_seed_reactive_throughput_mvarh": 32.20350401784479,
+      "all_seeds_zero_events": false,
+      "all_seeds_zero_pf_failures": true,
+      "operational_pass": false
+    }
+  ]
+}

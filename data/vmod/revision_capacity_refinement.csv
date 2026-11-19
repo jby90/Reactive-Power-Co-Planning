@@ -1,0 +1,3 @@
+path_id,point_order,capacity_label,pv_s_scale,svc_q_scale,cap_total_mvar
+fine_svc_lower,0,F01,0.300000,0.234375,0.0
+svc_first_lower,0,S01,0.225000,0.187500,0.0

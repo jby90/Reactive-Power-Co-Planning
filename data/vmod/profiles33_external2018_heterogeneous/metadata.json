@@ -1,0 +1,44 @@
+{
+  "role": "deterministic synthetic node-heterogeneity sensitivity test",
+  "measurement_status": "Not measured nodal data. Bounded autocorrelated location-specific multipliers are applied to the public OPSD system-level factors.",
+  "source_dir": "data/vmod/profiles33_external2018",
+  "seed": 20261119,
+  "load_multiplier": {
+    "sigma": 0.05,
+    "ar1_rho": 0.96,
+    "bounds": [
+      0.8,
+      1.2
+    ]
+  },
+  "pv_multiplier": {
+    "sigma": 0.1,
+    "ar1_rho": 0.9,
+    "bounds": [
+      0.7,
+      1.3
+    ]
+  },
+  "shape": {
+    "load": [
+      35136,
+      32
+    ],
+    "pv": [
+      35136,
+      3
+    ]
+  },
+  "mean_off_diagonal_correlation": {
+    "source_load": 1.0,
+    "heterogeneous_load": 0.9214055173963055,
+    "source_pv": 1.0,
+    "heterogeneous_pv": 0.9860343978410286
+  },
+  "aggregate_energy_ratio": {
+    "load": 1.0000001068531408,
+    "pv": 0.9999890532877268
+  },
+  "load_npy_sha256": "e0755a5fef7ce0b24744bf0ab6f7290a428f3696d3c74d3d4336c7688eaca3ef",
+  "pv_npy_sha256": "8d3cf8dc7d7b2be4fa157f246c450b74e0d46ac859a384f4561e0c78d3387a8e"
+}

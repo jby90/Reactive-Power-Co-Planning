@@ -34,7 +34,32 @@ pytest -q
 - `runs/VMOD_PROTOCOL_EXTERNAL2019_ENV69_FINAL_20260921/`: frozen 2019 confirmation protocol for the adapted 69-bus P08/P09 pair.
 - `runs/VMOD_ENV69_EXTERNAL2018_MARGIN_0p003_20260921/calibration/`: the nine compact development-calibration summaries that triggered the audited 69-bus path extension; no external-selection result is included there.
 - `runs/VMOD_FINAL_STUDY_20260921/`: claim gates and figure source data.
+- `runs/VMOD_REVISION_20261119/`: reviewer-requested operational sensitivity audits. The alternative-path runs use eight off-path or intermediate capacity points on the 17 external selection days. The heterogeneous-profile run uses the same 349-day confirmation calendar and retains the P02-rejected/P03-passed classification. These runs do not apply the principal path's teacher-support gate and do not establish a global optimum or formal security guarantee.
 - `SHA256SUMS.csv`: hashes for every released file.
+
+To regenerate the reviewer-requested sensitivity inputs and evaluations:
+
+```bash
+python prepare_vmod_heterogeneous_profiles.py \
+  --source_dir data/vmod/profiles33_external2018 \
+  --out_dir data/vmod/profiles33_external2018_heterogeneous
+
+python evaluate_vmod_capacity_sensitivity.py \
+  --capacity_table data/vmod/revision_capacity_paths.csv \
+  --days_metadata runs/VMOD_PROTOCOL_EXTERNAL2018_20260921/selection_days.csv \
+  --profile_dir data/vmod/profiles33_external2018 \
+  --policy_dir runs/VMOD_EXTERNAL2018_MARGIN_0p003_20260921/policies \
+  --out_dir runs/VMOD_REVISION_20261119/path_sensitivity_selection
+
+python evaluate_vmod_capacity_sensitivity.py \
+  --capacity_table data/vmod/revision_heterogeneous_boundary.csv \
+  --days_metadata runs/VMOD_PROTOCOL_EXTERNAL2018_20260921/confirmation_days.csv \
+  --profile_dir data/vmod/profiles33_external2018_heterogeneous \
+  --policy_dir runs/VMOD_EXTERNAL2018_MARGIN_0p003_20260921/policies \
+  --out_dir runs/VMOD_REVISION_20261119/heterogeneous_confirmation
+```
+
+`make_vmod_topology_figure.py` exports the 33- and 69-bus single-line diagrams from the released machine-readable feeder cases.
 
 To regenerate figures into `outputs/figures`, set `VMOD_FIGURE_OUT` and run:
 

@@ -1,0 +1,138 @@
+{
+  "scope": "Frozen-actor operational sensitivity only; no teacher-support gate, investment objective, or global-optimality claim.",
+  "capacity_table": "data/vmod/revision_capacity_paths.csv",
+  "days_metadata": "runs/VMOD_PROTOCOL_EXTERNAL2018_20260921/selection_days.csv",
+  "profile_dir": "data/vmod/profiles33_external2018",
+  "seeds": [
+    42,
+    43,
+    44,
+    45,
+    46
+  ],
+  "evaluated_days_per_seed": 17,
+  "paths": [
+    {
+      "path_id": "fine_svc",
+      "first_operational_pass_label": "F02",
+      "first_operational_pass_order": 0,
+      "all_higher_tested_points_pass": true
+    },
+    {
+      "path_id": "pv_first",
+      "first_operational_pass_label": null,
+      "first_operational_pass_order": null,
+      "all_higher_tested_points_pass": false
+    },
+    {
+      "path_id": "svc_first",
+      "first_operational_pass_label": "S02",
+      "first_operational_pass_order": 0,
+      "all_higher_tested_points_pass": true
+    }
+  ],
+  "points": [
+    {
+      "path_id": "fine_svc",
+      "point_order": 0,
+      "capacity_label": "F02",
+      "pv_s_scale": 0.3,
+      "svc_q_scale": 0.28125,
+      "total_event_days": 0,
+      "maximum_seed_event_days": 0,
+      "total_pf_fail_days": 0,
+      "mean_seed_loss_mwh": 1.4766785048618651,
+      "worst_minimum_voltage_pu": 0.9515416974251847,
+      "worst_maximum_voltage_pu": 1.0213774323034162,
+      "mean_seed_reactive_throughput_mvarh": 31.440156239236977,
+      "all_seeds_zero_events": true,
+      "all_seeds_zero_pf_failures": true,
+      "operational_pass": true
+    },
+    {
+      "path_id": "fine_svc",
+      "point_order": 1,
+      "capacity_label": "F03",
+      "pv_s_scale": 0.3,
+      "svc_q_scale": 0.328125,
+      "total_event_days": 0,
+      "maximum_seed_event_days": 0,
+      "total_pf_fail_days": 0,
+      "mean_seed_loss_mwh": 1.4354819135322234,
+      "worst_minimum_voltage_pu": 0.9518605918823854,
+      "worst_maximum_voltage_pu": 1.0211840429638372,
+      "mean_seed_reactive_throughput_mvarh": 31.041635223087138,
+      "all_seeds_zero_events": true,
+      "all_seeds_zero_pf_failures": true,
+      "operational_pass": true
+    },
+    {
+      "path_id": "pv_first",
+      "point_order": 0,
+      "capacity_label": "V03",
+      "pv_s_scale": 0.45,
+      "svc_q_scale": 0.0,
+      "total_event_days": 33,
+      "maximum_seed_event_days": 8,
+      "total_pf_fail_days": 0,
+      "mean_seed_loss_mwh": 3.5225065937712117,
+      "worst_minimum_voltage_pu": 0.9401641562011499,
+      "worst_maximum_voltage_pu": 1.0627484181775304,
+      "mean_seed_reactive_throughput_mvarh": 54.09647758714614,
+      "all_seeds_zero_events": false,
+      "all_seeds_zero_pf_failures": true,
+      "operational_pass": false
+    },
+    {
+      "path_id": "pv_first",
+      "point_order": 1,
+      "capacity_label": "V04",
+      "pv_s_scale": 0.6,
+      "svc_q_scale": 0.0,
+      "total_event_days": 34,
+      "maximum_seed_event_days": 9,
+      "total_pf_fail_days": 0,
+      "mean_seed_loss_mwh": 4.335072859567151,
+      "worst_minimum_voltage_pu": 0.9442150481943747,
+      "worst_maximum_voltage_pu": 1.0909003691755392,
+      "mean_seed_reactive_throughput_mvarh": 59.95518104951047,
+      "all_seeds_zero_events": false,
+      "all_seeds_zero_pf_failures": true,
+      "operational_pass": false
+    },
+    {
+      "path_id": "svc_first",
+      "point_order": 0,
+      "capacity_label": "S02",
+      "pv_s_scale": 0.225,
+      "svc_q_scale": 0.375,
+      "total_event_days": 0,
+      "maximum_seed_event_days": 0,
+      "total_pf_fail_days": 0,
+      "mean_seed_loss_mwh": 1.4258330245208828,
+      "worst_minimum_voltage_pu": 0.9522534413082689,
+      "worst_maximum_voltage_pu": 1.0212099748670784,
+      "mean_seed_reactive_throughput_mvarh": 31.20075433809718,
+      "all_seeds_zero_events": true,
+      "all_seeds_zero_pf_failures": true,
+      "operational_pass": true
+    },
+    {
+      "path_id": "svc_first",
+      "point_order": 1,
+      "capacity_label": "S04",
+      "pv_s_scale": 0.225,
+      "svc_q_scale": 0.75,
+      "total_event_days": 0,
+      "maximum_seed_event_days": 0,
+      "total_pf_fail_days": 0,
+      "mean_seed_loss_mwh": 1.4226032121148435,
+      "worst_minimum_voltage_pu": 0.9524546017218961,
+      "worst_maximum_voltage_pu": 1.0206873484562067,
+      "mean_seed_reactive_throughput_mvarh": 30.924061064583025,
+      "all_seeds_zero_events": true,
+      "all_seeds_zero_pf_failures": true,
+      "operational_pass": true
+    }
+  ]
+}

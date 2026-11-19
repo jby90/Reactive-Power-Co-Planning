@@ -1,0 +1,3 @@
+path_id,point_order,capacity_label,pv_s_scale,svc_q_scale,cap_total_mvar
+heterogeneous_boundary,0,P02,0.300000,0.187500,0.0
+heterogeneous_boundary,1,P03,0.300000,0.375000,0.0
