@@ -34,10 +34,10 @@ pytest -q
 - `runs/VMOD_PROTOCOL_EXTERNAL2019_ENV69_FINAL_20260921/`: frozen 2019 confirmation protocol for the adapted 69-bus P08/P09 pair.
 - `runs/VMOD_ENV69_EXTERNAL2018_MARGIN_0p003_20260921/calibration/`: the nine compact development-calibration summaries that triggered the audited 69-bus path extension; no external-selection result is included there.
 - `runs/VMOD_FINAL_STUDY_20260921/`: claim gates and figure source data.
-- `runs/VMOD_REVISION_20261119/`: reviewer-requested operational sensitivity audits. The alternative-path runs use eight off-path or intermediate capacity points on the 17 external selection days. The heterogeneous-profile run uses the same 349-day confirmation calendar and retains the P02-rejected/P03-passed classification. These runs do not apply the principal path's teacher-support gate and do not establish a global optimum or formal security guarantee.
+- `runs/VMOD_REVISION_20261119/`: operational sensitivity audits. The alternative-path runs use eight off-path or intermediate capacity points on the 17 external selection days. The heterogeneous-profile run uses the same 349-day confirmation calendar and retains the P02-rejected/P03-passed classification. These runs do not apply the principal path's teacher-support gate and do not establish a global optimum or formal security guarantee.
 - `SHA256SUMS.csv`: hashes for every released file.
 
-To regenerate the reviewer-requested sensitivity inputs and evaluations:
+To regenerate the sensitivity inputs and evaluations:
 
 ```bash
 python prepare_vmod_heterogeneous_profiles.py \
@@ -67,6 +67,22 @@ To regenerate figures into `outputs/figures`, set `VMOD_FIGURE_OUT` and run:
 set VMOD_FIGURE_OUT=outputs/figures
 python make_vmod_figures.py --figures all
 ```
+
+## Calendar-week confirmation audit
+
+From the repository root, reproduce the calendar table and one-sided 95% upper
+bounds using only Python's standard library (no training or downloads):
+
+```bash
+python audit_vmod_confirmation_calendar.py --output outputs/calendar_audit
+```
+
+Compare `weeks.csv` and `summary.json` with the reference files in
+`data/vmod/confirmation_calendar/`. Each frozen actor recorded zero event-days
+on the same 349 UTC dates (daily upper bound 0.855%). The full-week endpoint
+uses 37 complete Monday--Sunday weeks (7.78%); the observed-date endpoint uses
+all 53 represented weeks (5.50%) and excludes unobserved dates. Bounds assume
+independent, equal-risk indicators at the stated unit; seeds are not pooled.
 
 The package reports empirical simulation evidence only. It does not provide a
 formal safety guarantee or an economically calibrated equipment optimum.

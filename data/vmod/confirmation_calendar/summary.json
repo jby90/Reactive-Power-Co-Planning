@@ -1,0 +1,20 @@
+{
+  "first_confirmation": "2018-01-02",
+  "last_confirmation": "2019-01-02",
+  "weeks_by_number_of_observed_days": {
+    "3": 1,
+    "5": 3,
+    "6": 12,
+    "7": 37
+  },
+  "daily_upper": 0.008547024811548627,
+  "observed_week_upper": 0.05495548846517784,
+  "full_week_upper": 0.07777471100513793,
+  "events_by_seed": {
+    "42": 0,
+    "43": 0,
+    "44": 0,
+    "45": 0,
+    "46": 0
+  }
+}
